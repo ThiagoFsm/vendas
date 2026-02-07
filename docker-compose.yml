@@ -38,6 +38,13 @@ services:
     networks:
       - vendas-network
 
+  node:
+      image: node:14-alpine
+      volumes:
+          - .:/var/www/html
+      working_dir: /var/www/html
+      entrypoint: [ "tail", "-f", "/dev/null" ]
+
 networks:
   vendas-network:
     driver: bridge
