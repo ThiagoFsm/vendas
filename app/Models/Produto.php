@@ -17,4 +17,20 @@ class Produto extends Model
         'tamanho_id',
         'valor_produto'
     ];
+
+    public function tipoProduto() {
+        return $this->belongsTo(TipoProduto::class);
+    }
+
+    public function sabor() {
+        return $this->belongsTo(Sabor::class);
+    }
+
+    public function tamanho() {
+        return $this->belongsTo(Tamanho::class);
+    }
+
+    public function pedidos() {
+        return $this->hasMany(Pedido::class);
+    }
 }

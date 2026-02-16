@@ -12,12 +12,13 @@ class Entrega extends Model
     protected $table = 'entregas';
 
     protected $fillable = [
+        'bairro',
         'rua',
         'numero',
-        'bairro',
         'data',
-        'hora',
-        'complemento'
+        'periodo',
+        'valor_uber',
+        'entregador_id'
     ];
 
     public function pedido()

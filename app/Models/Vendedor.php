@@ -14,4 +14,9 @@ class Vendedor extends Model
     protected $fillable = [
         'nome'
     ];
+
+    public function cliente()
+    {
+        return $this->hasMany(Cliente::class);
+    }
 }

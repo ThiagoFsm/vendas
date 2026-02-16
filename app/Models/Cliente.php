@@ -13,7 +13,16 @@ class Cliente extends Model
 
     protected $fillable = [
         'nome',
-        'vendedor_id',
-        'whatsapp',
+        'vendedor_id'
     ];
+
+    public function pedido()
+    {
+        return $this->hasMany(Pedido::class);
+    }
+
+    public function vendedor()
+    {
+        return $this->belongsTo(Vendedor::class);
+    }
 }

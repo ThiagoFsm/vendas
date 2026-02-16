@@ -27,4 +27,15 @@ class Pedido extends Model
         // Define que este campo pode pertencer a múltiplos modelos
         return $this->morphTo();
     }
+
+    public function produtos()
+    {
+        return $this->belongsToMany(Produto::class, 'pedido_produto', 'pedido_id', 'produto_id')
+                ->withPivot('quantidade');
+    }
+
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class);
+    }
 }
