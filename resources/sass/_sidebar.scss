@@ -1,0 +1,136 @@
+// Cores personalizadas para um look moderno
+$sidebar-bg: #1a1d20;
+$sidebar-link: #94999f;
+$sidebar-hover-bg: #2d3238;
+$sidebar-active-color: #0d6efd;
+
+// Borda mais visível
+$border-color: #d1d5db; // Um cinza mais escuro e definido
+
+.sidebar {
+    background-color: $sidebar-bg;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+
+    .sidebar-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+        h4 {
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+    }
+
+    .nav-item {
+        padding: 0.2rem 0.8rem;
+
+        .nav-link {
+            color: $sidebar-link;
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background-color: $sidebar-hover-bg;
+                color: #fff;
+                transform: translateX(5px);
+            }
+
+            &.active {
+                background-color: rgba($sidebar-active-color, 0.1);
+                color: $sidebar-active-color;
+            }
+
+            i {
+                margin-right: 12px;
+                font-size: 1.1rem;
+            }
+        }
+    }
+}
+
+.resizer {
+    transition: background 0.3s;
+    &:hover {
+        background: $sidebar-active-color !important;
+        opacity: 0.5;
+    }
+}
+
+.card-custom {
+    border: 1.5px solid $border-color; // Adicionada borda ao card também para combinar
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important;
+}
+
+// Configuração da Tabela e Bordas Visíveis
+.table {
+    --bs-table-hover-bg: #f8f9fa;
+
+    thead th {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 800; // Peso extra no cabeçalho
+        color: #374151; // Texto mais escuro
+        border-top: none;
+        padding: 1.2rem 1rem;
+    }
+
+    tbody td {
+        padding: 1.2rem 1rem;
+        color: #1f2937;
+        font-weight: 500;
+        border-bottom: 1.5px solid $border-color; // Linhas internas mais visíveis
+    }
+}
+
+// Tabela com bordas externas reforçadas
+.table-bordered-custom {
+    border: 2px solid $border-color; // Borda externa de 2px
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+    overflow: hidden;
+
+    thead th {
+        border-bottom: 2px solid $border-color; // Linha que separa o topo do corpo
+    }
+
+    // Garante que a última linha não tenha borda dupla com a borda de baixo da tabela
+    tbody tr:last-child td {
+        border-bottom: none;
+    }
+}
+
+.btn-action {
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s;
+
+    &.btn-view {
+        background-color: #ffffff;
+        color: #212529;
+        border: 1.5px solid $border-color; // Botões seguindo o padrão de borda
+        &:hover { background-color: #f3f4f6; }
+    }
+}
+
+.badge-status {
+    padding: 0.5em 0.8em;
+    border-radius: 6px;
+    font-weight: 700;
+
+    font-size: 0.75rem;
+    border: 1.5px solid currentColor; // Borda na cor do status
+}
