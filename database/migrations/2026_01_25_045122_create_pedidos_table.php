@@ -22,6 +22,7 @@ class CreatePedidosTable extends Migration
             $table->decimal('valor_restante', 10, 2)->nullable();
             $table->boolean('pago')->default(false);
             $table->morphs('entrega_retirada');
+            $table->boolean('ativo');
             $table->timestamps();
 
             $table->foreign('cliente_id', 'pedidos_cliente_id_fk')->references('id')->on('clientes');

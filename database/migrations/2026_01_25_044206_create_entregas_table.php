@@ -15,13 +15,16 @@ class CreateEntregasTable extends Migration
     {
         Schema::create('entregas', function (Blueprint $table) {
             $table->id();
-            $table->string('rua');
-            $table->string('numero');
-            $table->string('bairro');
-            $table->date('data');
-            $table->time('hora');
+            $table->string('bairro')->nullable();
+            $table->string('rua')->nullable();
+            $table->string('numero')->nullable();
+            $table->date('data')->nullable();
+            $table->string('periodo')->nullable();
             $table->decimal('valor_uber')->nullable();
+            $table->unsignedBigInteger('entregador_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('entregador_id' ,'entregas_entregador_id_fk')->references('id')->on('vendedores');
         });
     }
 

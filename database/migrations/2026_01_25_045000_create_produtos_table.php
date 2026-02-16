@@ -18,7 +18,8 @@ class CreateProdutosTable extends Migration
             $table->unsignedBigInteger('tipo_produto_id');
             $table->unsignedBigInteger('sabor_id');
             $table->unsignedBigInteger('tamanho_id');
-            $table->decimal('valor_produto');
+            $table->decimal('valor_produto')->nullable();
+            $table->boolean('ativo')->default(1);
             $table->timestamps();
 
             $table->foreign('tipo_produto_id', 'produtos_tipo_produto_id_fk')->references('id')->on('tipo_produtos');

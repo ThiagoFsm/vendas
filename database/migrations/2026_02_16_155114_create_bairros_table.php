@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTamanhosTable extends Migration
+class CreateBairrosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateTamanhosTable extends Migration
      */
     public function up()
     {
-        Schema::create('tamanhos', function (Blueprint $table) {
+        Schema::create('bairros', function (Blueprint $table) {
             $table->id();
             $table->string('descricao');
-            $table->boolean('ativo')->default(1);
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ class CreateTamanhosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tamanhos');
+        Schema::dropIfExists('bairros');
     }
 }

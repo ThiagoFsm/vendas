@@ -17,7 +17,6 @@ class CreateClientesTable extends Migration
             $table->id();
             $table->string('nome');
             $table->unsignedBigInteger('vendedor_id');
-            $table->string('whatsapp', 14);
             $table->timestamps();
 
             $table->foreign('vendedor_id', 'clientes_vendedor_id_fk')->references('id')->on('vendedores');

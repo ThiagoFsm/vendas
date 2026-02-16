@@ -17,7 +17,7 @@ class CreateRetiradasTable extends Migration
             $table->id();
             $table->string('bairro');
             $table->date('data');
-            $table->time('hora');
+            $table->string('periodo')->nullable();
             $table->timestamps();
         });
     }

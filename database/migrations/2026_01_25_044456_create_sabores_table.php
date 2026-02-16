@@ -16,6 +16,7 @@ class CreateSaboresTable extends Migration
         Schema::create('sabores', function (Blueprint $table) {
             $table->id();
             $table->string('descricao');
+            $table->boolean('ativo')->default(1);
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ class CreateSaboresTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sabors');
+        Schema::dropIfExists('sabores');
     }
 }
