@@ -1,20 +1,32 @@
-// resources/js/app.js
-
-/**
- * Primeiro carregamos as dependências (Axios, Lodash, etc)
- * que o Laravel configura por padrão no bootstrap.js.
- */
 require('./bootstrap');
-import 'bootstrap-icons/font/bootstrap-icons.css';
 
-// 1. Importar o v-money
-import money from 'v-money';
-
-// Define o Vue globalmente
+// 1. IMPORTAR O VUE PRIMEIRO
 window.Vue = require('vue').default;
 
-// 2. Registrar o plugin v-money com a configuração global para Real (BRL)
-// Isso permite que você use v-money em qualquer input do seu projeto
+// 2. TOAST NOTIFICATION
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
+
+const toastOptions = {
+    position: "top-right",
+    timeout: 3000,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+    draggablePercent: 0.6,
+    showCloseButtonOnHover: false,
+    hideProgressBar: false,
+    closeButton: "button",
+    icon: true,
+    rtl: false
+};
+
+// Agora o Vue já existe, então podemos usar
+Vue.use(Toast, toastOptions);
+
+// 3. DINHEIRO / V-MONEY
+import money from 'v-money';
 const dinheiro = {
     decimal: ',',
     thousands: '.',
@@ -24,46 +36,50 @@ const dinheiro = {
 };
 
 Vue.use(money, dinheiro);
-// Cria um "atalho" global
 Vue.prototype.$dinheiro = dinheiro;
 
-/**
- * Diretiva v-select simplificada.
- * Uso: <select v-model="item.sabor_id" v-select>
- */
+// 4. SELECT2 & JQUERY
+import jQuery from 'jquery';
+window.$ = window.jQuery = jQuery;
+import 'select2';
+import 'select2/dist/css/select2.css';
+import 'select2-bootstrap-5-theme/dist/select2-bootstrap-5-theme.css';
+
 Vue.directive('select', {
     inserted: function (el) {
         $(el).select2({
             theme: 'bootstrap-5',
             width: '100%',
-            placeholder: $(el).data('placeholder') || 'Selecione'
-        }).on('change', function () {
-            // Dispara um evento de mudança nativo que o Vue/v-model entende
+            placeholder: $(el).data('placeholder') || 'Selecione',
+            allowClear: true
+        }).on('select2:select select2:unselect', function () {
             el.dispatchEvent(new Event('change', { bubbles: true }));
         });
     },
-    update: function (el, binding) {
-        // Sincroniza o Select2 quando o valor no Vue muda (ex: reset de formulário)
-        $(el).val($(el).val()).trigger('change.select2');
+    componentUpdated: function (el) {
+        $(el).trigger('change.select2');
     },
     unbind: function (el) {
         $(el).select2('destroy');
     }
 });
 
-// remover mensagem de modo de desenvolvimento do console
+// 5. CONFIGURAÇÕES FINAIS E COMPONENTES
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
 
-/**
- * Importamos o arquivo que faz o registro automático dos componentes.
- * Como o arquivo chama 'components.js', basta apontar para o caminho dele.
- */
 require('./components');
 
-/**
- * Finalmente, instanciamos o Vue e o acoplamos ao ID #app do seu HTML.
- */
 const app = new Vue({
     el: '#app',
+    mounted() {
+        // Verifica se existem mensagens de sessão passadas pelo Blade
+        if (window.session && window.session.success) {
+            this.$toast.success(window.session.success);
+        }
+        // Usamos .error para a primeira mensagem de erro da sessão
+        if (window.session && window.session.error) {
+            this.$toast.error(window.session.error);
+        }
+    }
 });

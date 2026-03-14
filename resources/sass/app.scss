@@ -1,11 +1,19 @@
-// Fonts
+// 1. Módulos modernos do Sass
+@use "sass:math";
+@use "sass:color";
+
+// 2. Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 
-// Variables
+// 3. Suas variáveis
 @import 'variables';
 
-// Bootstrap
+// 4. Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
-// Sidebar Custom Styles (Adicione esta linha abaixo)
+// 5. Bootstrap Icons (ADICIONADO AQUI)
+// O sinal '~' é crucial para o Webpack/Mix encontrar as fontes dentro de node_modules
+@import '~bootstrap-icons/font/bootstrap-icons.css';
+
+// 6. Seus estilos específicos
 @import 'sidebar';

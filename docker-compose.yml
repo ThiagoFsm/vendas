@@ -12,6 +12,7 @@ services:
 
   nginx:
       image: nginx:alpine
+      container_name: vendas-nginx
       ports:
           - "80:80"
           - "8080:8080" # Mantemos para o seu HMR (v-dev)
@@ -40,10 +41,14 @@ services:
 
   node:
       image: node:14-alpine
+      container_name: vendas-node
+      restart: unless-stopped
       volumes:
           - .:/var/www/html
       working_dir: /var/www/html
       entrypoint: [ "tail", "-f", "/dev/null" ]
+      networks:
+          - vendas-network
 
 networks:
   vendas-network:

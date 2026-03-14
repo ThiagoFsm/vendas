@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\PedidoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+Route::get('/welcome', function () {
     return view('welcome');
+});
+
+Route::get('/', function () {
+    return view('pedidos.index');
+});
+
+Route::prefix('vendas')->name('vendas.')->group(function () {
+    Route::prefix('pedidos')->name('pedidos.')->group(function () {
+        Route::get('/', [PedidoController::class, 'index'])->name('index');
+        Route::get('/create', [PedidoController::class, 'create'])->name('create');
+        Route::post('/store', [PedidoController::class, 'store'])->name('store');
+    });
+
+    Route::prefix('clientes')->name('clientes.')->group(function () {
+        Route::get('/', [ClienteController::class, 'index'])->name('index');
+        Route::get('/create', [ClienteController::class, 'create'])->name('create');
+        Route::post('/store', [ClienteController::class, 'store'])->name('store');
+    });
 });
