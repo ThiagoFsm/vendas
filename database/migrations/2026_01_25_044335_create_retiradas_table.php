@@ -15,7 +15,7 @@ class CreateRetiradasTable extends Migration
     {
         Schema::create('retiradas', function (Blueprint $table) {
             $table->id();
-            $table->string('bairro');
+            $table->string('bairro_id');
             $table->date('data');
             $table->string('periodo')->nullable();
             $table->timestamps();

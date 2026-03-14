@@ -15,7 +15,7 @@ class CreateEntregasTable extends Migration
     {
         Schema::create('entregas', function (Blueprint $table) {
             $table->id();
-            $table->string('bairro')->nullable();
+            $table->unsignedBigInteger('bairro_id')->nullable();
             $table->string('rua')->nullable();
             $table->string('numero')->nullable();
             $table->date('data')->nullable();
@@ -25,6 +25,7 @@ class CreateEntregasTable extends Migration
             $table->timestamps();
 
             $table->foreign('entregador_id' ,'entregas_entregador_id_fk')->references('id')->on('vendedores');
+            $table->foreign('bairro_id' ,'entregas_bairro_id_fk')->references('id')->on('bairros');
         });
     }
 
