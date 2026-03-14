@@ -3,39 +3,54 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\Vendedor;
+use App\Services\ClienteService;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * ${COMMENT}
      *
-     * @return \Illuminate\Http\Response
+     * @var ClienteService
+     */
+    protected $clienteService;
+
+    /**
+     * @param ClienteService $clienteService
+     */
+    public function __construct(ClienteService $clienteService) {
+        $this->clienteService = $clienteService;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
      */
     public function index()
     {
-        //
+        return view('clientes.index');
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
      */
     public function create()
     {
-        //
+        $dependencias = $this->clienteService->gerenciarDependencias();
+
+        return view('clientes.create', compact('dependencias'));
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
-        //
+        $dados = $request->all();
+        $idCliente = $this->clienteService->salvarCliente($dados);
+
+        return redirect()->route('vendas.pedidos.create', ['$idCliente' => $idCliente]);
     }
 
     /**

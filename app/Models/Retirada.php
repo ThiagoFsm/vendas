@@ -12,7 +12,7 @@ class Retirada extends Model
     protected $table = 'retiradas';
 
     protected $fillable = [
-        'bairro',
+        'bairro_id',
         'data',
         'hora'
     ];
@@ -21,5 +21,9 @@ class Retirada extends Model
     {
         // Indica que esta entrega aponta para apenas UM pedido
         return $this->morphOne(Pedido::class, 'entrega_retirada');
+    }
+
+    public function bairro() {
+        return $this->belongsTo(Bairro::class, 'bairro_id', 'id');
     }
 }

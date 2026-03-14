@@ -11,4 +11,9 @@ class Bairro extends Model
 
     protected $table = 'bairros';
     protected $fillable = ['descricao'];
+
+    public function retirada()
+    {
+        $this->hasOne(Retirada::class, 'bairro_id', 'id');
+    }
 }

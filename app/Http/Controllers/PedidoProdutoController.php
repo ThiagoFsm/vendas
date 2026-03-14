@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PedidoComposicao;
+use App\Models\PedidoProduto;
 use Illuminate\Http\Request;
 
-class PedidoComposicaoController extends Controller
+class PedidoProdutoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +41,10 @@ class PedidoComposicaoController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\PedidoComposicao  $pedidoComposicao
+     * @param  \App\Models\PedidoProduto  $pedidoProduto
      * @return \Illuminate\Http\Response
      */
-    public function show(PedidoComposicao $pedidoComposicao)
+    public function show(PedidoProduto $pedidoProduto)
     {
         //
     }
@@ -52,10 +52,10 @@ class PedidoComposicaoController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\PedidoComposicao  $pedidoComposicao
+     * @param  \App\Models\PedidoProduto  $pedidoProduto
      * @return \Illuminate\Http\Response
      */
-    public function edit(PedidoComposicao $pedidoComposicao)
+    public function edit(PedidoProduto $pedidoProduto)
     {
         //
     }
@@ -64,10 +64,10 @@ class PedidoComposicaoController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\PedidoComposicao  $pedidoComposicao
+     * @param  \App\Models\PedidoProduto  $pedidoProduto
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, PedidoComposicao $pedidoComposicao)
+    public function update(Request $request, PedidoProduto $pedidoProduto)
     {
         //
     }
@@ -75,10 +75,10 @@ class PedidoComposicaoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\PedidoComposicao  $pedidoComposicao
+     * @param  \App\Models\PedidoProduto  $pedidoProduto
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PedidoComposicao $pedidoComposicao)
+    public function destroy(PedidoProduto $pedidoProduto)
     {
         //
     }

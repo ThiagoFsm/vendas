@@ -2,40 +2,59 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use App\Models\Pedido;
+use App\Services\PedidoService;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class PedidoController extends Controller
 {
+    protected $pedidoService;
+    public function __construct(PedidoService $pedidoService)
+    {
+        $this->pedidoService = $pedidoService;
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    public function index()
+    public function index() : view
     {
-        //
+
+        return view('pedidos.index');
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @param Cliente $cliente
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|View
      */
     public function create()
     {
-        //
+        $idCliente = request()->all();
+        $dependencias = $this->pedidoService->gerenciarDependencias($idCliente);
+
+        return view('pedidos.create', compact('dependencias'));
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
-        //
+        $dados = $request->all();
+        $produtos = $this->pedidoService->prepararProdutosSalvar($dados['pedido']);
+        $entrega_retirada = $this->pedidoService->gerenciarEntregaRetirada($dados['entrega_retirada']);
+        $pedidoPreparado = $this->pedidoService->prepararPedidoSalvar($dados);
+        $pedidoCriado = $this->pedidoService->salvarPedido($pedidoPreparado, $entrega_retirada, $produtos);
+
+        return response()->json(
+            'Pedido criado com sucesso!'
+        );
+//        return redirect()->route('vendas.pedidos.index')->with('success', 'Pedido cadastrado com sucesso!');
     }
 
     /**
