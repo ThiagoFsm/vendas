@@ -1,0 +1,94 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Bairro;
+use App\Models\Cliente;
+use App\Models\Entrega;
+use App\Models\Pedido;
+use App\Models\Retirada;
+use App\Models\Produto;
+use App\Models\Sabor;
+use App\Models\Tamanho;
+use App\Models\TipoProduto;
+use App\Models\Vendedor;
+use Exception;
+use Illuminate\Support\Facades\DB;
+
+class PedidoService
+{
+    public function gerenciarDependencias($idCliente): array
+    {
+        $cliente = Cliente::whereId($idCliente)->first();
+        $dependencias['cliente'] = $cliente;
+
+        $dependencias['produtos'] = Produto::with('tipoProduto', 'sabor', 'tamanho')->where('ativo', true)->get();
+        $dependencias['tipoProdutos'] = TipoProduto::where('ativo', true)->get();
+        $dependencias['sabores'] = Sabor::where('ativo', true)->get();
+        $dependencias['tamanhos'] = Tamanho::where('ativo', true)->get();
+        $dependencias['vendedores'] = Vendedor::all();
+        $dependencias['bairros'] = Bairro::all();
+
+        return $dependencias;
+    }
+
+    public function gerenciarEntregaRetirada($dados)
+    {
+        //retirada
+        if(!isset($dados['rua']) && !isset($dados['entregador_id'])) {
+            $entrega_retirada = Retirada::create($dados);
+        }
+
+        //uber ou entrega
+        else {
+            $dados['valor_uber'] = (float) str_replace(',', '.', $dados['valor_uber']);
+            $entrega_retirada = Entrega::create($dados);
+        }
+
+        return $entrega_retirada;
+    }
+
+    public function prepararPedidoSalvar($dados) {
+        $pedido['cliente_id'] = $dados['cliente']['id'];
+        $pedido['quantidade_itens'] = count($dados['pedido']);
+        $pedido['valor_total'] = $dados['valor_total'];
+        $pedido['valor_antecipado'] = (float) $dados['valor_antecipado'];
+        $pedido['valor_restante'] = $pedido['valor_total'] - $pedido['valor_antecipado'];
+
+        if($pedido['valor_restante'] === 0.00) {
+            $pedido['pago'] = true;
+        }
+        else {
+            $pedido['pago'] = false;
+        }
+
+        return $pedido;
+    }
+
+    public function salvarPedido($pedidoPreparado, $entrega_retirada, $produtos): object
+    {
+//        try {
+//            return DB::transaction(function () use ($pedidoPreparado, $entrega_retirada, $produtos) {
+                $pedido = new Pedido($pedidoPreparado);
+                $pedido->entrega_retirada()->associate($entrega_retirada);
+                $pedido->save();
+                $pedido->produtos()->sync($produtos);
+                return $pedido;
+//            });
+//        } catch (Exception $e) {
+//            return $e->getMessage();
+//        }
+
+    }
+
+    public function prepararProdutosSalvar($dadosPedido): array
+    {
+        return collect($dadosPedido)->mapWithKeys(function($produto) {
+            return [
+                $produto['produto_id'] => [
+                    'quantidade' => (int) $produto['quantidade']
+                ]
+            ];
+        })->toArray();
+    }
+}

@@ -12,7 +12,7 @@ class Entrega extends Model
     protected $table = 'entregas';
 
     protected $fillable = [
-        'bairro',
+        'bairro_id',
         'rua',
         'numero',
         'data',
