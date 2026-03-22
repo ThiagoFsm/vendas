@@ -1,5 +1,8 @@
 require('./bootstrap');
 
+import Swal from 'sweetalert2';
+window.Swal = Swal;
+
 // 1. IMPORTAR O VUE PRIMEIRO
 window.Vue = require('vue').default;
 
