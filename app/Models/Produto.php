@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Produto extends Model
 {
@@ -19,18 +21,19 @@ class Produto extends Model
     ];
 
     public function tipoProduto() {
-        return $this->belongsTo(TipoProduto::class);
+        return $this->belongsTo(TipoProduto::class, 'tipo_produto_id', 'id');
     }
 
     public function sabor() {
-        return $this->belongsTo(Sabor::class);
+        return $this->belongsTo(Sabor::class, 'sabor_id', 'id');
     }
 
     public function tamanho() {
-        return $this->belongsTo(Tamanho::class);
+        return $this->belongsTo(Tamanho::class, 'tamanho_id', 'id');
     }
 
     public function pedidos() {
-        return $this->hasMany(Pedido::class);
+        return $this->belongsToMany(Pedido::class, 'pedido_produto', 'produto_id', 'pedido_id')
+            ->withPivot('quantidade');
     }
 }

@@ -26,4 +26,11 @@ class Entrega extends Model
         // Indica que esta entrega aponta para apenas UM pedido
         return $this->morphOne(Pedido::class, 'entrega_retirada');
     }
+    public function bairro() {
+        return $this->belongsTo(Bairro::class, 'bairro_id', 'id');
+    }
+
+    public function entregador() {
+        return $this->belongsTo(Vendedor::class, 'entregador_id', 'id');
+    }
 }
