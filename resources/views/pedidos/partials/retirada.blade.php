@@ -2,7 +2,7 @@
 <div class="d-flex gap-3 justify-content-center">
     <div class="col-md-3 text-center">
         <label for="bairro" class="form-label small fw-bold text-muted">Bairro</label>
-        <select name="bairro" id="bairro" class="form-select select-input border-2" v-model="retirada.bairro_id"
+        <select name="bairro" id="bairro" class="form-select select-input border-2" v-model="retirada.bairro"
                 style="height: 40px; border-radius: 8px;" v-select required>
             <option value="">Selecione</option>
             <option value="Jacy">Jacy</option>

@@ -33,7 +33,7 @@ export default {
             },
             retirada_selecionada: '',
             retirada: {
-                bairro_id: '',
+                bairro: '',
                 data: '',
                 periodo: ''
             },
@@ -148,16 +148,15 @@ export default {
                     entrega_retirada: retirada_entrega(),
                     valor_antecipado: this.valor_antecipado.replace(/\./g, '').replace(',', '.'),
                     valor_total: this.valor_total_pedido
+                }). then(() => {
+                        window.Toast.fire({ icon: 'success', title: 'Pedido criado com sucesso!' });
+                    setTimeout(() => {
+                        window.location.href = '/vendas/pedidos';
+                    }, 3000);
                 });
-                if (response.status === 200 || response.status === 201) {
-                    console.log(response.data.message)
-                    // this.$toast.success(response)
-                    // window.location.href('vendas.pedidos') // redirecionar para pedidos index
-                }
+
             } catch (error) {
-                console.log("erro")
-                // console.error('Erro ao salvar pedido:', error.response.data);
-                // alert('Erro ao salvar:' + error.response.data.message);
+                window.Toast.fire({ icon: 'error', title: 'Erro criar pedido.', text: error.message });
             }
         }
     }
