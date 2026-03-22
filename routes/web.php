@@ -20,13 +20,13 @@ Route::get('/welcome', function () {
 });
 
 Route::get('/', function () {
-    return view('pedidos.index');
+    return redirect()->route('vendas.pedidos.index');
 });
 
 Route::prefix('vendas')->name('vendas.')->group(function () {
     Route::prefix('pedidos')->name('pedidos.')->group(function () {
-        Route::get('/', [PedidoController::class, 'index'])->name('index');
-        Route::get('/create', [PedidoController::class, 'create'])->name('create');
+        Route::get('/{pedido_id?}', [PedidoController::class, 'index'])->name('index');
+        Route::get('/create/{cliente_id?}', [PedidoController::class, 'create'])->name('create');
         Route::post('/store', [PedidoController::class, 'store'])->name('store');
     });
 
