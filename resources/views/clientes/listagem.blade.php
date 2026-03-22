@@ -2,7 +2,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h3 class="fw-bold mb-0">Clientes</h3>
-            <p class="text-muted small">Gerencie seus clientes</p>
+            <h5 class="text-muted">Gerencie seus clientes</h5>
         </div>
     </div>
 
@@ -32,7 +32,7 @@
                         <td>R$ 250,00</td>
                         <td class="text-end">
                             <button class="btn-action btn-view">Detalhes</button>
-                            <button class="btn-action text-danger border-0 bg-transparent ms-2">Excluir</button>
+                            <button class="btn-action btn-view text-danger">Excluir</button>
                         </td>
                     </tr>
                     </tbody>

@@ -35,7 +35,7 @@
                         <h5 class="fw-bold mb-3" style="color: #495057;">Itens do Pedido</h5>
                         <div class="row g-3 align-items-end p-3 mb-3"
                              style="background-color: #f8f9fa; border-radius: 8px;">
-                            <div class="col-md-3  text-center">
+                            <div class="col-md-3 text-center">
                                 <label for="item_produto" class="form-label small fw-bold text-muted">Produto</label>
                                 <select id="item_produto" name="item_produto" class="form-select select-input border-2"
                                         v-model="item.tipo_produto_id" style="height: 40px;" v-select>

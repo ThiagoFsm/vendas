@@ -9,7 +9,7 @@
 
     <style>
         :root {
-            --sidebar-width: 250px;
+            --sidebar-width: 140px;
         }
 
         body {
@@ -89,6 +89,107 @@
             padding-left: 0.75rem !important; /* Alinha com o padding padrão do Bootstrap 5 */
         }
 
+        /* Overlay da Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Escurece o fundo */
+            backdrop-filter: blur(2px); /* Efeito de desfoque moderno */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000; /* Acima da sidebar (que está em 1000) */
+            transition: opacity 0.3s ease;
+        }
+
+        /* Container da Modal */
+        .modal-content-custom {
+            background: #ffffff;
+            width: 90%;
+            max-width: 550px;
+            border-radius: 12px; /* Seguindo a tendência do seu Select2 */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: modalIn 0.3s ease-out;
+        }
+
+        /* Header da Modal - Usando o tom da sua Sidebar */
+        .modal-header-custom {
+            background: #212529; /* Mesma cor da sua sidebar */
+            color: #ffffff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header-custom h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        /* Body da Modal */
+        .modal-body-custom {
+            padding: 20px;
+            color: #343a40;
+        }
+
+        /* Estilização de inputs dentro da modal para combinar com seu Select2 */
+        .modal-body-custom input,
+        .modal-body-custom select,
+        .modal-body-custom textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px; /* Combinando com o seu Select2 */
+            margin-top: 5px;
+            margin-bottom: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .modal-body-custom input:focus {
+            border-color: #212529;
+        }
+
+        /* Footer da Modal */
+        .modal-footer-custom {
+            padding: 8px 12px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Botões */
+        .btn-fechar {
+            background: #212529;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-fechar:hover {
+            background: #343a40;
+        }
+
+        /* Animação de entrada */
+        @keyframes modalIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Força o container do SweetAlert a ficar acima da sua modal */
+        .swal2-container {
+            z-index: 3000 !important;
+        }
     </style>
 </head>
 <body id="body-layout">
@@ -109,26 +210,6 @@
     <button class="btn btn-dark mb-4" id="toggleSidebar">☰ Menu</button>
 
     <div id="app">
-{{--        <div class="container-fluid px-0">--}}
-{{--            @if(session('success'))--}}
-{{--                <div class="alert alert-success alert-dismissible fade show" role="alert">--}}
-{{--                    <strong>Sucesso!</strong> {{ session('success') }}--}}
-{{--                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>--}}
-{{--                </div>--}}
-{{--            @endif--}}
-
-{{--            @if($errors->any())--}}
-{{--                <div class="alert alert-danger alert-dismissible fade show" role="alert">--}}
-{{--                    <strong>Ops! Algo deu errado:</strong>--}}
-{{--                    <ul class="mb-0 mt-2">--}}
-{{--                        @foreach($errors->all() as $error)--}}
-{{--                            <li>{{ $error }}</li>--}}
-{{--                        @endforeach--}}
-{{--                    </ul>--}}
-{{--                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>--}}
-{{--                </div>--}}
-{{--            @endif--}}
-{{--        </div>--}}
         @yield('content')
     </div>
 </main>
@@ -188,28 +269,36 @@
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    const Toast = Swal.mixin({
+    // 1. Tornamos o Toast global para você usar em qualquer lugar (inclusive no Vue)
+    window.Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
         timer: 3000,
-        timerProgressBar: true
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
     });
 
-    // Dispara se houver mensagem de sucesso
+    // 2. Dispara se houver mensagem de sucesso do Laravel (Redirect::back()->with('success'))
     @if(session('success'))
-    Toast.fire({
+    window.Toast.fire({
         icon: 'success',
-        title: '{{ session('success') }}'
+        title: "{{ session('success') }}",
+        timerProgressBar: true,
+        showConfirmButton: false
     });
     @endif
 
-    // Dispara se houver erros de validação
+    // 3. Dispara se houver erros de validação ($errors)
     @if($errors->any())
-    Swal.fire({
+    window.Toast.fire({
         icon: 'error',
-        title: 'Ops...',
-        html: '{!! implode("<br>", $errors->all()) !!}'
+        title: 'Ops! Algo deu errado',
+        text: "{{ $errors->first() }}", // Mostra o primeiro erro
+        showConfirmButton: true
     });
     @endif
 </script>
