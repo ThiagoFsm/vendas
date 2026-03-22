@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cliente;
 use App\Models\Pedido;
 use App\Services\PedidoService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -17,31 +18,36 @@ class PedidoController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\View\View
+     * @param $pedido_id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|JsonResponse|View
      */
-    public function index() : view
+    public function index($pedido_id = null)
     {
+        $pedidos = $this->pedidoService->gerenciarDadosListagem();
 
-        return view('pedidos.index');
+        if (request()->ajax()) {
+            $pedido = $this->pedidoService->gerenciarModalListagem($pedido_id);
+
+            return response()->json($pedido);
+        }
+
+        return view('pedidos.index', compact('pedidos'));
     }
 
     /**
      * @param Cliente $cliente
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|View
      */
-    public function create()
+    public function create($cliente_id = null)
     {
-        $idCliente = request()->all();
-        $dependencias = $this->pedidoService->gerenciarDependencias($idCliente);
+        $dependencias = $this->pedidoService->gerenciarDependencias($cliente_id);
 
         return view('pedidos.create', compact('dependencias'));
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
@@ -51,10 +57,7 @@ class PedidoController extends Controller
         $pedidoPreparado = $this->pedidoService->prepararPedidoSalvar($dados);
         $pedidoCriado = $this->pedidoService->salvarPedido($pedidoPreparado, $entrega_retirada, $produtos);
 
-        return response()->json(
-            'Pedido criado com sucesso!'
-        );
-//        return redirect()->route('vendas.pedidos.index')->with('success', 'Pedido cadastrado com sucesso!');
+        return response()->json($pedidoCriado);
     }
 
     /**
@@ -63,9 +66,9 @@ class PedidoController extends Controller
      * @param  \App\Models\Pedido  $pedidos
      * @return \Illuminate\Http\Response
      */
-    public function show(Pedido $pedidos)
+    public function show(Pedido $pedido_id)
     {
-        //
+       //
     }
 
     /**
@@ -74,7 +77,7 @@ class PedidoController extends Controller
      * @param  \App\Models\Pedido  $pedidos
      * @return \Illuminate\Http\Response
      */
-    public function edit(Pedido $pedidos)
+    public function edit(Pedido $pedido_id)
     {
         //
     }

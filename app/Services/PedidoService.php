@@ -17,12 +17,39 @@ use Illuminate\Support\Facades\DB;
 
 class PedidoService
 {
+    public function gerenciarDadosListagem()
+    {
+        return Pedido::with([
+            'cliente',
+            'entrega_retirada',
+        ])->get();
+    }
+
+    public function gerenciarModalListagem($pedido_id)
+    {
+        if (is_null($pedido_id)) return null;
+
+        return Pedido::with([
+            'cliente',
+            'entrega_retirada' => function ($morphTo) {
+                $morphTo->morphWith([
+                    Entrega::class => ['entregador', 'bairro'],
+                ]);
+            },
+            'produtos' => function ($query) {
+                $query->with(['tipoProduto', 'sabor', 'tamanho']);
+            }
+        ])->find($pedido_id);
+    }
+
     public function gerenciarDependencias($idCliente): array
     {
-        $cliente = Cliente::whereId($idCliente)->first();
+        if (is_null($idCliente)) return [];
+
+        $cliente = Cliente::find($idCliente);
         $dependencias['cliente'] = $cliente;
 
-        $dependencias['produtos'] = Produto::with('tipoProduto', 'sabor', 'tamanho')->where('ativo', true)->get();
+        $dependencias['produtos'] = Produto::with(['tipoProduto', 'sabor', 'tamanho'])->where('ativo', true)->get();
         $dependencias['tipoProdutos'] = TipoProduto::where('ativo', true)->get();
         $dependencias['sabores'] = Sabor::where('ativo', true)->get();
         $dependencias['tamanhos'] = Tamanho::where('ativo', true)->get();
@@ -34,14 +61,20 @@ class PedidoService
 
     public function gerenciarEntregaRetirada($dados)
     {
+        if (is_null($dados)) return null;
+
         //retirada
-        if(!isset($dados['rua']) && !isset($dados['entregador_id'])) {
+        if(isset($dados['rua']) || isset($dados['entregador_id'])) {
             $entrega_retirada = Retirada::create($dados);
         }
 
         //uber ou entrega
-        else {
+        elseif(isset($dados['valor_uber'])) {
             $dados['valor_uber'] = (float) str_replace(',', '.', $dados['valor_uber']);
+            $entrega_retirada = Entrega::create($dados);
+        }
+
+        else {
             $entrega_retirada = Entrega::create($dados);
         }
 
@@ -49,6 +82,9 @@ class PedidoService
     }
 
     public function prepararPedidoSalvar($dados) {
+
+        if (is_null($dados)) return null;
+
         $pedido['cliente_id'] = $dados['cliente']['id'];
         $pedido['quantidade_itens'] = count($dados['pedido']);
         $pedido['valor_total'] = $dados['valor_total'];
@@ -65,24 +101,25 @@ class PedidoService
         return $pedido;
     }
 
-    public function salvarPedido($pedidoPreparado, $entrega_retirada, $produtos): object
+    public function salvarPedido($pedidoPreparado, $entrega_retirada, $produtos): string
     {
-//        try {
-//            return DB::transaction(function () use ($pedidoPreparado, $entrega_retirada, $produtos) {
+        try {
+            return DB::transaction(function () use ($pedidoPreparado, $entrega_retirada, $produtos) {
                 $pedido = new Pedido($pedidoPreparado);
                 $pedido->entrega_retirada()->associate($entrega_retirada);
                 $pedido->save();
                 $pedido->produtos()->sync($produtos);
                 return $pedido;
-//            });
-//        } catch (Exception $e) {
-//            return $e->getMessage();
-//        }
-
+            });
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     public function prepararProdutosSalvar($dadosPedido): array
     {
+        if (is_null($dadosPedido)) return [];
+
         return collect($dadosPedido)->mapWithKeys(function($produto) {
             return [
                 $produto['produto_id'] => [

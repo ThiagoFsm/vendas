@@ -41,16 +41,13 @@ class ClienteController extends Controller
         return view('clientes.create', compact('dependencias'));
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
+
     public function store(Request $request)
     {
         $dados = $request->all();
-        $idCliente = $this->clienteService->salvarCliente($dados);
+        $cliente = $this->clienteService->salvarCliente($dados);
 
-        return redirect()->route('vendas.pedidos.create', ['$idCliente' => $idCliente]);
+        return redirect()->route('vendas.pedidos.create', ['cliente_id' => $cliente->id]);
     }
 
     /**

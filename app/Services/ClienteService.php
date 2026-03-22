@@ -24,6 +24,8 @@ class ClienteService
 
     public function salvarCliente($dados)
     {
+        if (is_null($dados)) return [];
+
         try {
             return DB::transaction(function () use ($dados) {
                 $cliente = new Cliente();
@@ -46,8 +48,6 @@ class ClienteService
         $dependencias['tamanhos'] = Tamanho::where('ativo', true)->get();
         $dependencias['vendedores'] = Vendedor::all();
         $dependencias['bairros'] = Bairro::all();
-
-//        dd($dependencias);
 
         return $dependencias;
     }
