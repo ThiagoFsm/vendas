@@ -169,15 +169,31 @@
         .btn-fechar {
             background: #212529;
             color: white;
-            border: none;
+            border-color: white;
             padding: 5px 15px;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             transition: background 0.2s;
         }
 
         .btn-fechar:hover {
             background: #343a40;
+            color: white;
+        }
+
+        .btn-confirmar {
+            background: lightgreen;
+            color: black;
+            border-color: white;
+            padding: 5px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-confirmar:hover {
+            background: lightgreen;
+            color: black;
         }
 
         /* Animação de entrada */
