@@ -4,11 +4,10 @@
             <h3 class="fw-bold mb-0">Pedidos</h3>
             <h5 class="text-muted">Gerencie as vendas e status de pagamento</h5>
         </div>
-        <a href="/vendas/clientes/create" class="btn btn-outline-secondary px-4 text-black" style="border-radius: 8px;">
+        <a href="/vendas/clientes/create" class="btn btn-confirmar" style="border-radius:8px;">
             Novo pedido
         </a>
     </div>
-{{--    {{ dd($pedidos[6]) }}--}}
     <div class="card card-custom">
         <div class="card-body p-0"> <div class="table-responsive">
                 <table class="table table-hover align-middle table-bordered-custom mb-0">
@@ -44,7 +43,7 @@
                                     <td class="d-flex gap-1">
                                         <button class="btn-action btn-view" @click.prevent="detalhesPedido({{ $pedido->id }})">Detalhes</button>
                                         <button class="btn-action btn-view text-info">Editar</button>
-                                        <button class="btn-action btn-view text-danger" @click.prevent="marcarPedidoComoPago({{ $pedido->id }})">Excluir</button>
+                                        <button class="btn-action btn-view text-danger">Excluir</button>
                                     </td>
                                 </tr>
                             @endforeach
