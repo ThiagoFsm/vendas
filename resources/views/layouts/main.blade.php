@@ -156,6 +156,19 @@
             border-color: #212529;
         }
 
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            min-width: 300px;
+        }
+
         /* Footer da Modal */
         .modal-footer-custom {
             padding: 8px 12px;

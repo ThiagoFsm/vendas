@@ -28,6 +28,7 @@ Route::prefix('vendas')->name('vendas.')->group(function () {
         Route::get('/{pedido_id?}', [PedidoController::class, 'index'])->name('index');
         Route::get('/create/{cliente_id?}', [PedidoController::class, 'create'])->name('create');
         Route::post('/store', [PedidoController::class, 'store'])->name('store');
+        Route::post('/edit/{pedido_id?}', [PedidoController::class, 'edit'])->name('edit');
     });
 
     Route::prefix('clientes')->name('clientes.')->group(function () {

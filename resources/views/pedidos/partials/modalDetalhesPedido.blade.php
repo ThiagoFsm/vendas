@@ -114,7 +114,8 @@
         </div>
 
         <div class="modal-footer-custom">
-            <button class="btn-fechar" @click="fecharModal">Fechar</button>
+            <button class="btn btn-confirmar" @click.prevent="marcarPedidoComoPago({{ $pedido->id }})">Marcar como pago</button>
+            <button class="btn btn-fechar" @click="fecharModal">Fechar</button>
         </div>
     </div>
 </div>

@@ -128,4 +128,16 @@ class PedidoService
             ];
         })->toArray();
     }
+
+    public function atualizarPagamentoPedido($pedido_id)
+    {
+        if (is_null($pedido_id)) return null;
+
+        $pedido = Pedido::find($pedido_id);
+        $pedido->valor_restante = 0.0;
+        $pedido->pago = true;
+        $pedido->save();
+
+        return $pedido;
+    }
 }

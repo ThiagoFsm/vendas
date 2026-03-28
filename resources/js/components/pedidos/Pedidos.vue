@@ -15,24 +15,22 @@
             },
 
             async detalhesPedido(pedido_id) {
-                this.modal = true;
-
                 try {
                     const response = await axios.get(`/vendas/pedidos/${pedido_id}`);
                     if (response.status === 200 || response.status === 201) {
-                        console.log(response.data);
                         this.dadosModal = {
                             dados: {
-                                valor_total: response.data.valor_total,
-                                valor_antecipado: response.data.valor_antecipado,
-                                valor_restante: response.data.valor_restante
+                                valor_total: response?.data.valor_total,
+                                valor_antecipado: response?.data.valor_antecipado,
+                                valor_restante: response?.data.valor_restante
                             },
-                            nome_cliente: response.data.cliente.nome,
-                            entrega_retirada: response.data.entrega_retirada,
-                            produtos: response.data.produtos,
+                            nome_cliente: response?.data.cliente.nome,
+                            entrega_retirada: response?.data.entrega_retirada,
+                            produtos: response?.data.produtos,
                         };
                         const data = new Date(this.dadosModal.entrega_retirada.data);
                         this.dadosModal.entrega_retirada.data = data.toLocaleDateString('pt-BR');
+                        this.modal = true;
                     }
                 } catch (error) {
                     window.Toast.fire({ icon: 'error', title: 'Erro ao buscar dados' });
@@ -42,21 +40,44 @@
             fecharModal() {
                 this.modal = false;
             },
+
+            marcarPedidoComoPago(pedido_id) {
+                Swal.fire({
+                    title: 'Confirmar pagamento?',
+                    text: "Confirmar o pagamento total deste pedido?",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: 'lightgreen',
+                    cancelButtonColor: '#1f2937',
+                    confirmButtonText: '<span style="color: black">Confirmar</span>',
+                    cancelButtonText: 'Cancelar'
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        try {
+                            Swal.showLoading();
+                            const response = await axios.post('/vendas/pedidos/edit/', {
+                                pedido_id: pedido_id
+                            });
+
+                            window.Toast.fire({
+                                icon: 'success',
+                                title: 'Pedido marcado como pago!'
+                            });
+
+                            setTimeout(() => {
+                                window.location.href = '/vendas/pedidos';
+                            }, 2500);
+
+                        } catch (error) {
+                            window.Toast.fire({
+                                icon: 'error',
+                                title: 'Erro ao criar pedido.',
+                                text: error.response?.data?.message || 'Erro interno no servidor.'
+                            });
+                        }
+                    }
+                });
+            }
         }
     }
 </script>
-
-<style scoped>
-.modal-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex; align-items: center; justify-content: center;
-}
-.modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    min-width: 300px;
-}
-</style>

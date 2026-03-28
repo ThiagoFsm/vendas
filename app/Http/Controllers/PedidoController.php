@@ -72,14 +72,15 @@ class PedidoController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Pedido  $pedidos
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function edit(Pedido $pedido_id)
+    public function edit(Request $request)
     {
-        //
+        $pedido_id = $request['pedido_id'];
+        $pedido_pago = $this->pedidoService->atualizarPagamentoPedido($pedido_id);
+
+        return response()->json($pedido_pago);
     }
 
     /**
