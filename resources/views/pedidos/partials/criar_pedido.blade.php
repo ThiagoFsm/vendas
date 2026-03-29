@@ -8,7 +8,7 @@
             <i class="bi bi-arrow-left"></i> Voltar
         </a>
     </div>
-    {{--    {{ dd($dependencias['cliente']) }}--}}
+
     <div class="card border-10 shadow-sm" style="border-radius: 8px;">
         <div class="card-body p-4">
             <form action="#" method="POST">
@@ -107,17 +107,17 @@
                         <div class="d-flex gap-3 mt-2 justify-content-center">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="tipo_entrega" id="uber"
-                                       v-model="uber_selecionado" value="1">
+                                       v-model="entrega_retirada" value="uber">
                                 <label class="form-check-label" for="uber">Uber</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="tipo_entrega" id="retirada"
-                                       v-model="retirada_selecionada" value="1">
+                                       v-model="entrega_retirada" value="retirada">
                                 <label class="form-check-label" for="retirada">Retirada</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="tipo_entrega" id="entrega"
-                                       v-model="entrega_selecionada" value="1">
+                                       v-model="entrega_retirada" value="entrega">
                                 <label class="form-check-label" for="entrega">Entrega</label>
                             </div>
                         </div>
@@ -137,21 +137,21 @@
                     </div>
                 </div>
 
-                <div v-if="uber_selecionado" class="col-md-12">
+                <div v-if="entrega_retirada === 'uber'" :key="'secao_uber'" class="col-md-12">
                     <div class="col-12">
                         <hr class="text-muted opacity-25">
                     </div>
                     @include('pedidos.partials.uber')
                 </div>
 
-                <div v-if="retirada_selecionada" class="col-md-12">
+                <div v-if="entrega_retirada === 'retirada'" :key="'secao_retirada'" class="col-md-12">
                     <div class="col-12">
                         <hr class="text-muted opacity-25">
                     </div>
                     @include('pedidos.partials.retirada')
                 </div>
 
-                <div v-if="entrega_selecionada" class="col-md-12">
+                <div v-if="entrega_retirada === 'entrega'" :key="'secao_entrega'" class="col-md-12">
                     <div class="col-12">
                         <hr class="text-muted opacity-25">
                     </div>

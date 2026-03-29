@@ -5,13 +5,9 @@
         <select class="form-select select-input border-2" id="entregador_id" name="entregador_id"
                 v-model="entrega.entregador_id" style="height: 40px;" v-select required>
             <option value="">Selecione</option>
-            @if(isset($dependencias['vendedores']))
-                @foreach($dependencias['vendedores'] as $vendedor)
-                    <option value="{{ $vendedor['id'] }}">
-                        {{ $vendedor['nome'] }}
-                    </option>
-                @endforeach
-            @endif
+            <option v-for="vendedor in vendedores" :v-key="vendedor.id" :value="vendedor.id">
+                @{{ vendedor.nome }}
+            </option>
         </select>
     </div>
     <div class="col-md-3 text-center">

@@ -18,7 +18,7 @@
                             <th class="w-1/8">Vendedor</th>
                             <th class="w-1/8">Qtd</th>
                             <th class="w-1/8">Valor Total</th>
-                            <th class="w-1/8">Status</th>
+                            <th class="w-1/8">Pagamento</th>
                             <th class="w-1/8">Entrega/Retirada</th>
                             <th>Ações</th>
                         </tr>
@@ -39,7 +39,7 @@
                                             {{ $pedido->pago ? 'Pago' : 'Pendente' }}
                                         </span>
                                     </td>
-                                    <td>{{ isset($pedido->entrega_retirada->rua) ? 'Entrega' : 'Retirada' }}</td>
+                                    <td>{{ isset($pedido->entrega_retirada->rua) ? 'Uber' : (isset($pedido->entrega_retirada->entregador_id) ? 'Entrega' : 'Retirada') }}</td>
                                     <td class="d-flex gap-1">
                                         <button class="btn-action btn-view" @click.prevent="detalhesPedido({{ $pedido->id }})">Detalhes</button>
                                         <button class="btn-action btn-view text-info">Editar</button>

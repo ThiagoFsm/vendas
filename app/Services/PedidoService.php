@@ -63,19 +63,20 @@ class PedidoService
     {
         if (is_null($dados)) return null;
 
-        //retirada
-        if(isset($dados['rua']) || isset($dados['entregador_id'])) {
-            $entrega_retirada = Retirada::create($dados);
+        //entrega
+        if(isset($dados['entregador_id'])) {
+            $entrega_retirada = Entrega::create($dados);
         }
 
-        //uber ou entrega
+        //uber
         elseif(isset($dados['valor_uber'])) {
             $dados['valor_uber'] = (float) str_replace(',', '.', $dados['valor_uber']);
             $entrega_retirada = Entrega::create($dados);
         }
 
+        //retirada
         else {
-            $entrega_retirada = Entrega::create($dados);
+            $entrega_retirada = Retirada::create($dados);
         }
 
         return $entrega_retirada;

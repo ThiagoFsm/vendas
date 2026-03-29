@@ -61,26 +61,32 @@ class PedidoController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Pedido  $pedidos
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Pedido $pedido_id)
-    {
-       //
-    }
-
-    /**
      * @param Request $request
      * @return JsonResponse
      */
-    public function edit(Request $request)
+    public function pagar(Request $request)
     {
         $pedido_id = $request['pedido_id'];
         $pedido_pago = $this->pedidoService->atualizarPagamentoPedido($pedido_id);
 
         return response()->json($pedido_pago);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|View
+     */
+    public function edit($pedido_id = null)
+    {
+//        $pedido = Pedido::with([
+//            'cliente.vendedor',
+//            'entrega_retirada',
+//            'produtos.tipoProduto',
+//            'produtos.sabor',
+//            'produtos.tamanho',
+//        ])->find($pedido_id);
+//
+//        return view('pedidos.create', compact('pedido'));
     }
 
     /**
@@ -90,19 +96,26 @@ class PedidoController extends Controller
      * @param  \App\Models\Pedido  $pedidos
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Pedido $pedidos)
+    public function update(Request $request)
     {
-        //
+//        dd($request->all());
+//        $pedido_id = $request['pedido_id'];
+//        $pedido_atualizado = $this->pedidoService->atualizarPedido($pedido_id);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Pedido  $pedidos
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function destroy(Pedido $pedidos)
+    public function destroy(Request $request)
     {
-        //
+        $pedido_id = $request['pedido_id'];
+        $pedido = Pedido::findOrFail($pedido_id);
+        if($pedido->entrega_retirada){
+            $pedido->entrega_retirada->delete();
+        }
+        $pedido->delete();
+
+        return response()->json(['message' => 'Pedido excluído com sucesso!']);
     }
 }

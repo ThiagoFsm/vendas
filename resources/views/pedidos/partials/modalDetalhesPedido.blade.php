@@ -53,13 +53,13 @@
                     <div class="w-full text-center">
                         <div v-if="dadosModal.entrega_retirada.rua">
                             <h4 class="mt-3 text-center">Uber</h4>
-                            <div class="d-flex flex-row">
+                            <div class="d-flex flex-row justify-content-center">
                                 <div class="w-full">
                                     Rua:
                                     <span>@{{ dadosModal.entrega_retirada.rua + ', ' + dadosModal.entrega_retirada.numero + ' - ' + dadosModal.entrega_retirada.bairro.descricao }}</span>
                                 </div>
                             </div>
-                            <div class="d-flex flex-row">
+                            <div class="d-flex flex-row justify-content-center">
                                 <div class="w-25">
                                     Data:
                                     <span>@{{ dadosModal.entrega_retirada.data }}</span>

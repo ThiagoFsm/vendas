@@ -5,14 +5,9 @@
         <select id="bairro" name="bairro" class="form-select select-input border-2"
                 v-model="uber.bairro_id" style="height: 40px; border-radius: 8px" v-select required>
                 <option value="">Selecione</option>
-                @if(isset($dependencias['bairros']))
-                    @foreach($dependencias['bairros'] as $bairro)
-                        <option value="{{ $bairro['id'] }}">
-                            {{ $bairro['descricao'] }}
-                        </option>
-                    @endforeach
-
-                @endif
+                <option v-for="bairro in bairros" :v-key="bairro.id" :value="bairro.id">
+                    @{{ bairro.descricao }}
+                </option>
         </select>
     </div>
     <div class="col-md-2 text-center">

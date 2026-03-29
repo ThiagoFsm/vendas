@@ -1,13 +1,9 @@
 <script>
 export default {
     name: "criar-pedido",
-    props: ['produtos', 'cliente'],
+    props: ['produtos', 'cliente', 'bairros', 'vendedores'],
     data() {
         return {
-            bairros: {
-                id: '',
-                nome: ''
-            },
             item: {
                 tipo_produto_id: '',
                 sabor_id: '',
@@ -16,7 +12,7 @@ export default {
             },
             itens_pedido: [],
             listar: false,
-            uber_selecionado: '',
+            entrega_retirada: '',
             uber: {
                 bairro_id: '',
                 rua: '',
@@ -25,13 +21,11 @@ export default {
                 periodo: '',
                 valor_uber: 0.00
             },
-            entrega_selecionada: '',
             entrega: {
                 entregador_id: '',
                 data: '',
                 periodo: ''
             },
-            retirada_selecionada: '',
             retirada: {
                 bairro: '',
                 data: '',
@@ -44,31 +38,10 @@ export default {
     },
 
     mounted() {
-        // console.log(this.produtos)
+        console.log(this.bairros)
     },
 
     watch: {
-        uber_selecionado() {
-            if (this.uber_selecionado) {
-                this.entrega_selecionada = 0;
-                this.retirada_selecionada = 0;
-            }
-        },
-
-        retirada_selecionada() {
-            if (this.retirada_selecionada) {
-                this.uber_selecionado = 0;
-                this.entrega_selecionada = 0;
-            }
-        },
-
-        entrega_selecionada() {
-            if (this.entrega_selecionada) {
-                this.uber_selecionado = 0;
-                this.retirada_selecionada = 0;
-            }
-        },
-
         valor_total_itens() {
             // melhoria: poder mudar o valor do pedido depois de colocar o valor do uber
             this.valor_total_pedido = this.valor_total_itens + this.uber.valor_uber;
@@ -76,10 +49,15 @@ export default {
 
         'uber.valor_uber'() {
             setTimeout(() => {
-                const uber = parseFloat(this.uber.valor_uber.replace(/\./g, '').replace(',', '.'));
-                this.valor_total_pedido = this.valor_total_itens + uber;
+                const valorString = String(this.uber.valor_uber);
+                const uber = parseFloat(valorString.replace(/\./g, '').replace(',', '.'));
+                this.valor_total_pedido = this.valor_total_itens + (isNaN(uber) ? 0 : uber);
             }, 1000)
-        }
+        },
+
+        entrega_retirada(novoValor) {
+            this.resetarDadosEntrega(novoValor);
+        },
     },
 
     methods: {
@@ -133,19 +111,19 @@ export default {
             this.item.quantidade = '';
         },
 
-        async salvarPedido() {
-            const retirada_entrega = () => {
-                if (this.uber_selecionado) return this.uber;
-                if (this.retirada_selecionada) return this.retirada;
-                if (this.entrega_selecionada) return this.entrega;
-                return null
-            }
+        retirada_entrega() {
+            if (this.entrega_retirada === 'uber') return this.uber;
+            if (this.entrega_retirada === 'retirada') return this.retirada;
+            if (this.entrega_retirada === 'entrega') return this.entrega;
+            return null
+        },
 
+        async salvarPedido() {
             try {
                 const response = await axios.post('/vendas/pedidos/store', {
                     cliente: this.cliente,
                     pedido: this.itens_pedido,
-                    entrega_retirada: retirada_entrega(),
+                    entrega_retirada: this.retirada_entrega(),
                     valor_antecipado: this.valor_antecipado.replace(/\./g, '').replace(',', '.'),
                     valor_total: this.valor_total_pedido
                 }). then(() => {
@@ -158,7 +136,19 @@ export default {
             } catch (error) {
                 window.Toast.fire({ icon: 'error', title: 'Erro criar pedido.', text: error.message });
             }
-        }
+        },
+
+        resetarDadosEntrega(tipoSelecionado) {
+            if (tipoSelecionado !== 'uber') {
+                this.uber = { bairro_id: '', rua: '', numero: '', data: '', periodo: '', valor_uber: 0.00 };
+            }
+            if (tipoSelecionado !== 'entrega') {
+                this.entrega = { entregador_id: '', data: '', periodo: '' };
+            }
+            if (tipoSelecionado !== 'retirada') {
+                this.retirada = { bairro: '', data: '', periodo: '' };
+            }
+        },
     }
 }
 </script>
