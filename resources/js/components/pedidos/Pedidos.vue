@@ -55,7 +55,7 @@
                     if (result.isConfirmed) {
                         try {
                             Swal.showLoading();
-                            const response = await axios.post('/vendas/pedidos/edit/', {
+                            const response = await axios.post('/vendas/pedidos/pagar/', {
                                 pedido_id: pedido_id
                             });
 
@@ -77,6 +77,27 @@
                         }
                     }
                 });
+            },
+
+            async excluirPedido(pedido_id) {
+                try {
+                    const response = await axios.post('/vendas/pedidos/destroy/', {
+                        pedido_id: pedido_id
+                    });
+
+                    window.Toast.fire({
+                        icon: 'success',
+                        title: 'Pedido exluído com sucesso!'
+                    });
+
+                    window.location.reload();
+                } catch (error) {
+                    window.Toast.fire({
+                       icon: 'error',
+                       title: 'Não foi possível excluir o pedido.',
+                       text: error.response?.data?.message || 'Erro interno no servidor.'
+                    });
+                }
             }
         }
     }

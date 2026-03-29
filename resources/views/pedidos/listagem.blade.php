@@ -42,8 +42,8 @@
                                     <td>{{ isset($pedido->entrega_retirada->rua) ? 'Uber' : (isset($pedido->entrega_retirada->entregador_id) ? 'Entrega' : 'Retirada') }}</td>
                                     <td class="d-flex gap-1">
                                         <button class="btn-action btn-view" @click.prevent="detalhesPedido({{ $pedido->id }})">Detalhes</button>
-                                        <button class="btn-action btn-view text-info">Editar</button>
-                                        <button class="btn-action btn-view text-danger">Excluir</button>
+{{--                                        <a class="btn-action btn-view text-info" href="{{ route('vendas.pedidos.edit', $pedido->id) }}">Editar</a>--}}
+                                        <button class="btn-action btn-view text-danger" @click.prevent="excluirPedido({{ $pedido->id }})">Excluir</button>
                                     </td>
                                 </tr>
                             @endforeach

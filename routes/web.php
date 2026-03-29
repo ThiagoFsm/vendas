@@ -28,7 +28,10 @@ Route::prefix('vendas')->name('vendas.')->group(function () {
         Route::get('/{pedido_id?}', [PedidoController::class, 'index'])->name('index');
         Route::get('/create/{cliente_id?}', [PedidoController::class, 'create'])->name('create');
         Route::post('/store', [PedidoController::class, 'store'])->name('store');
-        Route::post('/edit/{pedido_id?}', [PedidoController::class, 'edit'])->name('edit');
+        Route::post('/pagar/{pedido_id?}', [PedidoController::class, 'pagar'])->name('pagar');
+//        Route::get('/edit/{pedido_id?}', [PedidoController::class, 'edit'])->name('edit');
+//        Route::post('/update/{pedido_id?}', [PedidoController::class, 'update'])->name('update');
+        Route::post('/destroy/{pedido_id?}', [PedidoController::class, 'destroy'])->name('destroy');
     });
 
     Route::prefix('clientes')->name('clientes.')->group(function () {
