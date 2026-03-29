@@ -18,9 +18,10 @@ class CreatePedidoProdutoTable extends Migration
             $table->unsignedBigInteger('pedido_id');
             $table->unsignedBigInteger('produto_id');
             $table->integer('quantidade');
+            $table->boolean('produzido')->default(false);
 
-            $table->foreign('pedido_id', 'pedido_produto_pedido_id_fk')->references('id')->on('pedidos');
-            $table->foreign('produto_id', 'pedido_produto_produto_id_fk')->references('id')->on('produtos');
+            $table->foreign('pedido_id', 'pedido_produto_pedido_id_fk')->references('id')->on('pedidos')->onDelete('cascade');;
+            $table->foreign('produto_id', 'pedido_produto_produto_id_fk')->references('id')->on('produtos')->onDelete('restrict');
         });
     }
 
