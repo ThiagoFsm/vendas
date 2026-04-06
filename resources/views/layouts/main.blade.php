@@ -109,7 +109,7 @@
         .modal-content-custom {
             background: #ffffff;
             width: 90%;
-            max-width: 550px;
+            max-width: 800px;
             border-radius: 12px; /* Seguindo a tendência do seu Select2 */
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             overflow: hidden;
@@ -209,6 +209,19 @@
             color: black;
         }
 
+        /*botões sabores*/
+        .btn-sabor {
+            border-color: white;
+            padding: 5px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-sabor:hover {
+            color: black;
+        }
+
         /* Animação de entrada */
         @keyframes modalIn {
             from { transform: translateY(-20px); opacity: 0; }
@@ -228,8 +241,8 @@
         <h4>Vendas</h4>
     </div>
     <ul class="nav flex-column mt-3">
-        <li class="nav-item"><a href="/" class="nav-link active">Início</a></li>
-        <li class="nav-item"><a href="/pedidos" class="nav-link">Pedidos</a></li>
+        <li class="nav-item"><a href="/" class="nav-link active">Pedidos</a></li>
+        <li class="nav-item"><a href="/vendas/producao" class="nav-link">Produção</a></li>
         <li class="nav-item"><a href="/perfil" class="nav-link">Perfil</a></li>
     </ul>
     <div class="resizer" id="resizer"></div>

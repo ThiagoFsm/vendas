@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\SaborController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,5 +39,10 @@ Route::prefix('vendas')->name('vendas.')->group(function () {
         Route::get('/', [ClienteController::class, 'index'])->name('index');
         Route::get('/create', [ClienteController::class, 'create'])->name('create');
         Route::post('/store', [ClienteController::class, 'store'])->name('store');
+    });
+
+    Route::prefix('producao')->name('producao.')->group(function () {
+        Route::get('/', [SaborController::Class, 'index'])->name('index');
+        Route::post('/marcar-produto-feito', [SaborController::Class, 'store'])->name('marcarProdutoFeito');
     });
 });

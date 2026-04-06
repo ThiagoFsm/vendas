@@ -87,7 +87,7 @@ class PedidoService
         if (is_null($dados)) return null;
 
         $pedido['cliente_id'] = $dados['cliente']['id'];
-        $pedido['quantidade_itens'] = count($dados['pedido']);
+        $pedido['quantidade_itens'] = array_sum(array_column($dados['pedido'], 'quantidade'));
         $pedido['valor_total'] = $dados['valor_total'];
         $pedido['valor_antecipado'] = (float) $dados['valor_antecipado'];
         $pedido['valor_restante'] = $pedido['valor_total'] - $pedido['valor_antecipado'];
