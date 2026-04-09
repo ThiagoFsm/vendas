@@ -124,7 +124,8 @@ class PedidoService
         return collect($dadosPedido)->mapWithKeys(function($produto) {
             return [
                 $produto['produto_id'] => [
-                    'quantidade' => (int) $produto['quantidade']
+                    'quantidade' => (int) $produto['quantidade'],
+                    'produzido' => false
                 ]
             ];
         })->toArray();

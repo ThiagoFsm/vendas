@@ -45,6 +45,9 @@
                     });
                     if (response.status === 200 || response.status === 201) {
                         window.Toast.fire({ icon: 'success', title: `Pedido ${pedido_id} atualizado!` });
+                        setTimeout(() => {
+                            this.fecharModal();
+                        }, 2000)
                     }
                 } catch (error) {
                     window.Toast.fire({ icon:'error', title: `Não foi possível atualizar o pedido ${pedido_id}.` });

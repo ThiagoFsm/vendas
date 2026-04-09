@@ -51,16 +51,13 @@ class SaborController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
-        //chegando aqui, atualizar o pedido marcando o produto_id como produzido
-//        dd($request->all());
         $produtoProduzido = $this->producaoService->marcarProdutoComoProduzido($request['pedido_id'], $request['produto_id']);
+        return response()->json($produtoProduzido);
     }
 
     /**

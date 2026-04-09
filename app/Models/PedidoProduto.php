@@ -15,5 +15,6 @@ class PedidoProduto extends Model
         'pedido_id',
         'produto_id',
         'quantidade',
+        'produzido'
     ];
 }
