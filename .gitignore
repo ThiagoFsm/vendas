@@ -6,6 +6,9 @@
 .env
 .env.backup
 .phpunit.result.cache
+.phpunit.cache
+.rector.cache
+.phpstan.cache
 docker-compose.override.yml
 Homestead.json
 Homestead.yaml

@@ -1,0 +1,14 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app/
+        - bootstrap/
+        - config/
+        - database/
+        - routes/
+        - tests/
+
+    # Nível de análise estática (0 a 9)
+    level: 5
