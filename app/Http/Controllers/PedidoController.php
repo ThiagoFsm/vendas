@@ -2,31 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PedidosRequest;
 use App\Models\Cliente;
 use App\Models\Pedido;
 use App\Services\PedidoService;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Throwable;
 
 class PedidoController extends Controller
 {
-    protected $pedidoService;
+    protected PedidoService $pedidoService;
     public function __construct(PedidoService $pedidoService)
     {
         $this->pedidoService = $pedidoService;
     }
 
     /**
-     * @param $pedido_id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|JsonResponse|View
+     * @param $pedidoId
+     * @return Factory|\Illuminate\Contracts\View\View|JsonResponse|View
      */
-    public function index($pedido_id = null)
+    public function index($pedidoId = null)
     {
         $pedidos = $this->pedidoService->gerenciarDadosListagem();
 
         if (request()->ajax()) {
-            $pedido = $this->pedidoService->gerenciarModalListagem($pedido_id);
+            $pedido = $this->pedidoService->gerenciarModalListagem($pedidoId);
 
             return response()->json($pedido);
         }
@@ -35,8 +38,8 @@ class PedidoController extends Controller
     }
 
     /**
-     * @param Cliente $cliente
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|View
+     * @param $cliente_id
+     * @return Factory|\Illuminate\Contracts\View\View|View
      */
     public function create($cliente_id = null)
     {
@@ -46,20 +49,27 @@ class PedidoController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param PedidosRequest $request
      * @return JsonResponse
+     * @throws Throwable
      */
-    public function store(Request $request)
+    public function store(PedidosRequest $request)
     {
-        $dados = $request->all();
+        $dados = $request->validated();
+        $pedidoId = $dados['pedidoId'] ?? null;
 
-        if ($dados['pedido_id'])
         $produtos = $this->pedidoService->prepararProdutosSalvar($dados['pedido']);
-        $entrega_retirada = $this->pedidoService->gerenciarEntregaRetirada($dados['entrega_retirada']);
         $pedidoPreparado = $this->pedidoService->prepararPedidoSalvar($dados);
-        $pedidoCriado = $this->pedidoService->salvarPedido($pedidoPreparado, $entrega_retirada, $produtos);
 
-        return response()->json($pedidoCriado);
+        if ($pedidoId) {
+            $pedido = $this->pedidoService->atualizarPedido($pedidoId, $pedidoPreparado, $dados['entrega_retirada'], $produtos);
+        }
+        else {
+            $entrega_retirada = $this->pedidoService->gerenciarEntregaRetirada($dados['entrega_retirada']);
+            $pedido = $this->pedidoService->salvarPedido($pedidoPreparado, $entrega_retirada, $produtos);
+        }
+
+        return response()->json($pedido);
     }
 
     /**
@@ -68,17 +78,17 @@ class PedidoController extends Controller
      */
     public function pagar(Request $request)
     {
-        $pedido_id = $request['pedido_id'];
-        $pedido_pago = $this->pedidoService->atualizarPagamentoPedido($pedido_id);
+        $pedidoId = $request['pedidoId'];
+        $pedido_pago = $this->pedidoService->atualizarPagamentoPedido($pedidoId);
 
         return response()->json($pedido_pago);
     }
 
     /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|View
+     * @param $pedidoId
+     * @return void
      */
-    public function edit($pedido_id = null)
+    public function edit($pedidoId = null)
     {
 //        $pedido = Pedido::with([
 //            'cliente.vendedor',
@@ -86,23 +96,20 @@ class PedidoController extends Controller
 //            'produtos.tipoProduto',
 //            'produtos.sabor',
 //            'produtos.tamanho',
-//        ])->find($pedido_id);
+//        ])->find($pedidoId);
 //
 //        return view('pedidos.create', compact('pedido'));
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Pedido  $pedidos
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return void
      */
     public function update(Request $request)
     {
 //        dd($request->all());
-//        $pedido_id = $request['pedido_id'];
-//        $pedido_atualizado = $this->pedidoService->atualizarPedido($pedido_id);
+//        $pedidoId = $request['pedidoId'];
+//        $pedido_atualizado = $this->pedidoService->atualizarPedido($pedidoId);
     }
 
     /**
@@ -111,8 +118,8 @@ class PedidoController extends Controller
      */
     public function destroy(Request $request)
     {
-        $pedido_id = $request['pedido_id'];
-        $pedido = Pedido::findOrFail($pedido_id);
+        $pedidoId = $request['pedidoId'];
+        $pedido = Pedido::findOrFail($pedidoId);
         if($pedido->entrega_retirada){
             $pedido->entrega_retirada->delete();
         }

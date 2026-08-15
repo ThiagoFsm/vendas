@@ -21,6 +21,7 @@
             <option value="">Selecione</option>
             <option value="Manhã">Manhã</option>
             <option value="Tarde">Tarde</option>
+            <option value="Tarde">Noite</option>
         </select>
     </div>
 </div>

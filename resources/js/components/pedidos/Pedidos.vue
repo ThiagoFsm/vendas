@@ -82,10 +82,14 @@
             },
 
             // async marcarPedidoComoFeito(pedido_id) {
-            //     $.ajax({
-            //         method: 'GET',
-            //         url: this.rota_editar,
-            //     });
+            //     try {
+            //         $.ajax({
+            //             method: 'POST',
+            //             url: ${APP_URL} + '/' + 'vendas/pedidos/store?' + pedido_id,
+            //         });
+            //     } catch (e) {
+            //         console.log(e)
+            //     }
             // },
 
             async marcarProdutoComoFeito(pedido_id, produto_id) {

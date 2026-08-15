@@ -13,11 +13,18 @@ use App\Models\Tamanho;
 use App\Models\TipoProduto;
 use App\Models\Vendedor;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use LaravelIdea\Helper\App\Models\_IH_Pedido_C;
+use Throwable;
 
 class PedidoService
 {
-    public function gerenciarDadosListagem()
+    /**
+     * @return Pedido[]|Collection|_IH_Pedido_C
+     */
+    public function gerenciarDadosListagem(): Collection|_IH_Pedido_C|array
     {
         return Pedido::with([
             'cliente',
@@ -25,9 +32,13 @@ class PedidoService
         ])->get();
     }
 
-    public function gerenciarModalListagem($pedido_id)
+    /**
+     * @param $pedidoId
+     * @return Pedido|Pedido[]|Collection|Model|_IH_Pedido_C|null
+     */
+    public function gerenciarModalListagem($pedidoId): Model|Collection|_IH_Pedido_C|Pedido|array|null
     {
-        if (is_null($pedido_id)) return null;
+        if (is_null($pedidoId)) return null;
 
         return Pedido::with([
             'cliente',
@@ -39,7 +50,7 @@ class PedidoService
             'produtos' => function ($query) {
                 $query->with(['tipoProduto', 'sabor', 'tamanho']);
             }
-        ])->find($pedido_id);
+        ])->find($pedidoId);
     }
 
     public function gerenciarDependencias($idCliente): array
@@ -59,7 +70,11 @@ class PedidoService
         return $dependencias;
     }
 
-    public function gerenciarEntregaRetirada($dados)
+    /**
+     * @param $dados
+     * @return Entrega|Retirada|null
+     */
+    public function gerenciarEntregaRetirada($dados): Entrega|Retirada|null
     {
         if (is_null($dados)) return null;
 
@@ -82,6 +97,10 @@ class PedidoService
         return $entrega_retirada;
     }
 
+    /**
+     * @param $dados
+     * @return array|null
+     */
     public function prepararPedidoSalvar($dados) {
 
         if (is_null($dados)) return null;
@@ -102,6 +121,13 @@ class PedidoService
         return $pedido;
     }
 
+    /**
+     * @param $pedidoPreparado
+     * @param $entrega_retirada
+     * @param $produtos
+     * @return string
+     * @throws Throwable
+     */
     public function salvarPedido($pedidoPreparado, $entrega_retirada, $produtos): string
     {
         try {
@@ -117,6 +143,10 @@ class PedidoService
         }
     }
 
+    /**
+     * @param $dadosPedido
+     * @return array
+     */
     public function prepararProdutosSalvar($dadosPedido): array
     {
         if (is_null($dadosPedido)) return [];
@@ -131,15 +161,25 @@ class PedidoService
         })->toArray();
     }
 
-    public function atualizarPagamentoPedido($pedido_id)
+    /**
+     * @param $pedidoId
+     * @return Pedido|Pedido[]|_IH_Pedido_C|null
+     */
+    public function atualizarPagamentoPedido($pedidoId): _IH_Pedido_C|Pedido|array|null
     {
-        if (is_null($pedido_id)) return null;
+        if (is_null($pedidoId)) return null;
 
-        $pedido = Pedido::find($pedido_id);
+        $pedido = Pedido::find($pedidoId);
         $pedido->valor_restante = 0.0;
         $pedido->pago = true;
         $pedido->save();
 
         return $pedido;
+    }
+
+    public function atualizarPedido($pedidoId, $pedidoPreparado, $entrega_retirada, $produtos): Pedido
+    {
+
+//        return $pedido;
     }
 }
