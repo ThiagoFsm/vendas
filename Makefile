@@ -1,4 +1,16 @@
-.PHONY: up down restart bash test test-parallel stan rector rector-dry pint pint-test qa check
+.PHONY: up down restart bash test test-parallel stan rector rector-dry pint pint-test qa check dev build npm-install
+
+# ==========================
+# Frontend & Vite (Hot Reload)
+# ==========================
+dev:
+	docker compose exec node npm run dev
+
+build:
+	docker compose exec node npm run build
+
+npm-install:
+	docker compose exec node npm install
 
 # ==========================
 # Docker & Ambiente

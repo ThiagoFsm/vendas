@@ -40,12 +40,14 @@ services:
       - vendas-network
 
   node:
-      image: node:14-alpine
+      image: node:20-alpine
       container_name: vendas-node
       restart: unless-stopped
+      ports:
+          - "5173:5173"
       volumes:
-          - .:/var/www/html
-      working_dir: /var/www/html
+          - .:/var/www
+      working_dir: /var/www
       entrypoint: [ "tail", "-f", "/dev/null" ]
       networks:
           - vendas-network

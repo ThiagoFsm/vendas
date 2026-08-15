@@ -1,7 +1,4 @@
 #!/bin/bash
-# Script para monitorar assets do Vue sem os avisos de depreciação
+# Executa o Vite com Hot Module Replacement (HMR) e reload automático
 
-docker compose exec -it node node node_modules/webpack/bin/webpack.js \
-    --config=node_modules/laravel-mix/setup/webpack.config.js \
-    --watch \
-    --no-stats
+docker compose exec node npm run dev

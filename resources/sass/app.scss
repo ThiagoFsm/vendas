@@ -9,11 +9,10 @@
 @import 'variables';
 
 // 4. Bootstrap
-@import '~bootstrap/scss/bootstrap';
+@import 'bootstrap/scss/bootstrap';
 
-// 5. Bootstrap Icons (ADICIONADO AQUI)
-// O sinal '~' é crucial para o Webpack/Mix encontrar as fontes dentro de node_modules
-@import '~bootstrap-icons/font/bootstrap-icons.css';
+// 5. Bootstrap Icons
+@import 'bootstrap-icons/font/bootstrap-icons.css';
 
 // 6. Seus estilos específicos
 @import 'sidebar';

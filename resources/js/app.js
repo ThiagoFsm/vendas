@@ -1,10 +1,11 @@
-require('./bootstrap');
+import './bootstrap';
 
 import Swal from 'sweetalert2';
 window.Swal = Swal;
 
 // 1. IMPORTAR O VUE PRIMEIRO
-window.Vue = require('vue').default;
+import Vue from 'vue';
+window.Vue = Vue;
 
 // 2. TOAST NOTIFICATION
 import Toast from "vue-toastification";
@@ -25,7 +26,6 @@ const toastOptions = {
     rtl: false
 };
 
-// Agora o Vue já existe, então podemos usar
 Vue.use(Toast, toastOptions);
 
 // 3. DINHEIRO / V-MONEY
@@ -71,7 +71,7 @@ Vue.directive('select', {
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
 
-require('./components');
+import './components';
 
 const app = new Vue({
     el: '#app',
