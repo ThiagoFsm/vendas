@@ -21,6 +21,7 @@
                         <th class="p-3">Produto</th>
                         <th class="p-3">Sabor</th>
                         <th class="p-3">Tamanho</th>
+                        <th class="p-3">Produção</th>
                     </tr>
                     </thead>
                     <tbody v-for="produto in dadosModal.produtos" :v-key="produto.id">
@@ -29,6 +30,31 @@
                         <td class="p-2">@{{ produto.tipo_produto.descricao }}</td>
                         <td class="p-2">@{{ produto.sabor.descricao }}</td>
                         <td class="p-2">@{{ produto.tamanho.descricao }}</td>
+                        <td v-if="produto.pivot.produzido" class="p-2">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="d-flex align-items-center justify-content-center gap-2">
+                                    <h6 class="m-0">Feito</h6>
+                                    <a class="btn-marcar-feito" readonly title="Produto feito">
+                                        <i class="bi bi-check-all" style="font-size: 15px"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                        <td v-else class="p-2">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="d-flex align-items-center justify-content-center gap-2">
+                                    <div v-if="produto.pivot.produzido">
+                                        <i class="bi bi-check-all" style="font-size: 15px"></i>
+                                    </div>
+                                    <div v-else>
+                                        <button class="btn btn-marcar-feito" style="background: lightblue;"
+                                                @click.prevent="marcarProdutoComoFeito(dadosModal.dados.pedido_id, produto.id)">
+                                            Marcar produto como feito
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -114,9 +140,11 @@
         </div>
 
         <div class="modal-footer-custom">
-{{--            @isset($pedido)--}}
-                <button class="btn btn-confirmar" @click.prevent="marcarPedidoComoPago({{ $pedido->id }})">Marcar como pago</button>
-{{--            @endisset--}}
+            @isset($pedido)
+                <button class="btn btn-confirmar" @click.prevent="marcarPedidoComoPago({{ $pedido->id }})">Marcar como
+                    pago
+                </button>
+            @endisset
             <button class="btn btn-fechar" @click="fecharModal">Fechar</button>
         </div>
     </div>

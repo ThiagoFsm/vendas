@@ -52,6 +52,8 @@ class PedidoController extends Controller
     public function store(Request $request)
     {
         $dados = $request->all();
+
+        if ($dados['pedido_id'])
         $produtos = $this->pedidoService->prepararProdutosSalvar($dados['pedido']);
         $entrega_retirada = $this->pedidoService->gerenciarEntregaRetirada($dados['entrega_retirada']);
         $pedidoPreparado = $this->pedidoService->prepararPedidoSalvar($dados);

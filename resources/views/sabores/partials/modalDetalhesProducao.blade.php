@@ -28,7 +28,7 @@
                         <td class="p-2">@{{ pedido.produtos[0].tamanho.descricao }}</td>
                         <td class="p-2">@{{ pedido.cliente.nome }}</td>
                         <td class="d-flex gap-1 justify-content-center">
-                            <button class="btn-action btn-view" style="background: lightgreen" @click.prevent="marcarComoFeito(pedido.id, pedido.produtos[0].id)">Marcar como feito</button>
+                            <button class="btn-action btn-view" style="background: lightgreen" @click.prevent="marcarProdutoComoFeito(pedido.id, pedido.produtos[0].id)">Marcar como feito</button>
                         </td>
                     </tr>
                     </tbody>

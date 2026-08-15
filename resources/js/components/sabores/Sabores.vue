@@ -1,6 +1,8 @@
 <script>
+    import {marcarComoFeito} from "../../funcoes/pedidos";
+
     export default {
-        name: "Sabores",
+        name: "sabores",
         props: ['sabores', 'pedidos'],
         data() {
             return {
@@ -37,21 +39,8 @@
                 }
             },
 
-            async marcarComoFeito(pedido_id, produto_id) {
-                try {
-                    const response = await axios.post('/vendas/producao/marcar-produto-feito', {
-                        pedido_id: pedido_id,
-                        produto_id: produto_id
-                    });
-                    if (response.status === 200 || response.status === 201) {
-                        window.Toast.fire({ icon: 'success', title: `Pedido ${pedido_id} atualizado!` });
-                        setTimeout(() => {
-                            this.fecharModal();
-                        }, 2000)
-                    }
-                } catch (error) {
-                    window.Toast.fire({ icon:'error', title: `Não foi possível atualizar o pedido ${pedido_id}.` });
-                }
+            async marcarProdutoComoFeito(pedido_id, produto_id) {
+                await marcarComoFeito(pedido_id, produto_id, this.fecharModal);
             },
 
             fecharModal() {

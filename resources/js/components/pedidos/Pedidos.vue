@@ -1,7 +1,8 @@
 <script>
+    import { marcarComoFeito } from '../../funcoes/pedidos';
     export default {
         name: "Pedidos",
-        props: ['rota_create'],
+        props: ['rota_criar', 'rota_editar'],
         data() {
             return {
                 modal: false,
@@ -11,7 +12,7 @@
 
         methods: {
             criarPedido() {
-                window.location.href = `${this.rota_create}`;
+                window.location.href = `${this.rota_criar}`;
             },
 
             async detalhesPedido(pedido_id) {
@@ -22,11 +23,12 @@
                             dados: {
                                 valor_total: response?.data.valor_total,
                                 valor_antecipado: response?.data.valor_antecipado,
-                                valor_restante: response?.data.valor_restante
+                                valor_restante: response?.data.valor_restante,
+                                pedido_id: response?.data.id
                             },
                             nome_cliente: response?.data.cliente.nome,
                             entrega_retirada: response?.data.entrega_retirada,
-                            produtos: response?.data.produtos,
+                            produtos: response?.data.produtos
                         };
                         const data = new Date(this.dadosModal.entrega_retirada.data);
                         this.dadosModal.entrega_retirada.data = data.toLocaleDateString('pt-BR');
@@ -55,7 +57,7 @@
                     if (result.isConfirmed) {
                         try {
                             Swal.showLoading();
-                            const response = await axios.post('/vendas/pedidos/pagar/', {
+                            await axios.post('/vendas/pedidos/pagar/', {
                                 pedido_id: pedido_id
                             });
 
@@ -78,6 +80,39 @@
                     }
                 });
             },
+
+            // async marcarPedidoComoFeito(pedido_id) {
+            //     $.ajax({
+            //         method: 'GET',
+            //         url: this.rota_editar,
+            //     });
+            // },
+
+            async marcarProdutoComoFeito(pedido_id, produto_id) {
+                Swal.fire({
+                    title: 'Marcar produto como feito?',
+                    text: "Confirmar a produção deste produto?",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: 'lightgreen',
+                    cancelButtonColor: '#1f2937',
+                    confirmButtonText: '<span style="color: black">Confirmar</span>',
+                    cancelButtonText: 'Cancelar'
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        await marcarComoFeito(pedido_id, produto_id, this.fecharModal);
+                        window.location.reload();
+                        await this.detalhesPedido();
+                    }
+                });
+            },
+
+            // async editarPedido(pedido_id) {
+            //     const response = $.ajax({
+            //         method: 'GET',
+            //         url:
+            //     })
+            // },
 
             async excluirPedido(pedido_id) {
                 try {

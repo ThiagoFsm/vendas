@@ -22,12 +22,12 @@ class SaborController extends Controller
     public function index()
     {
         $sabores = Sabor::where('ativo', 1)->orderBy('id')->get();
-        $pedidos = Pedido::with(
-        'produtos',
+        $pedidos = Pedido::with([
+                'produtos',
                 'produtos.tipoProduto',
                 'produtos.sabor',
                 'produtos.tamanho',
-        )->get();
+        ])->get();
 
         if (request()->ajax()) {
             $sabor_id = request('sabor_id');

@@ -9,51 +9,83 @@
         </a>
     </div>
     <div class="card card-custom">
-        <div class="card-body p-0"> <div class="table-responsive">
+        <div class="card-body p-0">
+            <div class="table-responsive">
                 <table class="table table-hover align-middle table-bordered-custom mb-0">
                     <thead>
-                        <tr class="text-center">
-                            <th class="w-1/8">Nº Pedido</th>
-                            <th class="w-1/8">Cliente</th>
-                            <th class="w-1/8">Vendedor</th>
-                            <th class="w-1/8">Qtd</th>
-                            <th class="w-1/8">Valor Total</th>
-                            <th class="w-1/8">Pagamento</th>
-                            <th class="w-1/8">Entrega/Retirada</th>
-                            <th>Ações</th>
-                        </tr>
+                    <tr class="text-center">
+                        <th class="w-1/12">Nº Pedido</th>
+                        <th class="w-1/12">Cliente</th>
+                        <th class="w-1/12">Vendedor</th>
+                        <th class="w-1/12">Qtd</th>
+                        <th class="w-1/12">Valor Total</th>
+                        <th class="w-1/12">Pagamento</th>
+                        <th class="w-1/12">Produção</th>
+                        <th>Ações</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        @if(!$pedidos->isEmpty())
-                            @foreach($pedidos as $pedido)
-                                <tr class="text-center">
-                                    <td class="fw-bold text-dark">{{ $pedido->id }}</td>
-                                    <td>{{ $pedido->cliente->nome }}</td>
-                                    <td class="text-muted">{{ $pedido->cliente->vendedor->nome }}</td>
-                                    <td>{{ $pedido->quantidade_itens }}</td>
-                                    <td>{{ $pedido->valor_total }}</td>
-                                    <td>
+                    @if(!$pedidos->isEmpty())
+                        @foreach($pedidos as $pedido)
+                            <tr class="text-center">
+                                <td class="fw-bold text-dark">{{ $pedido->id }}</td>
+                                <td>{{ $pedido->cliente->nome }}</td>
+                                <td class="text-muted">{{ $pedido->cliente->vendedor->nome }}</td>
+                                <td>{{ $pedido->quantidade_itens }}</td>
+                                <td>{{ $pedido->valor_total }}</td>
+                                <td>
                                         <span
                                             class="badge-status {{ $pedido->pago ? 'bg-success text-white' : 'bg-light text-warning' }}"
                                             style="border: 1px solid {{ $pedido->pago ? '#c3e6cb' : '#ffeeba' }};">
                                             {{ $pedido->pago ? 'Pago' : 'Pendente' }}
                                         </span>
+                                </td>
+                                @if($pedido->produzido)
+                                    <td>
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                                <h6 class="m-0">Feito</h6>
+                                                <a class="btn-marcar-feito">
+                                                    <i class="bi bi-check-all" style="font-size: 15px"></i>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </td>
-                                    <td>{{ isset($pedido->entrega_retirada->rua) ? 'Uber' : (isset($pedido->entrega_retirada->entregador_id) ? 'Entrega' : 'Retirada') }}</td>
-                                    <td class="d-flex gap-1">
-                                        <button class="btn-action btn-view" @click.prevent="detalhesPedido({{ $pedido->id }})">Detalhes</button>
-{{--                                        <a class="btn-action btn-view text-info" href="{{ route('vendas.pedidos.edit', $pedido->id) }}">Editar</a>--}}
-                                        <button class="btn-action btn-view text-danger" @click.prevent="excluirPedido({{ $pedido->id }})">Excluir</button>
+                                @else
+                                    <td>
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                                <h6 class="m-0">À fazer</h6>
+                                            </div>
+                                        </div>
                                     </td>
-                                </tr>
-                            @endforeach
-                        @else
-                            <tr>
-                                <td>
-                                    <span>Nenhum pedido encontrado.</span>
+                                @endif
+                                <td class="d-flex justify-content-center gap-1">
+                                    <button class="btn-action btn-view border-1"
+                                            @click.prevent="detalhesPedido({{ $pedido->id }})">Detalhes
+                                    </button>
+                                    @if(!$pedido->produzido)
+                                        <button class="btn-marcar-feito border-1"
+                                                @click.prevent="marcarPedidoComoFeito({{ $pedido->id }})">
+                                            Marcar como feito
+                                        </button>
+                                    @endif
+                                    {{--<button class="btn-action btn-view"
+                                            @click.prevent="editarPedido({{ $pedido->id }})">Editar
+                                    </button>--}}
+                                    <button class="btn-action btn-view text-danger"
+                                            @click.prevent="excluirPedido({{ $pedido->id }})">Excluir
+                                    </button>
                                 </td>
                             </tr>
-                        @endif
+                        @endforeach
+                    @else
+                        <tr>
+                            <td>
+                                <span>Nenhum pedido encontrado.</span>
+                            </td>
+                        </tr>
+                    @endif
                     </tbody>
                 </table>
             </div>

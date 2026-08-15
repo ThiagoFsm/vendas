@@ -5,7 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Projeto - @yield('title')</title>
 
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <script>
+        window.session = {
+            success: "{{ session('success') }}",
+            error: "{{ $errors->first() }}"
+        };
+    </script>
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
     <style>
         :root {
@@ -197,7 +203,7 @@
         .btn-confirmar {
             background: lightgreen;
             color: black;
-            border-color: white;
+            border-color: black;
             padding: 5px 15px;
             border-radius: 8px;
             cursor: pointer;
@@ -220,6 +226,13 @@
 
         .btn-sabor:hover {
             color: black;
+        }
+
+        .btn-marcar-feito {
+            background: lightgreen;
+            padding: 0.5px 4px;
+            border-radius: 8px;
+            border-color: grey;
         }
 
         /* Animação de entrada */
@@ -302,13 +315,7 @@
         }
     });
 </script>
-<script>
-    window.session = {
-        success: "{{ session('success') }}",
-        error: "{{ $errors->first() }}"
-    };
-</script>
-<script src="{{ asset('js/app.js') }}"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // 1. Tornamos o Toast global para você usar em qualquer lugar (inclusive no Vue)
