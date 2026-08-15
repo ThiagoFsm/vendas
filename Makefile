@@ -4,6 +4,8 @@
 # Frontend & Vite (Hot Reload)
 # ==========================
 dev:
+	docker compose up -d node
+	docker compose exec node pkill -f vite 2>/dev/null || true
 	docker compose exec node npm run dev
 
 build:
