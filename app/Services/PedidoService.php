@@ -34,9 +34,9 @@ class PedidoService
 
     /**
      * @param $pedidoId
-     * @return Pedido|Pedido[]|Collection|Model|_IH_Pedido_C|null
+     * @return Pedido|null
      */
-    public function gerenciarModalListagem($pedidoId): Model|Collection|_IH_Pedido_C|Pedido|array|null
+    public function gerenciarModalListagem($pedidoId): Pedido|null
     {
         if (is_null($pedidoId)) return null;
 
@@ -53,13 +53,10 @@ class PedidoService
         ])->find($pedidoId);
     }
 
-    public function gerenciarDependencias($idCliente): array
+    public function gerenciarDependencias($idCliente = null): array
     {
-        if (is_null($idCliente)) return [];
-
-        $cliente = Cliente::find($idCliente);
-        $dependencias['cliente'] = $cliente;
-
+        $dependencias = [];
+        $dependencias['cliente'] = !is_null($idCliente) ? Cliente::with('vendedor')->find($idCliente) : null;
         $dependencias['produtos'] = Produto::with(['tipoProduto', 'sabor', 'tamanho'])->where('ativo', true)->get();
         $dependencias['tipoProdutos'] = TipoProduto::where('ativo', true)->get();
         $dependencias['sabores'] = Sabor::where('ativo', true)->get();
@@ -76,45 +73,48 @@ class PedidoService
      */
     public function gerenciarEntregaRetirada($dados): Entrega|Retirada|null
     {
-        if (is_null($dados)) return null;
+        if (is_null($dados) || empty($dados)) return null;
 
-        //entrega
-        if(isset($dados['entregador_id'])) {
-            $entrega_retirada = Entrega::create($dados);
+        // Uber: possui valor_uber ou bairro_id com rua/numero
+        if (!empty($dados['valor_uber']) || (!empty($dados['bairro_id']) && !empty($dados['rua']))) {
+            if (isset($dados['valor_uber']) && is_string($dados['valor_uber'])) {
+                $dados['valor_uber'] = (float) str_replace(',', '.', str_replace('.', '', $dados['valor_uber']));
+            }
+            return Entrega::create($dados);
         }
 
-        //uber
-        elseif(isset($dados['valor_uber'])) {
-            $dados['valor_uber'] = (float) str_replace(',', '.', $dados['valor_uber']);
-            $entrega_retirada = Entrega::create($dados);
+        // Entrega: possui entregador_id
+        if (!empty($dados['entregador_id'])) {
+            return Entrega::create($dados);
         }
 
-        //retirada
-        else {
-            $entrega_retirada = Retirada::create($dados);
+        // Retirada: possui bairro ou data de retirada
+        if (!empty($dados['bairro']) || !empty($dados['data'])) {
+            return Retirada::create($dados);
         }
 
-        return $entrega_retirada;
+        return null;
     }
 
     /**
      * @param $dados
      * @return array|null
      */
-    public function prepararPedidoSalvar($dados) {
-
+    public function prepararPedidoSalvar($dados): ?array
+    {
         if (is_null($dados)) return null;
 
-        $pedido['cliente_id'] = $dados['cliente']['id'];
-        $pedido['quantidade_itens'] = array_sum(array_column($dados['pedido'], 'quantidade'));
-        $pedido['valor_total'] = $dados['valor_total'];
-        $pedido['valor_antecipado'] = (float) $dados['valor_antecipado'];
-        $pedido['valor_restante'] = $pedido['valor_total'] - $pedido['valor_antecipado'];
+        $pedido = [];
+        $pedido['cliente_id'] = $dados['cliente']['id'] ?? $dados['cliente_id'] ?? null;
+        $pedido['quantidade_itens'] = array_sum(array_column($dados['pedido'] ?? [], 'quantidade'));
+        $pedido['valor_total'] = $dados['valor_total'] ?? 0;
+        $pedido['valor_antecipado'] = isset($dados['valor_antecipado']) ? (float) $dados['valor_antecipado'] : 0.0;
+        $pedido['valor_restante'] = (float) $pedido['valor_total'] - (float) $pedido['valor_antecipado'];
 
-        if($pedido['valor_restante'] === 0.00) {
+        if ($pedido['valor_restante'] <= 0.00) {
             $pedido['pago'] = true;
-        }
-        else {
+            $pedido['valor_restante'] = 0.00;
+        } else {
             $pedido['pago'] = false;
         }
 
@@ -125,22 +125,22 @@ class PedidoService
      * @param $pedidoPreparado
      * @param $entrega_retirada
      * @param $produtos
-     * @return string
+     * @return Pedido
      * @throws Throwable
      */
-    public function salvarPedido($pedidoPreparado, $entrega_retirada, $produtos): string
+    public function salvarPedido($pedidoPreparado, $entrega_retirada, $produtos): Pedido
     {
-        try {
-            return DB::transaction(function () use ($pedidoPreparado, $entrega_retirada, $produtos) {
-                $pedido = new Pedido($pedidoPreparado);
+        return DB::transaction(function () use ($pedidoPreparado, $entrega_retirada, $produtos) {
+            $pedido = new Pedido($pedidoPreparado);
+            if ($entrega_retirada) {
                 $pedido->entrega_retirada()->associate($entrega_retirada);
-                $pedido->save();
+            }
+            $pedido->save();
+            if (!empty($produtos)) {
                 $pedido->produtos()->sync($produtos);
-                return $pedido;
-            });
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
+            }
+            return $pedido;
+        });
     }
 
     /**
@@ -155,7 +155,7 @@ class PedidoService
             return [
                 $produto['produto_id'] => [
                     'quantidade' => (int) $produto['quantidade'],
-                    'produzido' => false
+                    'produzido' => !empty($produto['produzido'])
                 ]
             ];
         })->toArray();
@@ -163,9 +163,9 @@ class PedidoService
 
     /**
      * @param $pedidoId
-     * @return Pedido|Pedido[]|_IH_Pedido_C|null
+     * @return Pedido|null
      */
-    public function atualizarPagamentoPedido($pedidoId): _IH_Pedido_C|Pedido|array|null
+    public function atualizarPagamentoPedido($pedidoId): Pedido|null
     {
         if (is_null($pedidoId)) return null;
 
@@ -177,9 +177,33 @@ class PedidoService
         return $pedido;
     }
 
-    public function atualizarPedido($pedidoId, $pedidoPreparado, $entrega_retirada, $produtos): Pedido
+    /**
+     * @param $pedidoId
+     * @param $pedidoPreparado
+     * @param $dadosEntregaRetirada
+     * @param $produtos
+     * @return Pedido
+     * @throws Throwable
+     */
+    public function atualizarPedido($pedidoId, $pedidoPreparado, $dadosEntregaRetirada, $produtos): Pedido
     {
+        return DB::transaction(function () use ($pedidoId, $pedidoPreparado, $dadosEntregaRetirada, $produtos) {
+            $pedido = Pedido::with('entrega_retirada')->findOrFail($pedidoId);
+            $pedido->update($pedidoPreparado);
+            $pedido->produtos()->sync($produtos);
 
-//        return $pedido;
+            if ($dadosEntregaRetirada) {
+                if ($pedido->entrega_retirada) {
+                    $pedido->entrega_retirada->delete();
+                }
+                $novaEntregaRetirada = $this->gerenciarEntregaRetirada($dadosEntregaRetirada);
+                if ($novaEntregaRetirada) {
+                    $pedido->entrega_retirada()->associate($novaEntregaRetirada);
+                    $pedido->save();
+                }
+            }
+
+            return $pedido;
+        });
     }
 }

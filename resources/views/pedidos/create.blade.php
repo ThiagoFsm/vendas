@@ -1,13 +1,11 @@
 @extends('layouts.main')
 
-@section('title', 'Novo pedido')
+@section('title', isset($pedidoId) && $pedidoId ? 'Editar Pedido' : 'Novo Pedido')
 
 @section('content')
     <criar-pedido inline-template
-        :produtos="{{ json_encode($dependencias['produtos'] ?? []) }}"
-        :cliente="{{ json_encode($dependencias['cliente'] ?? []) }}"
-        :bairros="{{ json_encode($dependencias['bairros'] ?? []) }}"
-        :vendedores="{{ json_encode($dependencias['vendedores'] ?? []) }}">
+        :pedido-id="{{ isset($pedidoId) && $pedidoId ? json_encode($pedidoId) : 'null' }}"
+        :cliente-id="{{ isset($clienteId) && $clienteId ? json_encode($clienteId) : 'null' }}">
         @include('pedidos.partials.criar_pedido')
     </criar-pedido>
 @endsection

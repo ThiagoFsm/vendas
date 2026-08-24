@@ -2,7 +2,7 @@
     import { marcarComoFeito } from '../../funcoes/pedidos';
     export default {
         name: "Pedidos",
-        props: ['rota_criar', 'rota_editar'],
+        props: ['rota_criar', 'rota_store'],
         data() {
             return {
                 modal: false,
@@ -111,12 +111,9 @@
                 });
             },
 
-            // async editarPedido(pedido_id) {
-            //     const response = $.ajax({
-            //         method: 'GET',
-            //         url:
-            //     })
-            // },
+            editarPedido(pedidoId) {
+                window.location.href = `/vendas/pedidos/edit/${pedidoId}`;
+            },
 
             async excluirPedido(pedido_id) {
                 try {

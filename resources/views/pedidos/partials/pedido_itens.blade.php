@@ -9,7 +9,7 @@
             <th class="text-center" width="10%">Excluir</th>
         </thead>
 
-        <tbody v-for="item in itens_pedido" class="p-2">
+        <tbody v-for="(item, index) in itens_pedido" :key="index" class="p-2">
             <td class="text-center">
                 @{{ item.quantidade }}
             </td>
@@ -26,7 +26,7 @@
                 {{"R$"}}@{{ item.valor }}{{",00"}}
             </td>
             <td class="text-center">
-                <button @click.prevent="excluirItem(item.produto_id)" style="border: none; background: none">
+                <button @click.prevent="excluirItem(index)" style="border: none; background: none">
                     <i class="bi bi-x-lg" style="color: red; font-weight: bold"></i>
                 </button>
             </td>

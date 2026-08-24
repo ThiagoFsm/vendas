@@ -13,9 +13,9 @@ class PedidosRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        if ($this->route('pedido_id')) {
+        if ($this->route('pedidoId')) {
             $this->merge([
-                'pedido_id' => $this->route('pedido_id'),
+                'pedidoId' => $this->route('pedidoId'),
             ]);
         }
     }
@@ -23,7 +23,7 @@ class PedidosRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'pedido_id'                             => 'sometimes|nullable|exists:pedidos,id',
+            'pedidoId'                              => 'sometimes|nullable|exists:pedidos,id',
             'cliente'                               => 'sometimes|array',
                 'cliente.id'                        => 'integer|exists:clientes,id',
                 'cliente.nome'                      => 'string',
@@ -36,8 +36,8 @@ class PedidosRequest extends FormRequest
                 'pedido.*.quantidade'               => 'string|min:1',
                 'pedido.*.valor'                    => 'integer',
             'entrega_retirada'                      => 'sometimes|array',
-                'entrega_retirada.data'             => 'required|date',
-                'entrega_retirada.periodo'          => 'required|string',
+                'entrega_retirada.data'             => 'date',
+                'entrega_retirada.periodo'          => 'string',
             // retirada
                 'entrega_retirada.bairro'           => 'sometimes|string',
             // uber
@@ -56,7 +56,7 @@ class PedidosRequest extends FormRequest
     {
         return [
             // Identificador geral
-            'pedido_id.exists'                          => 'O pedido informado não foi encontrado no sistema.',
+            'pedidoId.exists'                          => 'O pedido informado não foi encontrado no sistema.',
 
             // Cliente
             'cliente.id.exists'                         => 'O cliente informado não foi encontrado.',

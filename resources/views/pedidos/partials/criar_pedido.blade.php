@@ -1,10 +1,10 @@
 <div class="container-fluid py-4" style="font-size: 13px">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h3 class="fw-bold mb-0">Novo Pedido</h3>
-            <p class="text-muted small">Preencha os dados para registrar uma nova venda</p>
+            <h3 class="fw-bold mb-0">@{{ isEditing ? ('Editar Pedido #' + pedidoId) : 'Novo Pedido' }}</h3>
+            <p class="text-muted small">@{{ isEditing ? 'Altere os dados do pedido' : 'Preencha os dados para registrar um novo pedido' }}</p>
         </div>
-        <a href="/pedidos" class="btn btn-outline-secondary px-4 text-black" style="border-radius: 8px;">
+        <a href="/vendas/pedidos" class="btn btn-outline-secondary px-4 text-black" style="border-radius: 8px;">
             <i class="bi bi-arrow-left"></i> Voltar
         </a>
     </div>
@@ -16,14 +16,14 @@
                     <div class="col-md-6 text-center">
                         <span class="form-label fw-bold text-dark">Cliente</span>
                         <input type="text" id="cliente_id" name="cliente_id" class="form-control border-2 bg-light mt-1"
-                               value="{{ $dependencias['cliente']->nome ?? '' }}"
+                               :value="cliente ? cliente.nome : ''"
                                style="height: 40px; border-radius: 8px;" readonly>
                     </div>
 
                     <div class="col-md-6 text-center">
                         <span class="form-label fw-bold text-dark">Vendedor(a)</span>
                         <input id="vendedor" name="vendedor" class="form-control border-2 bg-light mt-1"
-                               value="{{ $dependencias['cliente']->vendedor->nome ?? '' }}"
+                               :value="cliente && cliente.vendedor ? cliente.vendedor.nome : ''"
                                style="height: 40px; border-radius: 8px;" readonly>
                     </div>
 
@@ -40,13 +40,9 @@
                                 <select id="item_produto" name="item_produto" class="form-select select-input border-2"
                                         v-model="item.tipo_produto_id" style="height: 40px;" v-select>
                                     <option value="">Selecione</option>
-                                    @if(isset($dependencias['tipoProdutos']))
-                                        @foreach($dependencias['tipoProdutos'] as $tipoProduto)
-                                            <option value="{{ $tipoProduto['id'] }}">
-                                                {{ $tipoProduto['descricao'] }}
-                                            </option>
-                                        @endforeach
-                                    @endif
+                                    <option v-for="tipoProduto in tipoProdutos" :key="tipoProduto.id" :value="tipoProduto.id">
+                                        @{{ tipoProduto.descricao }}
+                                    </option>
                                 </select>
                             </div>
                             <div class="col-md-4 text-center">
@@ -54,13 +50,9 @@
                                 <select id="item_sabor" name="item_sabor" class="form-select select-input border-2"
                                         v-model="item.sabor_id" style="height: 40px;" v-select>
                                     <option value="">Selecione</option>
-                                    @if(isset($dependencias['sabores']))
-                                        @foreach($dependencias['sabores'] as $sabor)
-                                            <option value="{{ $sabor['id'] }}">
-                                                {{ $sabor['descricao'] }}
-                                            </option>
-                                        @endforeach
-                                    @endif
+                                    <option v-for="sabor in sabores" :key="sabor.id" :value="sabor.id">
+                                        @{{ sabor.descricao }}
+                                    </option>
                                 </select>
                             </div>
                             <div class="col-md-2 text-center">
@@ -68,13 +60,9 @@
                                 <select id="item_tamanho" name="item_tamanho" class="form-select select-input border-2"
                                         v-model="item.tamanho_id" style="height: 40px; border-radius: 8px;" v-select>
                                     <option value="">Selecione</option>
-                                    @if(isset($dependencias['tamanhos']))
-                                        @foreach($dependencias['tamanhos'] as $tamanho)
-                                            <option value="{{ $tamanho['id'] }}">
-                                                {{ $tamanho['descricao'] }}
-                                            </option>
-                                        @endforeach
-                                    @endif
+                                    <option v-for="tamanho in tamanhos" :key="tamanho.id" :value="tamanho.id">
+                                        @{{ tamanho.descricao }}
+                                    </option>
                                 </select>
                             </div>
                             <div class="col-md-2 text-center">
@@ -163,7 +151,7 @@
                     <div class="p-3 bg-light" style="border-radius: 8px; border-left: 5px solid #212529;">
                         <span class="text-muted small d-block">Total do Pedido</span>
                         <strong class="fs-4 text-dark">
-                            {{"R$"}}@{{ valor_total_itens }}{{",00"}} + {{"R$"}}@{{ uber.valor_uber }}{{" (Uber)"}} =
+                            {{"R$"}}@{{ valor_total_itens }}{{",00"}} + {{"R$"}}@{{ uber.valor_uber || '0,00' }}{{" (Uber)"}} =
                         </strong>
                         <strong class="fs-4 text-dark">
                             {{"R$"}}@{{ valor_total_pedido }}
@@ -175,7 +163,7 @@
                         </button>
                         <button @click.prevent="salvarPedido" type="submit" class="btn btn-dark px-3 py-2 fw-bold"
                                 style="border-radius: 8px; letter-spacing: 0.5px;">
-                            <i class="bi bi-check-circle"></i> SALVAR PEDIDO
+                            <i class="bi bi-check-circle"></i> @{{ isEditing ? 'ATUALIZAR PEDIDO' : 'SALVAR PEDIDO' }}
                         </button>
                     </div>
                 </div>

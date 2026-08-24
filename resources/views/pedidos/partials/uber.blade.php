@@ -5,7 +5,7 @@
         <select id="bairro" name="bairro" class="form-select select-input border-2"
                 v-model="uber.bairro_id" style="height: 40px; border-radius: 8px" v-select required>
                 <option value="">Selecione</option>
-                <option v-for="bairro in bairros" :v-key="bairro.id" :value="bairro.id">
+                <option v-for="bairro in bairros" :key="bairro.id" :value="bairro.id">
                     @{{ bairro.descricao }}
                 </option>
         </select>
@@ -32,7 +32,7 @@
             <option value="">Selecione</option>
             <option value="Manhã">Manhã</option>
             <option value="Tarde">Tarde</option>
-            <option value="Tarde">Noite</option>
+            <option value="Noite">Noite</option>
         </select>
     </div>
     <div class="col-md-1 text-center">

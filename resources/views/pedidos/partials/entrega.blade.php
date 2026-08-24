@@ -5,7 +5,7 @@
         <select class="form-select select-input border-2" id="entregador_id" name="entregador_id"
                 v-model="entrega.entregador_id" style="height: 40px;" v-select required>
             <option value="">Selecione</option>
-            <option v-for="vendedor in vendedores" :v-key="vendedor.id" :value="vendedor.id">
+            <option v-for="vendedor in vendedores" :key="vendedor.id" :value="vendedor.id">
                 @{{ vendedor.nome }}
             </option>
         </select>
@@ -22,7 +22,7 @@
             <option value="">Selecione</option>
             <option value="Manhã">Manhã</option>
             <option value="Tarde">Tarde</option>
-            <option value="Tarde">Noite</option>
+            <option value="Noite">Noite</option>
         </select>
     </div>
 </div>

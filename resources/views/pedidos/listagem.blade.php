@@ -70,9 +70,9 @@
                                             Marcar como feito
                                         </button>
                                     @endif
-                                    {{--<button class="btn-action btn-view"
+                                    <button class="btn-action btn-view"
                                             @click.prevent="editarPedido({{ $pedido->id }})">Editar
-                                    </button>--}}
+                                    </button>
                                     <button class="btn-action btn-view text-danger"
                                             @click.prevent="excluirPedido({{ $pedido->id }})">Excluir
                                     </button>
