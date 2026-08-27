@@ -206,4 +206,14 @@ class PedidoService
             return $pedido;
         });
     }
+
+    public function marcarPedidoComoPago(Pedido $pedidoAtualizar): bool
+    {
+        if ($pedidoAtualizar->pago) return false;
+
+        $pedidoAtualizar->valor_antecipado += $pedidoAtualizar->valor_restante;
+        $pedidoAtualizar->valor_restante = 0.0;
+        $pedidoAtualizar->pago = true;
+        return $pedidoAtualizar->save();
+    }
 }

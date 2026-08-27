@@ -122,7 +122,11 @@ $border-color: #d1d5db; // Um cinza mais escuro e definido
         background-color: #ffffff;
         color: #212529;
         border: 1.5px solid $border-color; // Botões seguindo o padrão de borda
-        &:hover { background-color: #f3f4f6; }
+        &:hover {
+            background-color: var(--btn-hover-bg, #f3f4f6);
+            color: var(--btn-hover-color, inherit);
+            border-color: var(--btn-hover-border, inherit);
+        }
     }
 }
 

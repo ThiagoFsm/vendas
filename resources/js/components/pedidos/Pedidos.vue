@@ -26,6 +26,7 @@
                                 valor_restante: response?.data.valor_restante,
                                 pedido_id: response?.data.id
                             },
+                            pago: response?.data.pago,
                             nome_cliente: response?.data.cliente.nome,
                             entrega_retirada: response?.data.entrega_retirada,
                             produtos: response?.data.produtos
@@ -57,13 +58,15 @@
                     if (result.isConfirmed) {
                         try {
                             Swal.showLoading();
-                            await axios.post('/vendas/pedidos/pagar/', {
-                                pedido_id: pedido_id
+
+                            const response = await $.ajax({
+                                type: 'POST',
+                                url: `/vendas/pedidos/${pedido_id}/pagar`,
                             });
 
                             window.Toast.fire({
                                 icon: 'success',
-                                title: 'Pedido marcado como pago!'
+                                title: response?.message
                             });
 
                             setTimeout(() => {
@@ -73,8 +76,8 @@
                         } catch (error) {
                             window.Toast.fire({
                                 icon: 'error',
-                                title: 'Erro ao criar pedido.',
-                                text: error.response?.data?.message || 'Erro interno no servidor.'
+                                title: 'Erro ao atualizar pedido.',
+                                text: error?.message || 'Erro interno no servidor.'
                             });
                         }
                     }
@@ -112,14 +115,12 @@
             },
 
             editarPedido(pedidoId) {
-                window.location.href = `/vendas/pedidos/edit/${pedidoId}`;
+                window.location.href = `/vendas/pedidos/${pedidoId}/edit`;
             },
 
             async excluirPedido(pedido_id) {
                 try {
-                    const response = await axios.post('/vendas/pedidos/destroy/', {
-                        pedido_id: pedido_id
-                    });
+                    await axios.post(`/vendas/pedidos/${pedido_id}/destroy`);
 
                     window.Toast.fire({
                         icon: 'success',
@@ -131,7 +132,7 @@
                     window.Toast.fire({
                        icon: 'error',
                        title: 'Não foi possível excluir o pedido.',
-                       text: error.response?.data?.message || 'Erro interno no servidor.'
+                       text: error.response?.message || 'Erro interno no servidor.'
                     });
                 }
             }

@@ -74,7 +74,7 @@ export default {
         async carregarDependencias() {
             try {
                 const endpoint = this.clienteId
-                    ? `/vendas/pedidos/dependencias/${this.clienteId}`
+                    ? `/vendas/pedidos/${this.clienteId}/dependencias`
                     : '/vendas/pedidos/dependencias';
                 const response = await axios.get(endpoint);
                 if (response.data) {
@@ -278,7 +278,7 @@ export default {
                 };
 
                 const url = this.isEditing && this.pedidoId
-                    ? `/vendas/pedidos/store/${this.pedidoId}`
+                    ? `/vendas/pedidos/${this.pedidoId}/store`
                     : '/vendas/pedidos/store';
 
                 await axios.post(url, payload);

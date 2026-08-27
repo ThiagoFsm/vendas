@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PedidosRequest;
-use App\Models\Cliente;
 use App\Models\Pedido;
 use App\Services\PedidoService;
 use Illuminate\Contracts\View\Factory;
@@ -82,7 +81,7 @@ class PedidoController extends Controller
      * @return JsonResponse
      * @throws Throwable
      */
-    public function store(PedidosRequest $request, $pedidoId = null)
+    public function store(PedidosRequest $request, $pedidoId = null): JsonResponse
     {
         $dados = $request->validated();
         $pedidoId = $pedidoId ?? ($dados['pedidoId'] ?? null);
@@ -97,7 +96,7 @@ class PedidoController extends Controller
             $pedido = $this->pedidoService->salvarPedido($pedidoPreparado, $entrega_retirada, $produtos);
         }
 
-        return response()->json($pedido ?? null);
+        return response()->json($pedido);
     }
 
     /**
@@ -115,15 +114,24 @@ class PedidoController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): JsonResponse
     {
         $pedidoId = $request['pedidoId'];
         $pedido = Pedido::findOrFail($pedidoId);
-        if($pedido->entrega_retirada){
-            $pedido->entrega_retirada->delete();
-        }
+        $pedido->entrega_retirada->delete();
         $pedido->delete();
 
-        return response()->json(['message' => 'Pedido excluído com sucesso!']);
+        return response()->json([
+            'message' => 'Pedido excluído com sucesso!'
+        ]);
+    }
+
+    public function pagar(Pedido $pedido): JsonResponse
+    {
+        $pedidoPago = $this->pedidoService->marcarPedidoComoPago($pedido);
+
+        return response()->json([
+            'message' => $pedidoPago ? 'Pedido pago com sucesso!' : 'O pedido já está pago.'
+        ]);
     }
 }

@@ -186,7 +186,7 @@
 
         /* Botões */
         .btn-fechar {
-            background: #212529;
+            background: #444747;
             color: white;
             border-color: white;
             padding: 5px 15px;
@@ -201,7 +201,7 @@
         }
 
         .btn-confirmar {
-            background: lightgreen;
+            background: #b5ffb5;
             color: black;
             border-color: black;
             padding: 5px 15px;
@@ -229,10 +229,9 @@
         }
 
         .btn-marcar-feito {
-            background: lightgreen;
-            padding: 0.5px 4px;
+            color: green;
+            /*padding: 0.5px 4px;*/
             border-radius: 8px;
-            border-color: grey;
         }
 
         /* Animação de entrada */

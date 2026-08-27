@@ -33,9 +33,8 @@
                         <td v-if="produto.pivot.produzido" class="p-2">
                             <div class="d-flex align-items-center justify-content-center">
                                 <div class="d-flex align-items-center justify-content-center gap-2">
-                                    <h6 class="m-0">Feito</h6>
                                     <a class="btn-marcar-feito" readonly title="Produto feito">
-                                        <i class="bi bi-check-all" style="font-size: 15px"></i>
+                                        <i class="bi bi-check-all" style="font-size: 25px"></i>
                                     </a>
                                 </div>
                             </div>
@@ -139,13 +138,30 @@
             </div>
         </div>
 
-        <div class="modal-footer-custom">
-            @isset($pedido)
-                <button class="btn btn-confirmar" @click.prevent="marcarPedidoComoPago({{ $pedido->id }})">Marcar como
-                    pago
+        <div class="modal-footer-custom flex justify-content-between">
+            <div>
+                <button v-if="!dadosModal.pago" class="btn-action btn-view" style="color: green; --btn-hover-bg: #C4FDC4FF; border-color: green"
+                        @click.prevent="marcarPedidoComoPago(dadosModal.dados.pedido_id)">
+                    Marcar como pago
                 </button>
-            @endisset
-            <button class="btn btn-fechar" @click="fecharModal">Fechar</button>
+                <button class="btn-action btn-view"
+                        style="color: green; border-color: green; --btn-hover-bg: #C4FDC4FF"
+                        @click.prevent="marcarPedidoComoFeito({{ $pedido->id }})">
+                    Marcar como feito
+                </button>
+            </div>
+            <div>
+                <button class="btn btn-fechar" @click="fecharModal">Fechar</button>
+            </div>
         </div>
     </div>
 </div>
+
+
+
+
+
+
+
+
+

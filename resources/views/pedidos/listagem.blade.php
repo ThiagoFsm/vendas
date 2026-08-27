@@ -5,7 +5,7 @@
             <h5 class="text-muted">Gerencie as vendas e status de pagamento</h5>
         </div>
         <a href="/vendas/clientes/create" class="btn btn-confirmar" style="border-radius:8px;">
-            Novo pedido
+            Novo Pedido
         </a>
     </div>
     <div class="card card-custom">
@@ -35,18 +35,18 @@
                                 <td>{{ $pedido->valor_total }}</td>
                                 <td>
                                         <span
-                                            class="badge-status {{ $pedido->pago ? 'bg-success text-white' : 'bg-light text-warning' }}"
-                                            style="border: 1px solid {{ $pedido->pago ? '#c3e6cb' : '#ffeeba' }};">
+                                            class="badge-status {{ $pedido->pago ? 'bg-success text-white' : 'bg-warning text-white' }}"
+                                            style="border: 2px solid {{ $pedido->pago ? '#c3e6cb' : '#ffeeba' }}; border-radius: 30px">
                                             {{ $pedido->pago ? 'Pago' : 'Pendente' }}
                                         </span>
                                 </td>
                                 @if($pedido->produzido)
                                     <td>
                                         <div class="d-flex align-items-center justify-content-center">
-                                            <div class="d-flex align-items-center justify-content-center gap-2">
-                                                <h6 class="m-0">Feito</h6>
+                                            <div class="d-flex align-items-center justify-content-center gap-1">
+{{--                                                <h6 class="m-0">Feito</h6>--}}
                                                 <a class="btn-marcar-feito">
-                                                    <i class="bi bi-check-all" style="font-size: 15px"></i>
+                                                    <i class="bi bi-check-all" style="font-size: 25px"></i>
                                                 </a>
                                             </div>
                                         </div>
@@ -61,19 +61,23 @@
                                     </td>
                                 @endif
                                 <td class="d-flex justify-content-center gap-1">
-                                    <button class="btn-action btn-view border-1"
+                                    <button class="btn-action btn-view"
+                                            style="border-color: #2d3238; --btn-hover-bg: #E4E4E4FF;"
                                             @click.prevent="detalhesPedido({{ $pedido->id }})">Detalhes
                                     </button>
-                                    @if(!$pedido->produzido)
-                                        <button class="btn-marcar-feito border-1"
-                                                @click.prevent="marcarPedidoComoFeito({{ $pedido->id }})">
-                                            Marcar como feito
-                                        </button>
-                                    @endif
+{{--                                    @if(!$pedido->produzido)--}}
+{{--                                        <button class="btn-action btn-view"--}}
+{{--                                                style="color: green; border-color: green; --btn-hover-bg: #C4FDC4FF"--}}
+{{--                                                @click.prevent="marcarPedidoComoFeito({{ $pedido->id }})">--}}
+{{--                                            Feito--}}
+{{--                                        </button>--}}
+{{--                                    @endif--}}
                                     <button class="btn-action btn-view"
+                                            style="color: deepskyblue; border-color: deepskyblue; --btn-hover-bg: #C2EFFFFF"
                                             @click.prevent="editarPedido({{ $pedido->id }})">Editar
                                     </button>
                                     <button class="btn-action btn-view text-danger"
+                                            style="border-color: #fdcece; --btn-hover-bg: #FDCECEFF"
                                             @click.prevent="excluirPedido({{ $pedido->id }})">Excluir
                                     </button>
                                 </td>
