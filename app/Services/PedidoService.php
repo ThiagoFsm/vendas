@@ -25,10 +25,26 @@ class PedidoService
      */
     public function gerenciarDadosListagem(): Collection
     {
-        return Pedido::with([
+        $pedidos = Pedido::with([
             'cliente.vendedor',
             'entrega_retirada',
+            'produtos',
         ])->get();
+
+        foreach ($pedidos as $pedido) {
+            if (!$pedido->produzido && $pedido->produtos->isNotEmpty()) {
+                $todosProduzidos = $pedido->produtos->every(function ($produto) {
+                    return (bool) ($produto->pivot->produzido ?? false);
+                });
+
+                if ($todosProduzidos) {
+                    $pedido->produzido = true;
+                    $pedido->save();
+                }
+            }
+        }
+
+        return $pedidos;
     }
 
     /**
@@ -37,7 +53,7 @@ class PedidoService
      */
     public function gerenciarModalListagem(Pedido $pedido): Pedido
     {
-        return $pedido->load([
+        $pedido->load([
             'cliente',
             'entrega_retirada' => function ($morphTo) {
                 $morphTo->morphWith([
@@ -48,6 +64,19 @@ class PedidoService
             'produtos.sabor',
             'produtos.tamanho',
         ]);
+
+        if (!$pedido->produzido && $pedido->produtos->isNotEmpty()) {
+            $todosProduzidos = $pedido->produtos->every(function ($produto) {
+                return (bool) ($produto->pivot->produzido ?? false);
+            });
+
+            if ($todosProduzidos) {
+                $pedido->produzido = true;
+                $pedido->save();
+            }
+        }
+
+        return $pedido;
     }
 
     public function gerenciarDependencias($idCliente = null): array
@@ -105,7 +134,11 @@ class PedidoService
         $pedido['cliente_id'] = $dados['cliente']['id'] ?? $dados['cliente_id'] ?? null;
         $pedido['quantidade_itens'] = array_sum(array_column($dados['pedido'] ?? [], 'quantidade'));
         $pedido['valor_total'] = $dados['valor_total'] ?? 0;
-        $pedido['valor_antecipado'] = isset($dados['valor_antecipado']) ? (float) $dados['valor_antecipado'] : 0.0;
+        $valorAntecipado = $dados['valor_antecipado'] ?? 0;
+        if (is_string($valorAntecipado)) {
+            $valorAntecipado = (float) str_replace(',', '.', str_replace('.', '', $valorAntecipado));
+        }
+        $pedido['valor_antecipado'] = (float) $valorAntecipado;
         $pedido['valor_restante'] = (float) $pedido['valor_total'] - (float) $pedido['valor_antecipado'];
 
         if ($pedido['valor_restante'] <= 0.00) {
@@ -135,6 +168,13 @@ class PedidoService
             $pedido->save();
             if (!empty($produtos)) {
                 $pedido->produtos()->sync($produtos);
+                $todosProduzidos = collect($produtos)->every(function ($p) {
+                    return !empty($p['produzido']);
+                });
+                if ($todosProduzidos) {
+                    $pedido->produzido = true;
+                    $pedido->save();
+                }
             }
             return $pedido;
         });
@@ -189,10 +229,16 @@ class PedidoService
             $pedido->update($pedidoPreparado);
             $pedido->produtos()->sync($produtos);
 
+            if (!empty($produtos)) {
+                $todosProduzidos = collect($produtos)->every(function ($p) {
+                    return !empty($p['produzido']);
+                });
+                $pedido->produzido = $todosProduzidos;
+                $pedido->save();
+            }
+
             if ($dadosEntregaRetirada) {
-                if ($pedido->entrega_retirada) {
-                    $pedido->entrega_retirada->delete();
-                }
+                $pedido->entrega_retirada?->delete();
                 $novaEntregaRetirada = $this->gerenciarEntregaRetirada($dadosEntregaRetirada);
                 if ($novaEntregaRetirada) {
                     $pedido->entrega_retirada()->associate($novaEntregaRetirada);
@@ -201,6 +247,15 @@ class PedidoService
             }
 
             return $pedido;
+        });
+    }
+
+    public function excluirPedido(Pedido $pedido): bool
+    {
+        return DB::transaction(function () use ($pedido) {
+            $pedido->entrega_retirada?->delete();
+            $pedido->produtos()->detach();
+            return (bool) $pedido->delete();
         });
     }
 

@@ -34,7 +34,7 @@ Route::prefix('vendas')->name('vendas.')->group(function () {
         Route::post('/{pedidoId?}/store', [PedidoController::class, 'store'])->name('store');
         Route::post('/{pedido}/pagar', [PedidoController::class, 'pagar'])->name('pagar');
         Route::post('/{pedido}/produzir', [PedidoController::class, 'produzir'])->name('produzir');
-        Route::post('/{pedido_id?}/destroy', [PedidoController::class, 'destroy'])->name('destroy');
+        Route::post('/{pedido}/destroy', [PedidoController::class, 'destroy'])->name('destroy');
     });
 
     Route::prefix('clientes')->name('clientes.')->group(function () {

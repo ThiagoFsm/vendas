@@ -74,9 +74,11 @@ class PedidoController extends Controller
      */
     public function edit($pedidoId)
     {
+        $pedido = Pedido::findOrFail($pedidoId);
+
         return view('pedidos.create', [
-            'pedidoId' => $pedidoId,
-            'clienteId' => null,
+            'pedidoId' => $pedido->id,
+            'clienteId' => $pedido->cliente_id,
         ]);
     }
 
@@ -105,26 +107,29 @@ class PedidoController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return void
+     * @param PedidosRequest $request
+     * @param Pedido|null $pedido
+     * @return JsonResponse
+     * @throws Throwable
      */
-    public function update(Request $request)
+    public function update(PedidosRequest $request, ?Pedido $pedido = null): JsonResponse
     {
-//        dd($request->all());
-//        $pedidoId = $request['pedidoId'];
-//        $pedido_atualizado = $this->pedidoService->atualizarPedido($pedidoId);
+        $id = $pedido ? $pedido->id : $request->input('pedidoId');
+        return $this->store($request, $id);
     }
 
     /**
      * @param Request $request
+     * @param Pedido|null $pedido
      * @return JsonResponse
      */
-    public function destroy(Request $request): JsonResponse
+    public function destroy(Request $request, ?Pedido $pedido = null): JsonResponse
     {
-        $pedidoId = $request['pedidoId'];
-        $pedido = Pedido::findOrFail($pedidoId);
-        $pedido->entrega_retirada->delete();
-        $pedido->delete();
+        $pedidoModel = ($pedido && $pedido->exists)
+            ? $pedido
+            : Pedido::findOrFail($request->input('pedidoId') ?? $request->route('pedido') ?? $request->route('pedido_id'));
+
+        $this->pedidoService->excluirPedido($pedidoModel);
 
         return response()->json([
             'message' => 'Pedido excluído com sucesso!'

@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Cliente $cliente
- * @property-read Model|\Eloquent $entrega_retirada
+ * @property-read Model|\Eloquent|null $entrega_retirada
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Produto> $produtos
  * @property-read int|null $produtos_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Pedido newModelQuery()
