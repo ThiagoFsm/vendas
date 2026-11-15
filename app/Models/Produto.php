@@ -47,20 +47,24 @@ class Produto extends Model
         'valor_produto'
     ];
 
-    public function tipoProduto() {
+    public function tipoProduto(): BelongsTo
+    {
         return $this->belongsTo(TipoProduto::class, 'tipo_produto_id', 'id');
     }
 
-    public function sabor() {
+    public function sabor(): BelongsTo
+    {
         return $this->belongsTo(Sabor::class, 'sabor_id', 'id');
     }
 
-    public function tamanho() {
+    public function tamanho(): BelongsTo
+    {
         return $this->belongsTo(Tamanho::class, 'tamanho_id', 'id');
     }
 
-    public function pedidos() {
+    public function pedidos(): BelongsToMany
+    {
         return $this->belongsToMany(Pedido::class, 'pedido_produto', 'produto_id', 'pedido_id')
-            ->withPivot('quantidade');
+            ->withPivot('quantidade', 'produzido');
     }
 }

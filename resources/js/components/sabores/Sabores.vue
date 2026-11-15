@@ -3,7 +3,7 @@
 
     export default {
         name: "sabores",
-        props: ['sabores', 'pedidos'],
+        props: ["sabores", 'pedidos'],
         data() {
             return {
                 modal: false,
@@ -40,7 +40,16 @@
             },
 
             async marcarProdutoComoFeito(pedido_id, produto_id) {
-                await marcarComoFeito(pedido_id, produto_id, this.fecharModal);
+                await marcarComoFeito(pedido_id, produto_id);
+                if (this.dadosModal && Array.isArray(this.dadosModal)) {
+                    const pedido = this.dadosModal.find(p => p.id === pedido_id);
+                    if (pedido && pedido.produtos) {
+                        const prod = pedido.produtos.find(pr => pr.id === produto_id);
+                        if (prod && prod.pivot) {
+                            prod.pivot.produzido = true;
+                        }
+                    }
+                }
             },
 
             fecharModal() {

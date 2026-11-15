@@ -30,9 +30,10 @@ Route::prefix('vendas')->name('vendas.')->group(function () {
         Route::get('/{cliente_id?}/dependencias', [PedidoController::class, 'dependencias'])->name('dependencias');
         Route::get('/{cliente_id?}/create', [PedidoController::class, 'create'])->name('create');
         Route::get('/{pedido_id?}/edit', [PedidoController::class, 'edit'])->name('edit');
-        Route::get('/{pedido_id?}', [PedidoController::class, 'show'])->name('show');
+        Route::get('/{pedido}', [PedidoController::class, 'show'])->name('show');
         Route::post('/{pedidoId?}/store', [PedidoController::class, 'store'])->name('store');
-        Route::post('/{pedido?}/pagar', [PedidoController::class, 'pagar'])->name('pagar');
+        Route::post('/{pedido}/pagar', [PedidoController::class, 'pagar'])->name('pagar');
+        Route::post('/{pedido}/produzir', [PedidoController::class, 'produzir'])->name('produzir');
         Route::post('/{pedido_id?}/destroy', [PedidoController::class, 'destroy'])->name('destroy');
     });
 
@@ -44,6 +45,6 @@ Route::prefix('vendas')->name('vendas.')->group(function () {
 
     Route::prefix('producao')->name('producao.')->group(function () {
         Route::get('/', [SaborController::Class, 'index'])->name('index');
-        Route::post('/marcar-produto-feito', [SaborController::Class, 'store'])->name('marcarProdutoFeito');
+        Route::post('/{produto}/{pedido}', [SaborController::Class, 'store'])->name('marcarProdutoFeito');
     });
 });

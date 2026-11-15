@@ -6,6 +6,7 @@ use App\Models\Pedido;
 use App\Models\Produto;
 use App\Models\Sabor;
 use App\Services\ProducaoService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SaborController extends Controller
@@ -51,12 +52,13 @@ class SaborController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param Produto $produto
+     * @param Pedido $pedido
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Produto $produto, Pedido $pedido): JsonResponse
     {
-        $produtoProduzido = $this->producaoService->marcarProdutoComoProduzido($request['pedido_id'], $request['produto_id']);
+        $produtoProduzido = $this->producaoService->marcarProdutoComoProduzido($pedido, $produto);
         return response()->json($produtoProduzido);
     }
 

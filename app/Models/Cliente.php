@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -35,12 +37,12 @@ class Cliente extends Model
         'vendedor_id'
     ];
 
-    public function pedido()
+    public function pedido(): HasMany
     {
         return $this->hasMany(Pedido::class);
     }
 
-    public function vendedor()
+    public function vendedor(): BelongsTo
     {
         return $this->belongsTo(Vendedor::class);
     }

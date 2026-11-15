@@ -28,32 +28,39 @@
                         <td class="p-2">@{{ pedido.produtos[0].tamanho.descricao }}</td>
                         <td class="p-2">@{{ pedido.cliente.nome }}</td>
                         <td class="d-flex gap-1 justify-content-center">
-                            <button class="btn-action btn-view" style="background: lightgreen" @click.prevent="marcarProdutoComoFeito(pedido.id, pedido.produtos[0].id)">Marcar como feito</button>
+                            <button v-if="!pedido.produtos[0].pivot.produzido" class="btn-action btn-view"
+                                    style="color: green; --btn-hover-bg: #C4FDC4FF; border-color: green"
+                                    @click.prevent="marcarProdutoComoFeito(pedido.id, pedido.produtos[0].id)">
+                                Marcar como feito
+                            </button>
+                            <a v-else class="btn-marcar-feito">
+                                <i class="bi bi-check-all" style="font-size: 25px"></i>
+                            </a>
                         </td>
                     </tr>
                     </tbody>
                 </table>
-{{--                <div class="w-full text-center">--}}
-{{--                    <h4 class="mt-3 text-center">Informações do Pedido</h4>--}}
-{{--                    <div class="d-flex flex-row justify-content-center">--}}
-{{--                        <div class="w-25">--}}
-{{--                            Valor Total:--}}
-{{--                            <span></span>--}}
-{{--                        </div>--}}
-{{--                        <div class="w-25">--}}
-{{--                            Valor Antecipado:--}}
-{{--                            <span></span>--}}
-{{--                        </div>--}}
-{{--                        <div class="w-25">--}}
-{{--                            Valor Restante:--}}
-{{--                            <span></span>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--                <div>--}}
-{{--                    <div class="w-full text-center">--}}
-{{--                    </div>--}}
-{{--                </div>--}}
+                {{--                <div class="w-full text-center">--}}
+                {{--                    <h4 class="mt-3 text-center">Informações do Pedido</h4>--}}
+                {{--                    <div class="d-flex flex-row justify-content-center">--}}
+                {{--                        <div class="w-25">--}}
+                {{--                            Valor Total:--}}
+                {{--                            <span></span>--}}
+                {{--                        </div>--}}
+                {{--                        <div class="w-25">--}}
+                {{--                            Valor Antecipado:--}}
+                {{--                            <span></span>--}}
+                {{--                        </div>--}}
+                {{--                        <div class="w-25">--}}
+                {{--                            Valor Restante:--}}
+                {{--                            <span></span>--}}
+                {{--                        </div>--}}
+                {{--                    </div>--}}
+                {{--                </div>--}}
+                {{--                <div>--}}
+                {{--                    <div class="w-full text-center">--}}
+                {{--                    </div>--}}
+                {{--                </div>--}}
             </div>
         </div>
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * @property int $id
@@ -13,11 +14,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property numeric $valor_total
  * @property numeric|null $valor_antecipado
  * @property numeric|null $valor_restante
- * @property int $pago
+ * @property boolean $pago
  * @property string $entrega_retirada_type
  * @property int $entrega_retirada_id
  * @property int $ativo
- * @property int $produzido
+ * @property boolean $produzido
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Cliente $cliente
@@ -45,9 +46,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Pedido extends Model
 {
 
-    /**
-     * @var float|mixed
-     */
     protected $table = 'pedidos';
 
     protected $fillable = [
@@ -58,10 +56,16 @@ class Pedido extends Model
         'valor_restante',
         'pago',
         'entrega_retirada',
-        'concluido'
+        'produzido',
+        'ativo',
     ];
 
-    public function entrega_retirada(): BelongsTo
+    protected $casts = [
+        'pago' => 'boolean',
+        'produzido' => 'boolean',
+    ];
+
+    public function entrega_retirada(): MorphTo
     {
         // Define que este campo pode pertencer a múltiplos modelos
         return $this->morphTo();

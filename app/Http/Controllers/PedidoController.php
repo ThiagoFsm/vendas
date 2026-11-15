@@ -20,24 +20,29 @@ class PedidoController extends Controller
     }
 
     /**
-     * @return Factory|\Illuminate\Contracts\View\View|View
+     * @param Request $request
+     * @return Factory|\Illuminate\Contracts\View\View|View|JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        $pedidos = $this->pedidoService->gerenciarDadosListagem();
+        if ($request->ajax() || $request->wantsJson()) {
+            $pedidos = $this->pedidoService->gerenciarDadosListagem();
 
-        return view('pedidos.index', compact('pedidos'));
+            return response()->json($pedidos);
+        }
+
+        return view('pedidos.index');
     }
 
     /**
-     * @param $pedidoId
+     * @param Pedido $pedido
      * @return JsonResponse
      */
-    public function show($pedidoId): JsonResponse
+    public function show(Pedido $pedido): JsonResponse
     {
-        $pedido = $this->pedidoService->gerenciarModalListagem($pedidoId);
+        $pedidoFormatado = $this->pedidoService->gerenciarModalListagem($pedido);
 
-        return response()->json($pedido);
+        return response()->json($pedidoFormatado);
     }
 
     /**
@@ -132,6 +137,15 @@ class PedidoController extends Controller
 
         return response()->json([
             'message' => $pedidoPago ? 'Pedido pago com sucesso!' : 'O pedido já está pago.'
+        ]);
+    }
+
+    public function produzir(Pedido $pedido): JsonResponse
+    {
+        $pedidoProduzido = $this->pedidoService->marcarPedidoComoProduzido($pedido);
+
+        return response()->json([
+            'message' => $pedidoProduzido ? 'Pedido marcado como feito com sucesso!' : 'O pedido já está concluído.'
         ]);
     }
 }

@@ -16,41 +16,38 @@ use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use LaravelIdea\Helper\App\Models\_IH_Pedido_C;
 use Throwable;
 
 class PedidoService
 {
     /**
-     * @return Pedido[]|Collection|_IH_Pedido_C
+     * @return Collection<int, Pedido>
      */
-    public function gerenciarDadosListagem(): Collection|_IH_Pedido_C|array
+    public function gerenciarDadosListagem(): Collection
     {
         return Pedido::with([
-            'cliente',
+            'cliente.vendedor',
             'entrega_retirada',
         ])->get();
     }
 
     /**
-     * @param $pedidoId
-     * @return Pedido|null
+     * @param Pedido $pedido
+     * @return Pedido
      */
-    public function gerenciarModalListagem($pedidoId): Pedido|null
+    public function gerenciarModalListagem(Pedido $pedido): Pedido
     {
-        if (is_null($pedidoId)) return null;
-
-        return Pedido::with([
+        return $pedido->load([
             'cliente',
             'entrega_retirada' => function ($morphTo) {
                 $morphTo->morphWith([
                     Entrega::class => ['entregador', 'bairro'],
                 ]);
             },
-            'produtos' => function ($query) {
-                $query->with(['tipoProduto', 'sabor', 'tamanho']);
-            }
-        ])->find($pedidoId);
+            'produtos.tipoProduto',
+            'produtos.sabor',
+            'produtos.tamanho',
+        ]);
     }
 
     public function gerenciarDependencias($idCliente = null): array
@@ -72,7 +69,7 @@ class PedidoService
      * @return Entrega|Retirada|null
      */
     public function gerenciarEntregaRetirada($dados): Entrega|Retirada|null
-    {
+    {// refatorar
         if (is_null($dados) || empty($dados)) return null;
 
         // Uber: possui valor_uber ou bairro_id com rua/numero
@@ -215,5 +212,24 @@ class PedidoService
         $pedidoAtualizar->valor_restante = 0.0;
         $pedidoAtualizar->pago = true;
         return $pedidoAtualizar->save();
+    }
+
+    public function marcarPedidoComoProduzido(Pedido $pedido): bool
+    {
+        if ($pedido->produzido) {
+            return false;
+        }
+
+        $pedido->produzido = true;
+        $salvo = $pedido->save();
+
+        $pedido->load('produtos');
+        if ($pedido->produtos->isNotEmpty()) {
+            $pedido->produtos()->updateExistingPivot($pedido->produtos->pluck('id'), [
+                'produzido' => true,
+            ]);
+        }
+
+        return $salvo;
     }
 }

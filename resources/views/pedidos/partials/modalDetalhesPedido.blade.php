@@ -48,7 +48,7 @@
                                     <div v-else>
                                         <button class="btn btn-marcar-feito" style="background: lightblue;"
                                                 @click.prevent="marcarProdutoComoFeito(dadosModal.dados.pedido_id, produto.id)">
-                                            Marcar produto como feito
+                                            Produto feito
                                         </button>
                                     </div>
                                 </div>
@@ -140,14 +140,13 @@
 
         <div class="modal-footer-custom flex justify-content-between">
             <div>
-                <button v-if="!dadosModal.pago" class="btn-action btn-view" style="color: green; --btn-hover-bg: #C4FDC4FF; border-color: green"
+                <button v-if="!dadosModal.produzido" class="marcar" style="--btn-hover-bg: lightskyblue"
+                        @click.prevent="marcarPedidoComoFeito(dadosModal.dados.pedido_id)">
+                    Marcar como feito
+                </button>
+                <button v-if="!dadosModal.pago" class="marcar" style="--btn-hover-bg: lightgreen"
                         @click.prevent="marcarPedidoComoPago(dadosModal.dados.pedido_id)">
                     Marcar como pago
-                </button>
-                <button class="btn-action btn-view"
-                        style="color: green; border-color: green; --btn-hover-bg: #C4FDC4FF"
-                        @click.prevent="marcarPedidoComoFeito({{ $pedido->id }})">
-                    Marcar como feito
                 </button>
             </div>
             <div>

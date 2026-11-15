@@ -130,6 +130,22 @@ $border-color: #d1d5db; // Um cinza mais escuro e definido
     }
 }
 
+.marcar {
+    border-radius: 8px;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    background-color: #ffffff;
+    border: 1px solid #afafaf;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        background-color: var(--btn-hover-bg, #f3f4f6);
+        color: var(--btn-hover-color, inherit);
+        border-color: var(--btn-hover-border, inherit);
+    }
+}
+
 .badge-status {
     padding: 0.5em 0.8em;
     border-radius: 6px;

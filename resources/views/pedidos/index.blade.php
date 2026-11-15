@@ -4,6 +4,7 @@
 
 @section('content')
     <pedidos inline-template
+        rota_pedidos="{{ route('vendas.pedidos.index') }}"
         rota_criar="{{ route('vendas.pedidos.create') }}"
         rota_store="{{ route('vendas.pedidos.store') }}">
         @include('pedidos.listagem')
