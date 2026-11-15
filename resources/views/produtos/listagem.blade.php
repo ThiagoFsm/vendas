@@ -1,0 +1,192 @@
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-0">Produtos</h3>
+            <h5 class="text-muted">Gerencie o catálogo de produtos e valores</h5>
+        </div>
+        <button class="btn btn-confirmar" style="border-radius: 8px;" @click.prevent="abrirModalCriar">
+            Novo Produto
+        </button>
+    </div>
+
+    <div class="card card-custom">
+        <!-- Barra de Filtros e Busca -->
+        <div class="p-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex align-items-center flex-wrap gap-2 flex-grow-1" style="max-width: 950px;">
+                <!-- Pesquisa de Texto -->
+                <div class="position-relative" style="min-width: 240px; flex: 1;">
+                    <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                    <input
+                        type="text"
+                        class="form-control ps-5"
+                        placeholder="Buscar por tipo, sabor ou tamanho..."
+                        v-model="termoPesquisa"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                    >
+                    <button
+                        v-if="termoPesquisa"
+                        type="button"
+                        class="btn btn-sm btn-link position-absolute top-50 end-0 translate-middle-y text-muted text-decoration-none me-2"
+                        @click="termoPesquisa = ''"
+                        title="Limpar busca"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Filtro Tipo de Produto -->
+                <div style="min-width: 170px;">
+                    <select
+                        class="form-select"
+                        v-model="filtroTipo"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                    >
+                        <option value="">Todos os Tipos</option>
+                        <option v-for="tipo in dependencias.tipoProdutos" :key="tipo.id" :value="tipo.id">
+                            @{{ tipo.descricao }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Filtro Sabor -->
+                <div style="min-width: 160px;">
+                    <select
+                        class="form-select"
+                        v-model="filtroSabor"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                    >
+                        <option value="">Todos os Sabores</option>
+                        <option v-for="sabor in dependencias.sabores" :key="sabor.id" :value="sabor.id">
+                            @{{ sabor.descricao }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Filtro Status -->
+                <div style="min-width: 140px;">
+                    <select
+                        class="form-select"
+                        v-model="filtroStatus"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                    >
+                        <option value="">Todos Status</option>
+                        <option value="ativo">Ativos</option>
+                        <option value="inativo">Inativos</option>
+                    </select>
+                </div>
+
+                <!-- Botão Limpar Filtros -->
+                <button
+                    v-if="hasFiltrosAtivos"
+                    type="button"
+                    class="btn btn-outline-secondary d-flex align-items-center gap-1"
+                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 38px;"
+                    @click="limparFiltros"
+                    title="Limpar todos os filtros"
+                >
+                    <i class="bi bi-x-circle"></i>
+                    <span>Limpar</span>
+                </button>
+            </div>
+
+            <div class="text-muted small">
+                <span>Total: <strong>@{{ produtosFiltrados.length }}</strong> de <strong>@{{ produtos.length }}</strong> produto(s)</span>
+            </div>
+        </div>
+
+        <!-- Tabela de Produtos -->
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle table-bordered-custom mb-0">
+                    <thead>
+                    <tr class="text-center">
+                        <th style="width: 70px;">ID</th>
+                        <th class="text-start">Tipo de Produto</th>
+                        <th class="text-start">Sabor</th>
+                        <th>Tamanho</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                        <th style="width: 180px;">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-if="carregando">
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                            <span>Carregando produtos...</span>
+                        </td>
+                    </tr>
+                    <tr v-else-if="!produtos || produtos.length === 0">
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <span>Nenhum produto cadastrado no catálogo.</span>
+                        </td>
+                    </tr>
+                    <tr v-else-if="produtosFiltrados.length === 0">
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <span v-if="termoPesquisa">Nenhum produto encontrado para "<strong>@{{ termoPesquisa }}</strong>".</span>
+                            <span v-else>Nenhum produto encontrado com os filtros selecionados.</span>
+                        </td>
+                    </tr>
+                    <template v-else>
+                        <tr v-for="produto in produtosFiltrados" :key="produto.id" class="text-center">
+                            <td class="fw-bold text-dark">@{{ produto.id }}</td>
+                            <td class="text-start fw-semibold">
+                                @{{ produto.tipo_produto ? produto.tipo_produto.descricao : '-' }}
+                            </td>
+                            <td class="text-start">
+                                @{{ produto.sabor ? produto.sabor.descricao : '-' }}
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border">
+                                    @{{ produto.tamanho ? produto.tamanho.descricao : '-' }}
+                                </span>
+                            </td>
+                            <td class="fw-bold text-success">
+                                R$ @{{ formatarValor(produto.valor_produto) }}
+                            </td>
+                            <td>
+                                <span
+                                    class="badge-status"
+                                    :class="produto.ativo ? 'bg-success text-white' : 'bg-secondary text-white'"
+                                    :style="{
+                                        border: '2px solid ' + (produto.ativo ? '#c3e6cb' : '#d6d8db'),
+                                        borderRadius: '30px',
+                                        cursor: 'pointer'
+                                    }"
+                                    @click="toggleAtivo(produto)"
+                                    :title="produto.ativo ? 'Clique para desativar' : 'Clique para ativar'"
+                                >
+                                    @{{ produto.ativo ? 'Ativo' : 'Inativo' }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center gap-1">
+                                    <button
+                                        class="btn-action btn-view"
+                                        style="color: deepskyblue; border-color: deepskyblue; --btn-hover-bg: #C2EFFFFF;"
+                                        @click="abrirModalEditar(produto)"
+                                        title="Editar produto"
+                                    >
+                                        Editar
+                                    </button>
+                                    <button
+                                        class="btn-action btn-view text-danger"
+                                        style="border-color: #fdcece; --btn-hover-bg: #FDCECEFF;"
+                                        @click="excluirProduto(produto)"
+                                        title="Excluir produto"
+                                    >
+                                        Excluir
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro / Edição -->
+    @include('produtos.partials.modalProduto')
+</div>

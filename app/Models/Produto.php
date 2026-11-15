@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property int $sabor_id
  * @property int $tamanho_id
  * @property numeric|null $valor_produto
- * @property int $ativo
+ * @property boolean $ativo
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Pedido> $pedidos
@@ -44,7 +44,13 @@ class Produto extends Model
         'tipo_produto_id',
         'sabor_id',
         'tamanho_id',
-        'valor_produto'
+        'valor_produto',
+        'ativo',
+    ];
+
+    protected $casts = [
+        'ativo' => 'boolean',
+        'valor_produto' => 'float',
     ];
 
     public function tipoProduto(): BelongsTo

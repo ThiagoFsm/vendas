@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\SaborController;
 use Illuminate\Support\Facades\Route;
 
@@ -46,5 +47,15 @@ Route::prefix('vendas')->name('vendas.')->group(function () {
     Route::prefix('producao')->name('producao.')->group(function () {
         Route::get('/', [SaborController::Class, 'index'])->name('index');
         Route::post('/{produto}/{pedido}', [SaborController::Class, 'store'])->name('marcarProdutoFeito');
+    });
+
+    Route::prefix('produtos')->name('produtos.')->group(function () {
+        Route::get('/', [ProdutoController::class, 'index'])->name('index');
+        Route::get('/dependencias', [ProdutoController::class, 'dependencias'])->name('dependencias');
+        Route::post('/store', [ProdutoController::class, 'store'])->name('store');
+        Route::get('/{produto}', [ProdutoController::class, 'show'])->name('show');
+        Route::post('/{produto}/update', [ProdutoController::class, 'update'])->name('update');
+        Route::post('/{produto}/toggle-ativo', [ProdutoController::class, 'toggleAtivo'])->name('toggleAtivo');
+        Route::post('/{produto}/destroy', [ProdutoController::class, 'destroy'])->name('destroy');
     });
 });

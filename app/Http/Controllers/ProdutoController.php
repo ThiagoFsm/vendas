@@ -2,84 +2,137 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProdutoRequest;
 use App\Models\Produto;
+use App\Models\Sabor;
+use App\Models\Tamanho;
+use App\Models\TipoProduto;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ProdutoController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return View|JsonResponse
      */
-    public function index()
+    public function index(Request $request): View|JsonResponse
     {
-        //
+        if ($request->ajax() || $request->wantsJson()) {
+            $produtos = Produto::with(['tipoProduto', 'sabor', 'tamanho'])
+                ->orderBy('id', 'desc')
+                ->get();
+
+            return response()->json($produtos);
+        }
+
+        return view('produtos.index');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Retorna dependências para o formulário de cadastro/edição (tipos, sabores, tamanhos)
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function create()
+    public function dependencias(): JsonResponse
     {
-        //
+        return response()->json([
+            'tipoProdutos' => TipoProduto::where('ativo', true)->orderBy('descricao')->get(),
+            'sabores'      => Sabor::where('ativo', true)->orderBy('descricao')->get(),
+            'tamanhos'     => Tamanho::where('ativo', true)->orderBy('id')->get(),
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param ProdutoRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(ProdutoRequest $request): JsonResponse
     {
-        //
+        $dados = $request->validated();
+        if (!isset($dados['ativo'])) {
+            $dados['ativo'] = true;
+        }
+
+        $produto = Produto::create($dados);
+        $produto->load(['tipoProduto', 'sabor', 'tamanho']);
+
+        return response()->json([
+            'message' => 'Produto cadastrado com sucesso!',
+            'produto' => $produto,
+        ], 201);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Produto  $produto
-     * @return \Illuminate\Http\Response
+     * @param Produto $produto
+     * @return JsonResponse
      */
-    public function show(Produto $produto)
+    public function show(Produto $produto): JsonResponse
     {
-        //
+        return response()->json($produto->load(['tipoProduto', 'sabor', 'tamanho']));
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Produto  $produto
-     * @return \Illuminate\Http\Response
+     * @param ProdutoRequest $request
+     * @param Produto $produto
+     * @return JsonResponse
      */
-    public function edit(Produto $produto)
+    public function update(ProdutoRequest $request, Produto $produto): JsonResponse
     {
-        //
+        $dados = $request->validated();
+        $produto->update($dados);
+        $produto->load(['tipoProduto', 'sabor', 'tamanho']);
+
+        return response()->json([
+            'message' => 'Produto atualizado com sucesso!',
+            'produto' => $produto,
+        ]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Alterna o status ativo/inativo do produto
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Produto  $produto
-     * @return \Illuminate\Http\Response
+     * @param Produto $produto
+     * @return JsonResponse
      */
-    public function update(Request $request, Produto $produto)
+    public function toggleAtivo(Produto $produto): JsonResponse
     {
-        //
+        $produto->ativo = !$produto->ativo;
+        $produto->save();
+
+        $status = $produto->ativo ? 'ativado' : 'desativado';
+
+        return response()->json([
+            'message' => "Produto {$status} com sucesso!",
+            'ativo'   => $produto->ativo,
+        ]);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Exclui o produto ou o inativa caso já esteja vinculado a pedidos
      *
-     * @param  \App\Models\Produto  $produto
-     * @return \Illuminate\Http\Response
+     * @param Produto $produto
+     * @return JsonResponse
      */
-    public function destroy(Produto $produto)
+    public function destroy(Produto $produto): JsonResponse
     {
-        //
+        // Se possui pedidos vinculados, desativa para não quebrar integridade referencial
+        if ($produto->pedidos()->exists()) {
+            $produto->ativo = false;
+            $produto->save();
+
+            return response()->json([
+                'message' => 'O produto possui pedidos vinculados e foi desativado em vez de excluído.',
+                'action'  => 'deactivated',
+            ]);
+        }
+
+        $produto->delete();
+
+        return response()->json([
+            'message' => 'Produto excluído com sucesso!',
+            'action'  => 'deleted',
+        ]);
     }
 }

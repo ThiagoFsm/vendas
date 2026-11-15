@@ -315,6 +315,11 @@
             </a>
         </li>
         <li class="nav-item">
+            <a href="{{ route('vendas.produtos.index') }}" class="nav-link {{ request()->routeIs('vendas.produtos.*') || request()->is('vendas/produtos*') ? 'active' : '' }}">
+                <i class="bi bi-box-seam"></i> Produtos
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="/perfil" class="nav-link {{ request()->is('perfil*') ? 'active' : '' }}">
                 <i class="bi bi-person"></i> Perfil
             </a>
