@@ -24,8 +24,8 @@
                         <th class="p-3">Produção</th>
                     </tr>
                     </thead>
-                    <tbody v-for="produto in dadosModal.produtos" :v-key="produto.id">
-                    <tr class="text-center">
+                    <tbody>
+                    <tr v-for="produto in dadosModal.produtos" :key="produto.id" class="text-center">
                         <td class="p-2">@{{ produto.pivot.quantidade }}</td>
                         <td class="p-2">@{{ produto.tipo_produto.descricao }}</td>
                         <td class="p-2">@{{ produto.sabor.descricao }}</td>
@@ -42,15 +42,10 @@
                         <td v-else class="p-2">
                             <div class="d-flex align-items-center justify-content-center">
                                 <div class="d-flex align-items-center justify-content-center gap-2">
-                                    <div v-if="produto.pivot.produzido">
-                                        <i class="bi bi-check-all" style="font-size: 15px"></i>
-                                    </div>
-                                    <div v-else>
-                                        <button class="btn btn-marcar-feito" style="background: lightblue;"
-                                                @click.prevent="marcarProdutoComoFeito(dadosModal.dados.pedido_id, produto.id)">
-                                            Produto feito
-                                        </button>
-                                    </div>
+                                    <button class="btn btn-marcar-feito" style="background: lightblue;"
+                                            @click.prevent="marcarProdutoComoFeito(dadosModal.dados.pedido_id, produto.id)">
+                                        Produto feito
+                                    </button>
                                 </div>
                             </div>
                         </td>

@@ -6,6 +6,9 @@
         data() {
             return {
                 pedidos: [],
+                termoPesquisa: '',
+                filtroVendedor: '',
+                filtroProducao: '',
                 carregando: false,
                 modal: false,
                 dadosModal: []
@@ -16,7 +19,68 @@
             await this.buscarPedidos();
         },
 
+        computed: {
+            vendedores() {
+                if (!this.pedidos || !Array.isArray(this.pedidos)) return [];
+                const mapa = new Map();
+                this.pedidos.forEach(p => {
+                    if (p.cliente && p.cliente.vendedor && p.cliente.vendedor.id) {
+                        mapa.set(p.cliente.vendedor.id, p.cliente.vendedor.nome);
+                    }
+                });
+                return Array.from(mapa, ([id, nome]) => ({ id, nome })).sort((a, b) => a.nome.localeCompare(b.nome));
+            },
+
+            hasFiltrosAtivos() {
+                return Boolean(this.termoPesquisa || this.filtroVendedor || this.filtroProducao);
+            },
+
+            pedidosFiltrados() {
+                return this.pedidos.filter(pedido => {
+                    // Filtro por Nome do Cliente
+                    if (this.termoPesquisa && this.termoPesquisa.trim()) {
+                        const normalizar = (texto) => {
+                            return (texto || '')
+                                .toLowerCase()
+                                .normalize('NFD')
+                                .replace(/[\u0300-\u036f]/g, '');
+                        };
+
+                        const termo = normalizar(this.termoPesquisa.trim());
+                        const nomeCliente = normalizar(pedido.cliente?.nome);
+                        if (!nomeCliente.includes(termo)) {
+                            return false;
+                        }
+                    }
+
+                    // Filtro por Vendedor
+                    if (this.filtroVendedor) {
+                        const vendedorId = pedido.cliente?.vendedor?.id;
+                        if (String(vendedorId) !== String(this.filtroVendedor)) {
+                            return false;
+                        }
+                    }
+
+                    // Filtro por Produção
+                    if (this.filtroProducao === 'feito' && !pedido.produzido) {
+                        return false;
+                    }
+                    if (this.filtroProducao === 'a_fazer' && pedido.produzido) {
+                        return false;
+                    }
+
+                    return true;
+                });
+            }
+        },
+
         methods: {
+            limparFiltros() {
+                this.termoPesquisa = '';
+                this.filtroVendedor = '';
+                this.filtroProducao = '';
+            },
+
             async buscarPedidos() {
                 this.carregando = true;
                 try {
@@ -42,6 +106,10 @@
                     const endpoint = this.rota_pedidos ? `${this.rota_pedidos}/${pedido_id}` : `/vendas/pedidos/${pedido_id}`;
                     const response = await axios.get(endpoint);
 
+                    const produtos = response?.data?.produtos || [];
+                    const todosProdutosProduzidos = produtos.length > 0 &&
+                        produtos.every(p => Boolean(p.pivot && p.pivot.produzido));
+
                     this.dadosModal = {
                         dados: {
                             valor_total: response?.data.valor_total,
@@ -49,14 +117,16 @@
                             valor_restante: response?.data.valor_restante,
                             pedido_id: response?.data.id
                         },
-                        pago: response?.data.pago,
-                        produzido: response.data.produzido,
-                        nome_cliente: response?.data.cliente.nome,
+                        pago: Boolean(response?.data.pago),
+                        produzido: Boolean(response?.data.produzido || todosProdutosProduzidos),
+                        nome_cliente: response?.data.cliente?.nome,
                         entrega_retirada: response?.data.entrega_retirada,
-                        produtos: response?.data.produtos
+                        produtos: produtos
                     };
-                    const data = new Date(this.dadosModal.entrega_retirada.data);
-                    this.dadosModal.entrega_retirada.data = data.toLocaleDateString('pt-BR');
+                    if (this.dadosModal.entrega_retirada && this.dadosModal.entrega_retirada.data) {
+                        const data = new Date(this.dadosModal.entrega_retirada.data);
+                        this.dadosModal.entrega_retirada.data = data.toLocaleDateString('pt-BR');
+                    }
                     this.modal = true;
 
                 } catch (error) {

@@ -184,6 +184,57 @@
             gap: 10px;
         }
 
+        /* Modal Scrollable Body & Custom Scrollbar */
+        .modal-body-scrollable {
+            max-height: 480px;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+
+        .modal-body-scrollable::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .modal-body-scrollable::-webkit-scrollbar-track {
+            background: #212529;
+            border-radius: 4px;
+        }
+
+        .modal-body-scrollable::-webkit-scrollbar-thumb {
+            background: #495057;
+            border-radius: 4px;
+        }
+
+        .modal-body-scrollable::-webkit-scrollbar-thumb:hover {
+            background: #6c757d;
+        }
+
+        .table-sticky {
+            border-collapse: separate !important;
+            border-spacing: 0 !important;
+        }
+
+        .table-sticky thead th {
+            position: sticky;
+            top: 0;
+            background-color: #212529 !important;
+            color: #ffffff !important;
+            z-index: 10;
+            border-bottom: 2px solid #373b3e;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .table-sticky tfoot td {
+            position: sticky;
+            bottom: 0;
+            background-color: #212529 !important;
+            color: #ffffff !important;
+            z-index: 10;
+            border-top: 2px solid #373b3e;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+        }
+
         /* Botões */
         .btn-fechar {
             background: #444747;
@@ -253,9 +304,21 @@
         <h4>Vendas</h4>
     </div>
     <ul class="nav flex-column mt-3">
-        <li class="nav-item"><a href="/" class="nav-link active">Pedidos</a></li>
-        <li class="nav-item"><a href="/vendas/producao" class="nav-link">Produção</a></li>
-        <li class="nav-item"><a href="/perfil" class="nav-link">Perfil</a></li>
+        <li class="nav-item">
+            <a href="{{ route('vendas.pedidos.index') }}" class="nav-link {{ request()->routeIs('vendas.pedidos.*') || request()->is('vendas/pedidos*') || request()->is('/') ? 'active' : '' }}">
+                <i class="bi bi-cart3"></i> Pedidos
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('vendas.producao.index') }}" class="nav-link {{ request()->routeIs('vendas.producao.*') || request()->is('vendas/producao*') ? 'active' : '' }}">
+                <i class="bi bi-fire"></i> Produção
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/perfil" class="nav-link {{ request()->is('perfil*') ? 'active' : '' }}">
+                <i class="bi bi-person"></i> Perfil
+            </a>
+        </li>
     </ul>
     <div class="resizer" id="resizer"></div>
 </nav>

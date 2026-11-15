@@ -58,9 +58,15 @@ class ProducaoService
     {
         $produtos = $pedido->produtos ?? null;
 
-        if ($produtos && !$produtos->pluck('pivot.produzido')->contains(false)) {
-            $pedido->produzido = true;
-            return $pedido->save();
+        if ($produtos && $produtos->isNotEmpty()) {
+            $todosProduzidos = $produtos->every(function ($produto) {
+                return (bool) ($produto->pivot->produzido ?? false);
+            });
+
+            if ($todosProduzidos) {
+                $pedido->produzido = true;
+                return $pedido->save();
+            }
         }
 
         return false;

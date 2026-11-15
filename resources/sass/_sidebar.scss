@@ -46,6 +46,10 @@ $border-color: #d1d5db; // Um cinza mais escuro e definido
             &.active {
                 background-color: rgba($sidebar-active-color, 0.1);
                 color: $sidebar-active-color;
+
+                i {
+                    color: $sidebar-active-color;
+                }
             }
 
             i {

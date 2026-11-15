@@ -9,13 +9,81 @@
         </a>
     </div>
     <div class="card card-custom">
+        <div class="p-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex align-items-center flex-wrap gap-2 flex-grow-1" style="max-width: 900px;">
+                <!-- Barra de Pesquisa de Cliente -->
+                <div class="position-relative" style="min-width: 260px; flex: 1;">
+                    <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                    <input
+                        type="text"
+                        class="form-control ps-5"
+                        placeholder="Buscar pelo nome do cliente..."
+                        v-model="termoPesquisa"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                    >
+                    <button
+                        v-if="termoPesquisa"
+                        type="button"
+                        class="btn btn-sm btn-link position-absolute top-50 end-0 translate-middle-y text-muted text-decoration-none me-2"
+                        @click="termoPesquisa = ''"
+                        title="Limpar busca"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Filtro Vendedor -->
+                <div style="min-width: 200px;">
+                    <select
+                        class="form-select"
+                        v-model="filtroVendedor"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                    >
+                        <option value="">Todos os Vendedores</option>
+                        <option v-for="vendedor in vendedores" :key="vendedor.id" :value="vendedor.id">
+                            @{{ vendedor.nome }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Filtro Produção -->
+                <div style="min-width: 170px;">
+                    <select
+                        class="form-select"
+                        v-model="filtroProducao"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                    >
+                        <option value="">Toda Produção</option>
+                        <option value="a_fazer">À fazer</option>
+                        <option value="feito">Feito</option>
+                    </select>
+                </div>
+
+                <!-- Botão Limpar Filtros -->
+                <button
+                    v-if="hasFiltrosAtivos"
+                    type="button"
+                    class="btn btn-outline-secondary d-flex align-items-center gap-1"
+                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 38px;"
+                    @click="limparFiltros"
+                    title="Limpar todos os filtros"
+                >
+                    <i class="bi bi-x-circle"></i>
+                    <span>Limpar</span>
+                </button>
+            </div>
+
+            <div class="text-muted small">
+                <span>Total: <strong>@{{ pedidosFiltrados.length }}</strong> de <strong>@{{ pedidos.length }}</strong> pedido(s)</span>
+            </div>
+        </div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle table-bordered-custom mb-0">
                     <thead>
                     <tr class="text-center">
                         <th class="w-1/12">Nº Pedido</th>
-                        <th class="w-1/12">Cliente</th>
+                        <th class="w-1/12 text-start">Cliente</th>
                         <th class="w-1/12">Vendedor</th>
                         <th class="w-1/12">Qtd</th>
                         <th class="w-1/12">Valor Total</th>
@@ -35,10 +103,16 @@
                             <span>Nenhum pedido encontrado.</span>
                         </td>
                     </tr>
+                    <tr v-else-if="pedidosFiltrados.length === 0">
+                        <td colspan="8" class="text-center py-4 text-muted">
+                            <span v-if="termoPesquisa">Nenhum pedido encontrado para o cliente "<strong>@{{ termoPesquisa }}</strong>".</span>
+                            <span v-else>Nenhum pedido encontrado com os filtros selecionados.</span>
+                        </td>
+                    </tr>
                     <template v-else>
-                        <tr v-for="pedido in pedidos" :key="pedido.id" class="text-center">
+                        <tr v-for="pedido in pedidosFiltrados" :key="pedido.id" class="text-center">
                             <td class="fw-bold text-dark">@{{ pedido.id }}</td>
-                            <td>@{{ pedido.cliente ? pedido.cliente.nome : '-' }}</td>
+                            <td class="text-start">@{{ pedido.cliente ? pedido.cliente.nome : '-' }}</td>
                             <td class="text-muted">@{{ pedido.cliente && pedido.cliente.vendedor ? pedido.cliente.vendedor.nome : '-' }}</td>
                             <td>@{{ pedido.quantidade_itens }}</td>
                             <td>@{{ pedido.valor_total }}</td>
@@ -69,19 +143,21 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="d-flex justify-content-center gap-1">
-                                <button class="btn-action btn-view"
-                                        style="border-color: #2d3238; --btn-hover-bg: #E4E4E4FF;"
-                                        @click.prevent="detalhesPedido(pedido.id)">Detalhes
-                                </button>
-                                <button class="btn-action btn-view"
-                                        style="color: deepskyblue; border-color: deepskyblue; --btn-hover-bg: #C2EFFFFF"
-                                        @click.prevent="editarPedido(pedido.id)">Editar
-                                </button>
-                                <button class="btn-action btn-view text-danger"
-                                        style="border-color: #fdcece; --btn-hover-bg: #FDCECEFF"
-                                        @click.prevent="excluirPedido(pedido.id)">Excluir
-                                </button>
+                            <td>
+                                <div class="d-flex justify-content-center gap-1">
+                                    <button class="btn-action btn-view"
+                                            style="border-color: #2d3238; --btn-hover-bg: #E4E4E4FF;"
+                                            @click.prevent="detalhesPedido(pedido.id)">Detalhes
+                                    </button>
+                                    <button class="btn-action btn-view"
+                                            style="color: deepskyblue; border-color: deepskyblue; --btn-hover-bg: #C2EFFFFF"
+                                            @click.prevent="editarPedido(pedido.id)">Editar
+                                    </button>
+                                    <button class="btn-action btn-view text-danger"
+                                            style="border-color: #fdcece; --btn-hover-bg: #FDCECEFF"
+                                            @click.prevent="excluirPedido(pedido.id)">Excluir
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     </template>
