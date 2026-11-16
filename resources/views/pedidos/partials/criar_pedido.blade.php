@@ -59,8 +59,8 @@
                                 <label for="item_tamanho" class="form-label small fw-bold text-muted">Tamanho</label>
                                 <select id="item_tamanho" name="item_tamanho" class="form-select select-input border-2"
                                         v-model="item.tamanho_id" style="height: 40px; border-radius: 8px;" v-select>
-                                    <option value="">Selecione</option>
-                                    <option v-for="tamanho in tamanhos" :key="tamanho.id" :value="tamanho.id">
+                                    <option value="">@{{ item.tipo_produto_id ? 'Selecione' : 'Selecione o produto' }}</option>
+                                    <option v-for="tamanho in tamanhosFiltrados" :key="tamanho.id" :value="tamanho.id">
                                         @{{ tamanho.descricao }}
                                     </option>
                                 </select>
@@ -72,17 +72,20 @@
                                        class="form-control border-2" v-model="item.quantidade" min="1" placeholder="Qtd"
                                        style="height: 40px; border-radius: 8px;">
                             </div>
-                            <div class="col-md-1 my-0 p-0">
-                                <button @click.prevent="adicionarItem" class="px-3 py-2"
-                                        style="border-radius: 8px; background-color: black; border: black">
-                                    <h5 style="font-size: 20px; margin: 0; color: white; font-weight: bold">+</h5>
+                            <div class="col-md-1 text-center">
+                                <label class="form-label small fw-bold text-muted d-none d-md-block">&nbsp;</label>
+                                <button type="button" @click.prevent="adicionarItem"
+                                        class="btn btn-dark w-100 d-flex align-items-center justify-content-center"
+                                        style="height: 40px; border-radius: 8px;"
+                                        title="Adicionar item ao pedido">
+                                    <i class="bi bi-plus-lg fs-5"></i>
                                 </button>
                             </div>
                         </div>
-                        <div>
-                            <div v-if="listar" style="height: 150px; overflow-y: auto">
-                                @include('pedidos.partials.pedido_itens')
-                            </div>
+
+                        <!-- Listagem dos Itens Selecionados -->
+                        <div class="mt-2">
+                            @include('pedidos.partials.pedido_itens')
                         </div>
                     </div>
 
@@ -115,11 +118,12 @@
                         <span class="form-label d-block fw-bold text-dark">Valor Pago na Hora</span>
                         <div class="d-flex align-items-center justify-content-center gap-2 mt-1" role="group"
                              style="border-radius: 8px; overflow: hidden;">
-                            <label class="form-label small fw-bold text-muted mb-0" for="valor_antecipado">R$</label>
-                            <div class="col-md-3">
+                            <label class="form-label fw-bold text-muted mb-0"
+                                   for="valor_antecipado" style="font-size: 16px">R$</label>
+                            <div class="col-md-2">
                                 <input type="text" class="form-control border-2 text-center" name="valor_antecipado"
                                        id="valor_antecipado" v-model.lazy="valor_antecipado" v-money="$dinheiro"
-                                       style="height: 40px; font-size: 13px; border-radius: 8px;">
+                                       style="height: 40px; font-size: 16px; border-radius: 8px;">
                             </div>
                         </div>
                     </div>

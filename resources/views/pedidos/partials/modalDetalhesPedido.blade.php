@@ -186,7 +186,7 @@
 
         <div class="modal-footer-custom d-flex justify-content-between align-items-center p-3 border-top">
             <div class="d-flex gap-2">
-                <button v-if="!dadosModal.produzido" class="btn btn-sm btn-outline-success"
+                <button v-if="!dadosModal.produzido" class="btn btn-sm btn-primary"
                         @click.prevent="marcarPedidoComoFeito(dadosModal.dados.pedido_id)">
                     <i class="bi bi-check2-circle me-1"></i> Marcar como feito
                 </button>

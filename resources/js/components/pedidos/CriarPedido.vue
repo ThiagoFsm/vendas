@@ -55,7 +55,56 @@ export default {
         }
     },
 
+    computed: {
+        tamanhosFiltrados() {
+            if (!this.item.tipo_produto_id) {
+                return [];
+            }
+
+            const tipoIdSelecionado = Number(this.item.tipo_produto_id);
+
+            const produtosDoTipo = this.produtos.filter(p => {
+                const tipoId = p.tipo_produto_id || p.tipo_produto?.id;
+                return Number(tipoId) === tipoIdSelecionado;
+            });
+
+            const tamanhoIdsVinculados = new Set(
+                produtosDoTipo
+                    .map(p => Number(p.tamanho_id || p.tamanho?.id))
+                    .filter(Boolean)
+            );
+
+            if (this.tamanhos && this.tamanhos.length > 0) {
+                return this.tamanhos.filter(t => tamanhoIdsVinculados.has(Number(t.id)));
+            }
+
+            const tamanhosMap = new Map();
+            produtosDoTipo.forEach(p => {
+                if (p.tamanho && !tamanhosMap.has(p.tamanho.id)) {
+                    tamanhosMap.set(p.tamanho.id, p.tamanho);
+                }
+            });
+
+            return Array.from(tamanhosMap.values());
+        }
+    },
+
     watch: {
+        'item.tipo_produto_id'(novoTipo, antigoTipo) {
+            if (novoTipo !== antigoTipo) {
+                const aindaValido = this.tamanhosFiltrados.some(
+                    t => Number(t.id) === Number(this.item.tamanho_id)
+                );
+                if (!aindaValido) {
+                    this.item.tamanho_id = '';
+                }
+
+                this.$nextTick(() => {
+                    $('#item_tamanho').val(this.item.tamanho_id).trigger('change.select2');
+                });
+            }
+        },
+
         valor_total_itens() {
             this.recalcularTotal();
         },
@@ -229,6 +278,11 @@ export default {
             this.item.sabor_id = '';
             this.item.tamanho_id = '';
             this.item.quantidade = '';
+            this.$nextTick(() => {
+                $('#item_produto').val('').trigger('change.select2');
+                $('#item_sabor').val('').trigger('change.select2');
+                $('#item_tamanho').val('').trigger('change.select2');
+            });
         },
 
         retirada_entrega() {

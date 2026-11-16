@@ -86,7 +86,7 @@
                         <option value="pago">Pago</option>
                         <option value="pendente">Pagamento Pendente</option>
                         <option value="produzido">Produzido</option>
-                        <option value="a_fazer">Produção À Fazer</option>
+                        <option value="a_fazer">À Fazer</option>
                     </select>
                 </div>
 
@@ -117,9 +117,9 @@
                     <tr class="text-center">
                         <th style="width: 70px;">ID</th>
                         <th class="text-start">Cliente</th>
-                        <th>Tipo / Envio</th>
-                        <th class="text-start">Endereço / Destino</th>
-                        <th>Data & Período</th>
+                        <th>Entregador (a)</th>
+                        <th class="text-start">Endereço</th>
+                        <th>Data / Período / Hora</th>
                         <th>Valor Pedido</th>
                         <th>Status Pedido</th>
                         <th style="width: 190px;">Ações</th>
