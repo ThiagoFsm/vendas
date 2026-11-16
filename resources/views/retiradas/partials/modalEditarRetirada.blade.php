@@ -36,7 +36,7 @@
                     </div>
                     <div class="card-body p-3">
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="edit_retirada_data" class="form-label fw-bold small text-muted text-uppercase">
                                     Data da Retirada <span class="text-danger">*</span>
                                 </label>
@@ -49,7 +49,7 @@
                                     style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
                                 >
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="edit_retirada_periodo" class="form-label fw-bold small text-muted text-uppercase">
                                     Período <span class="text-danger">*</span>
                                 </label>
@@ -65,6 +65,26 @@
                                     <option value="Tarde">Tarde</option>
                                     <option value="Noite">Noite</option>
                                 </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="edit_retirada_horas" class="form-label fw-bold small text-muted text-uppercase">
+                                    Horas
+                                </label>
+                                <input
+                                    type="time"
+                                    id="edit_retirada_horas"
+                                    class="form-control"
+                                    v-model="formEditar.horas"
+                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                >
+                            </div>
+                            <div class="col-12 mt-2">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="edit_retirada_realizada" v-model="formEditar.realizada" style="cursor: pointer;">
+                                    <label class="form-check-label fw-bold small text-muted" for="edit_retirada_realizada" style="cursor: pointer;">
+                                        Retirada já realizada
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>

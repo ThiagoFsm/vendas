@@ -42,5 +42,10 @@
                 <option value="Noite">Noite</option>
             </select>
         </div>
+        <div class="col-md-2 text-center">
+            <label for="horas_uber" class="form-label small fw-bold text-muted">Horas</label>
+            <input type="time" id="horas_uber" name="horas" class="form-control border-2 text-center"
+                   v-model="uber.horas" style="height: 40px; border-radius: 8px;">
+        </div>
     </div>
 </div>

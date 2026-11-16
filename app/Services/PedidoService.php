@@ -101,6 +101,11 @@ class PedidoService
     {// refatorar
         if (is_null($dados) || empty($dados)) return null;
 
+        $dados['realizada'] = false;
+        if (array_key_exists('horas', $dados) && empty($dados['horas'])) {
+            $dados['horas'] = null;
+        }
+
         // Uber: possui valor_uber ou bairro_id com rua/numero
         if (!empty($dados['valor_uber']) || (!empty($dados['bairro_id']) && !empty($dados['rua']))) {
             if (isset($dados['valor_uber']) && is_string($dados['valor_uber'])) {

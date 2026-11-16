@@ -31,8 +31,11 @@ export default {
             entregaEditando: null,
             formEditar: {
                 id: null,
+                modalidade: 'entrega',
                 data: '',
                 periodo: '',
+                horas: '',
+                realizada: false,
                 entregador_id: '',
                 bairro_id: '',
                 rua: '',
@@ -170,7 +173,7 @@ export default {
                 partes.push(entrega.bairro.descricao);
             }
 
-            return partes.length > 0 ? partes.join(' - ') : 'Endereço não informado';
+            return partes.length > 0 ? partes.join(' - ') : '-';
         },
 
         formatarData(dataStr) {
@@ -183,6 +186,11 @@ export default {
             }
             const data = new Date(dataStr);
             return isNaN(data.getTime()) ? dataStr : data.toLocaleDateString('pt-BR');
+        },
+
+        formatarHora(horaStr) {
+            if (!horaStr) return '';
+            return horaStr.substring(0, 5);
         },
 
         formatarValor(valor) {
@@ -233,15 +241,25 @@ export default {
 
         abrirModalEditar(entrega) {
             this.entregaEditando = entrega;
+            const modalidade = this.tipoEntrega(entrega) === 'uber' ? 'uber' : 'entrega';
+
+            let valorUberStr = '';
+            if (entrega.valor_uber !== null && entrega.valor_uber !== undefined && entrega.valor_uber !== '') {
+                valorUberStr = String(entrega.valor_uber).replace('.', ',');
+            }
+
             this.formEditar = {
                 id: entrega.id,
+                modalidade: modalidade,
                 data: entrega.data ? entrega.data.split('T')[0] : '',
                 periodo: entrega.periodo || '',
+                horas: entrega.horas ? entrega.horas.substring(0, 5) : '',
+                realizada: !!entrega.realizada,
                 entregador_id: entrega.entregador_id || '',
                 bairro_id: entrega.bairro_id || '',
                 rua: entrega.rua || '',
                 numero: entrega.numero || '',
-                valor_uber: entrega.valor_uber !== null && entrega.valor_uber !== undefined ? String(entrega.valor_uber) : ''
+                valor_uber: valorUberStr
             };
             this.modalEditar = true;
         },
@@ -255,17 +273,42 @@ export default {
         async salvarEdicaoEntrega() {
             if (!this.formEditar.id) return;
 
+            // Validação de acordo com a modalidade
+            if (this.formEditar.modalidade === 'entrega' && !this.formEditar.entregador_id) {
+                if (window.Toast) {
+                    window.Toast.fire({
+                        icon: 'warning',
+                        title: 'Por favor, selecione o entregador responsável.'
+                    });
+                }
+                return;
+            }
+
+            if (this.formEditar.modalidade === 'uber') {
+                if (!this.formEditar.valor_uber) {
+                    if (window.Toast) {
+                        window.Toast.fire({
+                            icon: 'warning',
+                            title: 'Por favor, informe o valor do Uber.'
+                        });
+                    }
+                    return;
+                }
+            }
+
             this.salvando = true;
             try {
                 const endpoint = `/vendas/entregas/${this.formEditar.id}/update`;
                 const payload = {
                     data: this.formEditar.data || null,
                     periodo: this.formEditar.periodo || null,
-                    entregador_id: this.formEditar.entregador_id || null,
-                    bairro_id: this.formEditar.bairro_id || null,
-                    rua: this.formEditar.rua || null,
-                    numero: this.formEditar.numero || null,
-                    valor_uber: this.formEditar.valor_uber || null
+                    horas: this.formEditar.horas || null,
+                    realizada: !!this.formEditar.realizada,
+                    entregador_id: this.formEditar.modalidade === 'entrega' ? (this.formEditar.entregador_id || null) : null,
+                    valor_uber: this.formEditar.modalidade === 'uber' ? (this.formEditar.valor_uber || null) : null,
+                    bairro_id: this.formEditar.modalidade === 'uber' ? (this.formEditar.bairro_id || null) : null,
+                    rua: this.formEditar.modalidade === 'uber' ? (this.formEditar.rua || null) : null,
+                    numero: this.formEditar.modalidade === 'uber' ? (this.formEditar.numero || null) : null
                 };
 
                 const response = await axios.post(endpoint, payload);

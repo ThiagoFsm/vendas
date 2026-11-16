@@ -83,9 +83,10 @@
                             <span class="fw-bold text-dark">@{{ dadosModal.entrega_retirada.data }}</span>
                         </div>
                         <div class="col-md-4">
-                            <span class="text-muted small d-block">Período:</span>
+                            <span class="text-muted small d-block">Período / Hora:</span>
                             <span class="badge bg-light text-dark border px-2 py-1">
-                                @{{ dadosModal.entrega_retirada.periodo }}
+                                @{{ dadosModal.entrega_retirada.periodo || '-' }}
+                                <span v-if="dadosModal.entrega_retirada.horas">(@{{ dadosModal.entrega_retirada.horas.substring(0, 5) }})</span>
                             </span>
                         </div>
                         <div class="col-md-4">
@@ -107,9 +108,10 @@
                             <span class="fw-bold text-dark">@{{ dadosModal.entrega_retirada.data }}</span>
                         </div>
                         <div class="col-md-4">
-                            <span class="text-muted small d-block">Período:</span>
+                            <span class="text-muted small d-block">Período / Hora:</span>
                             <span class="badge bg-light text-dark border px-2 py-1">
-                                @{{ dadosModal.entrega_retirada.periodo }}
+                                @{{ dadosModal.entrega_retirada.periodo || '-' }}
+                                <span v-if="dadosModal.entrega_retirada.horas">(@{{ dadosModal.entrega_retirada.horas.substring(0, 5) }})</span>
                             </span>
                         </div>
                     </div>
@@ -125,9 +127,10 @@
                             <span class="fw-bold text-dark">@{{ dadosModal.entrega_retirada.data }}</span>
                         </div>
                         <div class="col-md-4">
-                            <span class="text-muted small d-block">Período:</span>
+                            <span class="text-muted small d-block">Período / Hora:</span>
                             <span class="badge bg-light text-dark border px-2 py-1">
-                                @{{ dadosModal.entrega_retirada.periodo }}
+                                @{{ dadosModal.entrega_retirada.periodo || '-' }}
+                                <span v-if="dadosModal.entrega_retirada.horas">(@{{ dadosModal.entrega_retirada.horas.substring(0, 5) }})</span>
                             </span>
                         </div>
                     </div>

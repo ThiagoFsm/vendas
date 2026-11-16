@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property string $bairro
  * @property string $data
  * @property string|null $periodo
+ * @property string|null $horas
+ * @property bool $realizada
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Pedido|null $pedido
@@ -34,7 +36,13 @@ class Retirada extends Model
     protected $fillable = [
         'bairro',
         'data',
-        'periodo'
+        'periodo',
+        'horas',
+        'realizada',
+    ];
+
+    protected $casts = [
+        'realizada' => 'boolean',
     ];
 
     public function pedido(): MorphOne

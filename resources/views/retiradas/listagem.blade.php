@@ -119,10 +119,10 @@
                         <th style="width: 70px;">ID</th>
                         <th class="text-start">Cliente</th>
                         <th class="text-start">Local / Bairro</th>
-                        <th>Data Prevista</th>
-                        <th>Período</th>
+                        <th>Data / Período / Hora</th>
                         <th>Valor Pedido</th>
                         <th>Status Pedido</th>
+                        <th style="width: 110px;">Realizada</th>
                         <th style="width: 190px;">Ações</th>
                     </tr>
                     </thead>
@@ -160,10 +160,13 @@
                                 <span>@{{ retirada.bairro || 'Local não informado' }}</span>
                             </td>
                             <td>
-                                <span>@{{ formatarData(retirada.data) }}</span>
-                            </td>
-                            <td>
-                                <span>@{{ retirada.periodo || '-' }}</span>
+                                <span class="d-block">@{{ formatarData(retirada.data) }}</span>
+                                <span class="badge bg-light text-dark border" style="font-size: 0.75rem;">
+                                    @{{ retirada.periodo || '-' }}
+                                </span>
+                                <small v-if="retirada.horas" class="text-muted d-block mt-1" style="font-size: 0.75rem;">
+                                    <i class="bi bi-clock me-1"></i>@{{ formatarHora(retirada.horas) }}
+                                </small>
                             </td>
                             <td>
                                 <span class="text-dark">
@@ -190,6 +193,15 @@
                                     </span>
                                 </div>
                                 <span v-else class="text-muted">-</span>
+                            </td>
+                            <td>
+                                <span
+                                    class="badge"
+                                    :class="retirada.realizada ? 'bg-success text-white' : 'bg-secondary text-white'"
+                                    style="border-radius: 30px; font-size: 0.75rem; padding: 0.35rem 0.6rem;">
+                                    <i class="bi" :class="retirada.realizada ? 'bi-check2-circle me-1' : 'bi-clock me-1'"></i>
+                                    @{{ retirada.realizada ? 'Realizada' : 'Pendente' }}
+                                </span>
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center gap-1">

@@ -122,24 +122,25 @@
                         <th>Data / Período / Hora</th>
                         <th>Valor Pedido</th>
                         <th>Status Pedido</th>
+                        <th style="width: 110px;">Realizada</th>
                         <th style="width: 190px;">Ações</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr v-if="carregando">
-                        <td colspan="8" class="text-center py-5 text-muted">
+                        <td colspan="9" class="text-center py-5 text-muted">
                             <span class="spinner-border spinner-border-sm me-2" role="status"></span>
                             <span>Carregando entregas...</span>
                         </td>
                     </tr>
                     <tr v-else-if="!entregas || entregas.length === 0">
-                        <td colspan="8" class="text-center py-5 text-muted">
+                        <td colspan="9" class="text-center py-5 text-muted">
                             <i class="bi bi-inbox fs-2 d-block mb-2 text-muted"></i>
                             <span>Nenhuma entrega registrada.</span>
                         </td>
                     </tr>
                     <tr v-else-if="entregasFiltradas.length === 0">
-                        <td colspan="8" class="text-center py-5 text-muted">
+                        <td colspan="9" class="text-center py-5 text-muted">
                             <span v-if="termoPesquisa">Nenhuma entrega encontrada para "<strong>@{{ termoPesquisa }}</strong>".</span>
                             <span v-else>Nenhuma entrega encontrada com os filtros selecionados.</span>
                         </td>
@@ -171,6 +172,9 @@
                                 <span class="badge bg-light text-dark border" style="font-size: 0.75rem;">
                                     @{{ entrega.periodo || '-' }}
                                 </span>
+                                <small v-if="entrega.horas" class="text-muted d-block mt-1" style="font-size: 0.75rem;">
+                                    <i class="bi bi-clock me-1"></i>@{{ formatarHora(entrega.horas) }}
+                                </small>
                             </td>
                             <td>
                                 <span class="text-dark">
@@ -200,6 +204,15 @@
                                     </span>
                                 </div>
                                 <span v-else class="text-muted">-</span>
+                            </td>
+                            <td>
+                                <span
+                                    class="badge"
+                                    :class="entrega.realizada ? 'bg-success text-white' : 'bg-secondary text-white'"
+                                    style="border-radius: 30px; font-size: 0.75rem; padding: 0.35rem 0.6rem;">
+                                    <i class="bi" :class="entrega.realizada ? 'bi-check2-circle me-1' : 'bi-clock me-1'"></i>
+                                    @{{ entrega.realizada ? 'Realizada' : 'Pendente' }}
+                                </span>
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center gap-1">

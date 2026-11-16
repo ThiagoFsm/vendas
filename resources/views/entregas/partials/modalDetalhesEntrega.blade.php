@@ -40,12 +40,13 @@
                             <span class="fw-bold text-dark">@{{ formatarData(dadosModal.data) }}</span>
                         </div>
                         <div class="col-md-6">
-                            <span class="text-muted small d-block">Período:</span>
+                            <span class="text-muted small d-block">Período / Hora:</span>
                             <span class="badge bg-light text-dark border px-2 py-1">
                                 @{{ dadosModal.periodo || 'Não informado' }}
+                                <span v-if="dadosModal.horas">(@{{ formatarHora(dadosModal.horas) }})</span>
                             </span>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12" v-if="tipoEntrega(dadosModal) === 'uber' || dadosModal.rua || dadosModal.bairro_id">
                             <span class="text-muted small d-block">Endereço de Destino:</span>
                             <span class="fw-bold text-dark">@{{ enderecoCompleto(dadosModal) }}</span>
                         </div>

@@ -38,6 +38,8 @@ class PedidosRequest extends FormRequest
             'entrega_retirada'                      => 'sometimes|array',
                 'entrega_retirada.data'             => 'date',
                 'entrega_retirada.periodo'          => 'string',
+                'entrega_retirada.horas'            => 'sometimes|nullable|string',
+                'entrega_retirada.realizada'        => 'sometimes|nullable|boolean',
             // retirada
                 'entrega_retirada.bairro'           => 'sometimes|string',
             // uber

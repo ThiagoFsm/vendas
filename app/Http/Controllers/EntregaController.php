@@ -106,9 +106,19 @@ class EntregaController extends Controller
             'numero' => 'nullable|string|max:50',
             'data' => 'nullable|date',
             'periodo' => 'nullable|string|max:50',
+            'horas' => 'nullable|string|max:20',
             'valor_uber' => 'nullable',
             'entregador_id' => 'nullable|exists:vendedores,id',
+            'realizada' => 'nullable|boolean',
         ]);
+
+        if (array_key_exists('horas', $dados) && empty($dados['horas'])) {
+            $dados['horas'] = null;
+        }
+
+        if (!array_key_exists('realizada', $dados)) {
+            $dados['realizada'] = false;
+        }
 
         if (array_key_exists('bairro_id', $dados) && empty($dados['bairro_id'])) {
             $dados['bairro_id'] = null;
@@ -118,11 +128,25 @@ class EntregaController extends Controller
             $dados['entregador_id'] = null;
         }
 
+        if (array_key_exists('rua', $dados) && empty($dados['rua'])) {
+            $dados['rua'] = null;
+        }
+
+        if (array_key_exists('numero', $dados) && empty($dados['numero'])) {
+            $dados['numero'] = null;
+        }
+
         if (array_key_exists('valor_uber', $dados)) {
             if ($dados['valor_uber'] === '' || $dados['valor_uber'] === null) {
                 $dados['valor_uber'] = null;
+            } elseif (is_numeric($dados['valor_uber'])) {
+                $dados['valor_uber'] = (float) $dados['valor_uber'];
             } elseif (is_string($dados['valor_uber'])) {
-                $dados['valor_uber'] = (float) str_replace(',', '.', str_replace('.', '', $dados['valor_uber']));
+                if (strpos($dados['valor_uber'], ',') !== false) {
+                    $dados['valor_uber'] = (float) str_replace(',', '.', str_replace('.', '', $dados['valor_uber']));
+                } else {
+                    $dados['valor_uber'] = (float) $dados['valor_uber'];
+                }
             }
         }
 
@@ -185,9 +209,19 @@ class EntregaController extends Controller
             'numero' => 'nullable|string|max:50',
             'data' => 'nullable|date',
             'periodo' => 'nullable|string|max:50',
+            'horas' => 'nullable|string|max:20',
             'valor_uber' => 'nullable',
             'entregador_id' => 'nullable|exists:vendedores,id',
+            'realizada' => 'nullable|boolean',
         ]);
+
+        if (array_key_exists('horas', $dados) && empty($dados['horas'])) {
+            $dados['horas'] = null;
+        }
+
+        if (!array_key_exists('realizada', $dados)) {
+            $dados['realizada'] = false;
+        }
 
         if (array_key_exists('bairro_id', $dados) && empty($dados['bairro_id'])) {
             $dados['bairro_id'] = null;
@@ -197,11 +231,25 @@ class EntregaController extends Controller
             $dados['entregador_id'] = null;
         }
 
+        if (array_key_exists('rua', $dados) && empty($dados['rua'])) {
+            $dados['rua'] = null;
+        }
+
+        if (array_key_exists('numero', $dados) && empty($dados['numero'])) {
+            $dados['numero'] = null;
+        }
+
         if (array_key_exists('valor_uber', $dados)) {
             if ($dados['valor_uber'] === '' || $dados['valor_uber'] === null) {
                 $dados['valor_uber'] = null;
+            } elseif (is_numeric($dados['valor_uber'])) {
+                $dados['valor_uber'] = (float) $dados['valor_uber'];
             } elseif (is_string($dados['valor_uber'])) {
-                $dados['valor_uber'] = (float) str_replace(',', '.', str_replace('.', '', $dados['valor_uber']));
+                if (strpos($dados['valor_uber'], ',') !== false) {
+                    $dados['valor_uber'] = (float) str_replace(',', '.', str_replace('.', '', $dados['valor_uber']));
+                } else {
+                    $dados['valor_uber'] = (float) $dados['valor_uber'];
+                }
             }
         }
 

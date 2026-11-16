@@ -32,6 +32,8 @@ export default {
                 id: null,
                 data: '',
                 periodo: '',
+                horas: '',
+                realizada: false,
                 bairro: ''
             }
         };
@@ -169,6 +171,11 @@ export default {
             return isNaN(data.getTime()) ? dataStr : data.toLocaleDateString('pt-BR');
         },
 
+        formatarHora(horaStr) {
+            if (!horaStr) return '';
+            return horaStr.substring(0, 5);
+        },
+
         formatarValor(valor) {
             if (valor === null || valor === undefined || valor === '') return 'R$ 0,00';
             const num = parseFloat(valor) || 0;
@@ -221,6 +228,8 @@ export default {
                 id: retirada.id,
                 data: retirada.data ? retirada.data.split('T')[0] : '',
                 periodo: retirada.periodo || '',
+                horas: retirada.horas ? retirada.horas.substring(0, 5) : '',
+                realizada: !!retirada.realizada,
                 bairro: retirada.bairro || ''
             };
             this.modalEditar = true;
@@ -241,6 +250,8 @@ export default {
                 const payload = {
                     data: this.formEditar.data,
                     periodo: this.formEditar.periodo || null,
+                    horas: this.formEditar.horas || null,
+                    realizada: !!this.formEditar.realizada,
                     bairro: this.formEditar.bairro
                 };
 

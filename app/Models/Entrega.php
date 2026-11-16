@@ -14,8 +14,10 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property string|null $numero
  * @property string|null $data
  * @property string|null $periodo
+ * @property string|null $horas
  * @property numeric|null $valor_uber
  * @property int|null $entregador_id
+ * @property bool $realizada
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Bairro|null $bairro
@@ -48,8 +50,14 @@ class Entrega extends Model
         'numero',
         'data',
         'periodo',
+        'horas',
         'valor_uber',
-        'entregador_id'
+        'entregador_id',
+        'realizada',
+    ];
+
+    protected $casts = [
+        'realizada' => 'boolean',
     ];
 
     public function pedido(): MorphOne

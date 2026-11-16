@@ -28,17 +28,20 @@ export default {
                 numero: '',
                 data: '',
                 periodo: '',
+                horas: '',
                 valor_uber: '0,00'
             },
             entrega: {
                 entregador_id: '',
                 data: '',
-                periodo: ''
+                periodo: '',
+                horas: ''
             },
             retirada: {
                 bairro: '',
                 data: '',
-                periodo: ''
+                periodo: '',
+                horas: ''
             },
             valor_antecipado: 0.00,
             valor_total_itens: 0.00,
@@ -187,6 +190,7 @@ export default {
                             numero: er.numero || '',
                             data: formatDate(er.data),
                             periodo: er.periodo || '',
+                            horas: er.horas ? er.horas.substring(0, 5) : '',
                             valor_uber: er.valor_uber || '0,00'
                         };
                     } else if (er.entregador_id) {
@@ -194,14 +198,16 @@ export default {
                         this.entrega = {
                             entregador_id: er.entregador_id || '',
                             data: formatDate(er.data),
-                            periodo: er.periodo || ''
+                            periodo: er.periodo || '',
+                            horas: er.horas ? er.horas.substring(0, 5) : ''
                         };
                     } else {
                         this.entrega_retirada = 'retirada';
                         this.retirada = {
                             bairro: er.bairro || '',
                             data: formatDate(er.data),
-                            periodo: er.periodo || ''
+                            periodo: er.periodo || '',
+                            horas: er.horas ? er.horas.substring(0, 5) : ''
                         };
                     }
                 }
@@ -245,18 +251,35 @@ export default {
                 return;
             }
 
-            const item = {
-                produto_id: produtoEncontrado.id,
-                produto: produtoEncontrado.tipo_produto ? produtoEncontrado.tipo_produto.descricao : '',
-                sabor: produtoEncontrado.sabor ? produtoEncontrado.sabor.descricao : '',
-                tamanho: produtoEncontrado.tamanho ? produtoEncontrado.tamanho.descricao : '',
-                quantidade: Number(this.item.quantidade),
-                valor: Number(this.item.quantidade) * Number(produtoEncontrado.valor_produto),
-                produzido: false
-            };
+            const qtd = Number(this.item.quantidade);
+            const valorTotal = qtd * Number(produtoEncontrado.valor_produto);
 
-            this.itens_pedido.push(item);
-            this.valor_total_itens += item.valor;
+            // Se o item (produto, sabor e tamanho) já estiver na lista, soma a quantidade e o valor
+            const itemExistente = this.itens_pedido.find(
+                i => Number(i.produto_id) === Number(produtoEncontrado.id)
+            );
+
+            if (itemExistente) {
+                this.$set(itemExistente, 'quantidade', Number(itemExistente.quantidade) + qtd);
+                this.$set(itemExistente, 'valor', Number(itemExistente.valor) + valorTotal);
+                this.valor_total_itens += valorTotal;
+                window.Toast.fire({ icon: 'info', title: 'Quantidade do item somada ao pedido.' });
+            } else {
+                const item = {
+                    produto_id: produtoEncontrado.id,
+                    produto: produtoEncontrado.tipo_produto ? produtoEncontrado.tipo_produto.descricao : '',
+                    sabor: produtoEncontrado.sabor ? produtoEncontrado.sabor.descricao : '',
+                    tamanho: produtoEncontrado.tamanho ? produtoEncontrado.tamanho.descricao : '',
+                    quantidade: qtd,
+                    valor: valorTotal,
+                    produzido: false
+                };
+
+                this.itens_pedido.push(item);
+                this.valor_total_itens += valorTotal;
+                window.Toast.fire({ icon: 'success', title: 'Item adicionado ao pedido.' });
+            }
+
             this.listar = true;
             this.limparCamposItem();
         },
@@ -295,13 +318,13 @@ export default {
         resetarDadosEntrega(tipoSelecionado) {
             if (this.isLoading) return;
             if (tipoSelecionado !== 'uber') {
-                this.uber = { bairro_id: '', rua: '', numero: '', data: '', periodo: '', valor_uber: '0,00' };
+                this.uber = { bairro_id: '', rua: '', numero: '', data: '', periodo: '', horas: '', valor_uber: '0,00' };
             }
             if (tipoSelecionado !== 'entrega') {
-                this.entrega = { entregador_id: '', data: '', periodo: '' };
+                this.entrega = { entregador_id: '', data: '', periodo: '', horas: '' };
             }
             if (tipoSelecionado !== 'retirada') {
-                this.retirada = { bairro: '', data: '', periodo: '' };
+                this.retirada = { bairro: '', data: '', periodo: '', horas: '' };
             }
         },
 

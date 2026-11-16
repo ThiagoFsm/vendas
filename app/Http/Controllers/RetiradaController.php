@@ -84,7 +84,17 @@ class RetiradaController extends Controller
             'bairro' => 'required|string|max:255',
             'data' => 'required|date',
             'periodo' => 'nullable|string|max:50',
+            'horas' => 'nullable|string|max:20',
+            'realizada' => 'nullable|boolean',
         ]);
+
+        if (array_key_exists('horas', $dados) && empty($dados['horas'])) {
+            $dados['horas'] = null;
+        }
+
+        if (!array_key_exists('realizada', $dados)) {
+            $dados['realizada'] = false;
+        }
 
         $retirada = Retirada::create($dados);
 
@@ -138,7 +148,13 @@ class RetiradaController extends Controller
             'bairro' => 'required|string|max:255',
             'data' => 'required|date',
             'periodo' => 'nullable|string|max:50',
+            'horas' => 'nullable|string|max:20',
+            'realizada' => 'nullable|boolean',
         ]);
+
+        if (array_key_exists('horas', $dados) && empty($dados['horas'])) {
+            $dados['horas'] = null;
+        }
 
         $retirada->update($dados);
         $retirada->load([

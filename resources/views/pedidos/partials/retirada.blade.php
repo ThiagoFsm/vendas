@@ -24,4 +24,9 @@
             <option value="Noite">Noite</option>
         </select>
     </div>
+    <div class="col-md-3 text-center">
+        <label for="horas_retirada" class="form-label small fw-bold text-muted">Horas</label>
+        <input type="time" id="horas_retirada" name="horas" class="form-control border-2 text-center"
+               v-model="retirada.horas" style="height: 40px; border-radius: 8px;">
+    </div>
 </div>
