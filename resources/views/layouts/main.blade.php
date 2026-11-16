@@ -325,8 +325,8 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="/perfil" class="nav-link {{ request()->is('perfil*') ? 'active' : '' }}">
-                <i class="bi bi-person"></i> Perfil
+            <a href="{{ route('vendas.entregas.index') }}" class="nav-link {{ request()->routeIs('vendas.entregas.*') || request()->is('vendas/entregas*') ? 'active' : '' }}">
+                <i class="bi bi-truck"></i> Entregas
             </a>
         </li>
     </ul>

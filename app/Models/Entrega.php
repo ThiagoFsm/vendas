@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 /**
  * @property int $id
@@ -50,16 +52,19 @@ class Entrega extends Model
         'entregador_id'
     ];
 
-    public function pedido()
+    public function pedido(): MorphOne
     {
         // Indica que esta entrega aponta para apenas UM pedido
         return $this->morphOne(Pedido::class, 'entrega_retirada');
     }
-    public function bairro() {
+
+    public function bairro(): BelongsTo
+    {
         return $this->belongsTo(Bairro::class, 'bairro_id', 'id');
     }
 
-    public function entregador() {
+    public function entregador(): BelongsTo
+    {
         return $this->belongsTo(Vendedor::class, 'entregador_id', 'id');
     }
 }

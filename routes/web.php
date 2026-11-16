@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\EntregaController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProducaoController;
 use App\Http\Controllers\ProdutoController;
@@ -67,5 +68,14 @@ Route::prefix('vendas')->name('vendas.')->group(function () {
         Route::post('/{sabor}/update', [SaborController::class, 'update'])->name('update');
         Route::post('/{sabor}/toggle-ativo', [SaborController::class, 'toggleAtivo'])->name('toggleAtivo');
         Route::post('/{sabor}/destroy', [SaborController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('entregas')->name('entregas.')->group(function () {
+        Route::get('/', [EntregaController::class, 'index'])->name('index');
+        Route::get('/dependencias', [EntregaController::class, 'dependencias'])->name('dependencias');
+        Route::post('/store', [EntregaController::class, 'store'])->name('store');
+        Route::get('/{entrega}', [EntregaController::class, 'show'])->name('show');
+        Route::post('/{entrega}/update', [EntregaController::class, 'update'])->name('update');
+        Route::post('/{entrega}/destroy', [EntregaController::class, 'destroy'])->name('destroy');
     });
 });

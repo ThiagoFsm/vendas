@@ -1,0 +1,182 @@
+<div v-if="modalEditar" class="modal-overlay">
+    <div class="modal-content-custom" style="width: 90%; max-width: 650px; max-height: 90vh; display: flex; flex-direction: column;">
+        <div class="modal-header-custom d-flex justify-content-between align-items-center">
+            <h4 class="m-0 fw-bold">
+                <i class="bi bi-pencil-square me-2 text-primary"></i>
+                Editar Entrega #@{{ formEditar.id }}
+                <span v-if="entregaEditando && entregaEditando.pedido" class="badge bg-secondary ms-2" style="font-size: 0.75rem;">
+                    Pedido #@{{ entregaEditando.pedido.id }}
+                </span>
+            </h4>
+            <span @click.prevent="fecharModalEditar" style="cursor: pointer; font-size: 1.25rem;" title="Fechar">
+                <i class="bi bi-x-lg"></i>
+            </span>
+        </div>
+
+        <form @submit.prevent="salvarEdicaoEntrega" class="d-flex flex-column flex-grow-1" style="min-height: 0;">
+            <div class="modal-body-scrollable flex-grow-1 p-4" style="overflow-y: auto;">
+                <!-- Card de Identificação -->
+                <div class="alert alert-light border d-flex align-items-center justify-content-between mb-4 py-2 px-3" style="border-radius: 8px;">
+                    <div>
+                        <span class="text-muted small d-block">Cliente:</span>
+                        <strong class="text-dark">
+                            @{{ (entregaEditando && entregaEditando.pedido && entregaEditando.pedido.cliente) ? entregaEditando.pedido.cliente.nome : 'Não informado' }}
+                        </strong>
+                    </div>
+                    <div class="text-end" v-if="entregaEditando && entregaEditando.pedido">
+                        <span class="text-muted small d-block">Valor do Pedido:</span>
+                        <strong class="text-success">@{{ formatarValor(entregaEditando.pedido.valor_total) }}</strong>
+                    </div>
+                </div>
+
+                <!-- Seção 1: Agendamento -->
+                <div class="card mb-4" style="border: 1.5px solid #d1d5db; border-radius: 10px;">
+                    <div class="card-header bg-white border-bottom fw-bold text-dark py-2 px-3">
+                        <i class="bi bi-calendar-event text-primary me-1"></i> Agendamento da Entrega
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="edit_data" class="form-label fw-bold small text-muted text-uppercase">
+                                    Data da Entrega <span class="text-danger">*</span>
+                                </label>
+                                <input
+                                    type="date"
+                                    id="edit_data"
+                                    class="form-control"
+                                    v-model="formEditar.data"
+                                    required
+                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                >
+                            </div>
+                            <div class="col-md-6">
+                                <label for="edit_periodo" class="form-label fw-bold small text-muted text-uppercase">
+                                    Período <span class="text-danger">*</span>
+                                </label>
+                                <select
+                                    id="edit_periodo"
+                                    class="form-select"
+                                    v-model="formEditar.periodo"
+                                    required
+                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                >
+                                    <option value="">Selecione o período...</option>
+                                    <option value="Manhã">Manhã</option>
+                                    <option value="Tarde">Tarde</option>
+                                    <option value="Noite">Noite</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção 2: Responsável e Modalidade -->
+                <div class="card mb-4" style="border: 1.5px solid #d1d5db; border-radius: 10px;">
+                    <div class="card-header bg-white border-bottom fw-bold text-dark py-2 px-3">
+                        <i class="bi bi-person-badge text-primary me-1"></i> Responsável & Modalidade
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="row g-3">
+                            <div class="col-md-7">
+                                <label for="edit_entregador_id" class="form-label fw-bold small text-muted text-uppercase">
+                                    Entregador Responsável
+                                </label>
+                                <select
+                                    id="edit_entregador_id"
+                                    class="form-select"
+                                    v-model="formEditar.entregador_id"
+                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                >
+                                    <option value="">Nenhum / Entrega via Uber</option>
+                                    <option v-for="entregador in dependencias.entregadores" :key="entregador.id" :value="entregador.id">
+                                        @{{ entregador.nome }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-5">
+                                <label for="edit_valor_uber" class="form-label fw-bold small text-muted text-uppercase">
+                                    Valor Uber (R$)
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text" style="border-radius: 8px 0 0 8px; border: 1.5px solid #d1d5db; border-right: none;">R$</span>
+                                    <input
+                                        type="text"
+                                        id="edit_valor_uber"
+                                        class="form-control"
+                                        placeholder="0,00"
+                                        v-model="formEditar.valor_uber"
+                                        style="border-radius: 0 8px 8px 0; border: 1.5px solid #d1d5db; height: 42px;"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção 3: Endereço -->
+                <div class="card" style="border: 1.5px solid #d1d5db; border-radius: 10px;">
+                    <div class="card-header bg-white border-bottom fw-bold text-dark py-2 px-3">
+                        <i class="bi bi-geo-alt text-danger me-1"></i> Endereço de Destino
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="row g-3">
+                            <div class="col-md-5">
+                                <label for="edit_bairro_id" class="form-label fw-bold small text-muted text-uppercase">
+                                    Bairro
+                                </label>
+                                <select
+                                    id="edit_bairro_id"
+                                    class="form-select"
+                                    v-model="formEditar.bairro_id"
+                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                >
+                                    <option value="">Selecione o bairro...</option>
+                                    <option v-for="bairro in dependencias.bairros" :key="bairro.id" :value="bairro.id">
+                                        @{{ bairro.descricao }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-5">
+                                <label for="edit_rua" class="form-label fw-bold small text-muted text-uppercase">
+                                    Rua / Logradouro
+                                </label>
+                                <input
+                                    type="text"
+                                    id="edit_rua"
+                                    class="form-control"
+                                    placeholder="Ex: Rua das Flores"
+                                    v-model="formEditar.rua"
+                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                >
+                            </div>
+                            <div class="col-md-2">
+                                <label for="edit_numero" class="form-label fw-bold small text-muted text-uppercase">
+                                    Número
+                                </label>
+                                <input
+                                    type="text"
+                                    id="edit_numero"
+                                    class="form-control text-center"
+                                    placeholder="Nº"
+                                    v-model="formEditar.numero"
+                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer-custom d-flex justify-content-end align-items-center gap-2 p-3 border-top">
+                <button type="button" class="btn btn-fechar" @click="fecharModalEditar">
+                    Cancelar
+                </button>
+                <button type="submit" class="btn btn-confirmar d-flex align-items-center gap-1" :disabled="salvando">
+                    <span v-if="salvando" class="spinner-border spinner-border-sm me-1" role="status"></span>
+                    <i v-else class="bi bi-check-lg me-1"></i>
+                    <span>@{{ salvando ? 'Salvando...' : 'Salvar Alterações' }}</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
