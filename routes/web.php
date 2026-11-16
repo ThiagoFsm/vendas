@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\ProducaoController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\SaborController;
 use Illuminate\Support\Facades\Route;
@@ -45,8 +46,8 @@ Route::prefix('vendas')->name('vendas.')->group(function () {
     });
 
     Route::prefix('producao')->name('producao.')->group(function () {
-        Route::get('/', [SaborController::Class, 'index'])->name('index');
-        Route::post('/{produto}/{pedido}', [SaborController::Class, 'store'])->name('marcarProdutoFeito');
+        Route::get('/', [ProducaoController::class, 'index'])->name('index');
+        Route::post('/{produto}/{pedido}', [ProducaoController::class, 'store'])->name('marcarProdutoFeito');
     });
 
     Route::prefix('produtos')->name('produtos.')->group(function () {
@@ -57,5 +58,14 @@ Route::prefix('vendas')->name('vendas.')->group(function () {
         Route::post('/{produto}/update', [ProdutoController::class, 'update'])->name('update');
         Route::post('/{produto}/toggle-ativo', [ProdutoController::class, 'toggleAtivo'])->name('toggleAtivo');
         Route::post('/{produto}/destroy', [ProdutoController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('sabores')->name('sabores.')->group(function () {
+        Route::get('/', [SaborController::class, 'index'])->name('index');
+        Route::post('/store', [SaborController::class, 'store'])->name('store');
+        Route::get('/{sabor}', [SaborController::class, 'show'])->name('show');
+        Route::post('/{sabor}/update', [SaborController::class, 'update'])->name('update');
+        Route::post('/{sabor}/toggle-ativo', [SaborController::class, 'toggleAtivo'])->name('toggleAtivo');
+        Route::post('/{sabor}/destroy', [SaborController::class, 'destroy'])->name('destroy');
     });
 });

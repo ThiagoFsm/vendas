@@ -10,9 +10,9 @@
     </div>
     <div class="card card-custom">
         <div class="p-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div class="d-flex align-items-center flex-wrap gap-2 flex-grow-1" style="max-width: 900px;">
+            <div class="d-flex align-items-center flex-wrap gap-2">
                 <!-- Barra de Pesquisa de Cliente -->
-                <div class="position-relative" style="min-width: 260px; flex: 1;">
+                <div class="position-relative" style="width: 300px; flex-shrink: 0;">
                     <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
                     <input
                         type="text"
@@ -33,7 +33,7 @@
                 </div>
 
                 <!-- Filtro Vendedor -->
-                <div style="min-width: 200px;">
+                <div style="width: 200px; flex-shrink: 0;">
                     <select
                         class="form-select"
                         v-model="filtroVendedor"
@@ -47,7 +47,7 @@
                 </div>
 
                 <!-- Filtro Produção -->
-                <div style="min-width: 170px;">
+                <div style="width: 170px; flex-shrink: 0;">
                     <select
                         class="form-select"
                         v-model="filtroProducao"
@@ -63,8 +63,8 @@
                 <button
                     v-if="hasFiltrosAtivos"
                     type="button"
-                    class="btn btn-outline-secondary d-flex align-items-center gap-1"
-                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 38px;"
+                    class="btn btn-outline-secondary d-flex align-items-center gap-1 text-nowrap"
+                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 38px; flex-shrink: 0;"
                     @click="limparFiltros"
                     title="Limpar todos os filtros"
                 >

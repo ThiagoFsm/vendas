@@ -1,124 +1,211 @@
 <script>
-    import {marcarComoFeito} from "../../funcoes/pedidos";
+export default {
+    name: "Sabores",
+    props: ['rota_sabores', 'rota_store'],
 
-    export default {
-        name: "sabores",
-        props: ["sabores", 'pedidos'],
-        data() {
-            return {
-                modal: false,
-                dadosModal: [],
-                termoPesquisa: '',
-                filtroProducao: '',
+    data() {
+        return {
+            sabores: [],
+            carregando: false,
+            salvando: false,
+            modal: false,
+            editando: false,
+            saborIdEditando: null,
+
+            // Filtros e busca
+            termoPesquisa: '',
+            filtroStatus: '',
+
+            // Formulário
+            form: {
+                descricao: '',
+                ativo: true
             }
+        };
+    },
+
+    async mounted() {
+        await this.buscarSabores();
+    },
+
+    computed: {
+        hasFiltrosAtivos() {
+            return Boolean(this.termoPesquisa || this.filtroStatus);
         },
 
-        mounted() {
-            // console.log(this.pedidos)
-        },
+        saboresFiltrados() {
+            if (!this.sabores || !Array.isArray(this.sabores)) return [];
 
-        methods: {
-            GerarCorSabor(id) {
-                const cores = ['#cd5c5c', '#1e90ff', '#bc8f8f', '#db7093', '#8fbc8f', '#9370db'];
-                // Isso garante que o mesmo ID sempre receba a mesma cor da lista
-                return cores[id % cores.length];
-            },
+            return this.sabores.filter(sabor => {
+                // 1. Filtro por Descrição do Sabor
+                if (this.termoPesquisa && this.termoPesquisa.trim()) {
+                    const normalizar = (texto) => (texto || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                    const termo = normalizar(this.termoPesquisa.trim());
+                    const descricao = normalizar(sabor.descricao);
 
-            limparFiltros() {
-                this.termoPesquisa = '';
-                this.filtroProducao = '';
-            },
-
-            async filtrarItens(sabor_id, sabor_descricao, tamanho_id) {
-                try {
-                    this.limparFiltros();
-                    const response = await axios.get(`/vendas/producao/`, {
-                        params: {
-                            sabor_id: sabor_id,
-                            tamanho_id: tamanho_id
-                        }
-                    });
-                    if (response.status === 200 || response.status === 201) {
-                        this.dadosModal = response?.data;
-                        this.modal = true;
-                    }
-                } catch (error) {
-                    window.Toast.fire({ icon: 'error', title: `Erro ao buscar produtos do sabor ${sabor_descricao}.` });
-                }
-            },
-
-            async marcarProdutoComoFeito(pedido_id, produto_id) {
-                await marcarComoFeito(pedido_id, produto_id);
-                if (this.dadosModal && Array.isArray(this.dadosModal)) {
-                    const pedido = this.dadosModal.find(p => p.id === pedido_id);
-                    if (pedido && pedido.produtos) {
-                        const prod = pedido.produtos.find(pr => pr.id === produto_id);
-                        if (prod && prod.pivot) {
-                            this.$set(prod.pivot, 'produzido', true);
-                        }
-                    }
-                }
-            },
-
-            fecharModal() {
-                this.modal = false;
-                this.limparFiltros();
-            },
-        },
-
-        computed: {
-            hasFiltrosAtivos() {
-                return Boolean(this.termoPesquisa || this.filtroProducao);
-            },
-
-            dadosModalFiltrados() {
-                if (!this.dadosModal || !Array.isArray(this.dadosModal)) return [];
-
-                return this.dadosModal.filter(pedido => {
-                    // 1. Filtro por Cliente
-                    if (this.termoPesquisa && this.termoPesquisa.trim()) {
-                        const normalizar = (texto) => (texto || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-                        const termo = normalizar(this.termoPesquisa.trim());
-                        const nomeCliente = normalizar(pedido.cliente?.nome);
-                        if (!nomeCliente.includes(termo)) {
-                            return false;
-                        }
-                    }
-
-                    // 2. Filtro por Produção (feito ou à fazer)
-                    const produzido = Boolean(pedido.produtos?.[0]?.pivot?.produzido);
-                    if (this.filtroProducao === 'feito' && !produzido) {
+                    if (!descricao.includes(termo)) {
                         return false;
                     }
-                    if (this.filtroProducao === 'a_fazer' && produzido) {
-                        return false;
-                    }
+                }
 
-                    return true;
+                // 2. Filtro por Status Ativo/Inativo
+                if (this.filtroStatus === 'ativo' && !sabor.ativo) {
+                    return false;
+                }
+                if (this.filtroStatus === 'inativo' && sabor.ativo) {
+                    return false;
+                }
+
+                return true;
+            });
+        }
+    },
+
+    methods: {
+        GerarCorSabor(id) {
+            const cores = ['#cd5c5c', '#1e90ff', '#bc8f8f', '#db7093', '#8fbc8f', '#9370db', '#e67e22', '#16a085'];
+            return cores[id % cores.length];
+        },
+
+        limparFiltros() {
+            this.termoPesquisa = '';
+            this.filtroStatus = '';
+        },
+
+        async buscarSabores() {
+            this.carregando = true;
+            try {
+                const endpoint = this.rota_sabores || '/vendas/sabores';
+                const response = await axios.get(endpoint);
+                this.sabores = response.data || [];
+            } catch (error) {
+                window.Toast.fire({
+                    icon: 'error',
+                    title: 'Erro ao carregar lista de sabores.'
                 });
-            },
-
-            totalItens() {
-                if (!this.dadosModal || !Array.isArray(this.dadosModal)) return 0;
-                return this.dadosModal.reduce((acc, pedido) => {
-                    const qtd = pedido.produtos?.reduce((s, p) => s + Number(p.pivot?.quantidade || 0), 0) || 0;
-                    return acc + qtd;
-                }, 0);
-            },
-
-            totalItensFeitos() {
-                if (!this.dadosModal || !Array.isArray(this.dadosModal)) return 0;
-                return this.dadosModal.reduce((acc, pedido) => {
-                    const feitos = pedido.produtos?.reduce((s, p) => {
-                        return p.pivot?.produzido ? s + Number(p.pivot?.quantidade || 0) : s;
-                    }, 0) || 0;
-                    return acc + feitos;
-                }, 0);
-            },
-
-            totalItensAFazer() {
-                return this.totalItens - this.totalItensFeitos;
+            } finally {
+                this.carregando = false;
             }
+        },
+
+        abrirModalCriar() {
+            this.editando = false;
+            this.saborIdEditando = null;
+            this.form = {
+                descricao: '',
+                ativo: true
+            };
+            this.modal = true;
+        },
+
+        abrirModalEditar(sabor) {
+            this.editando = true;
+            this.saborIdEditando = sabor.id;
+            this.form = {
+                descricao: sabor.descricao,
+                ativo: Boolean(sabor.ativo)
+            };
+            this.modal = true;
+        },
+
+        fecharModal() {
+            this.modal = false;
+            this.salvando = false;
+        },
+
+        async salvarSabor() {
+            if (!this.form.descricao || !this.form.descricao.trim()) {
+                window.Toast.fire({
+                    icon: 'warning',
+                    title: 'Informe a descrição do sabor.'
+                });
+                return;
+            }
+
+            this.salvando = true;
+
+            try {
+                const payload = {
+                    descricao: this.form.descricao.trim(),
+                    ativo: this.form.ativo
+                };
+
+                let response;
+                if (this.editando && this.saborIdEditando) {
+                    response = await axios.post(`/vendas/sabores/${this.saborIdEditando}/update`, payload);
+                } else {
+                    const endpoint = this.rota_store || '/vendas/sabores/store';
+                    response = await axios.post(endpoint, payload);
+                }
+
+                window.Toast.fire({
+                    icon: 'success',
+                    title: response.data?.message || 'Sabor salvo com sucesso!'
+                });
+
+                this.fecharModal();
+                await this.buscarSabores();
+
+            } catch (error) {
+                const msg = error.response?.data?.message || 'Erro ao salvar sabor.';
+                window.Toast.fire({
+                    icon: 'error',
+                    title: msg
+                });
+            } finally {
+                this.salvando = false;
+            }
+        },
+
+        async toggleAtivo(sabor) {
+            try {
+                const response = await axios.post(`/vendas/sabores/${sabor.id}/toggle-ativo`);
+                sabor.ativo = response.data?.ativo ?? !sabor.ativo;
+
+                window.Toast.fire({
+                    icon: 'success',
+                    title: response.data?.message || 'Status alterado com sucesso!'
+                });
+            } catch (error) {
+                window.Toast.fire({
+                    icon: 'error',
+                    title: 'Não foi possível alterar o status do sabor.'
+                });
+            }
+        },
+
+        async excluirSabor(sabor) {
+            Swal.fire({
+                title: 'Excluir sabor?',
+                text: `Deseja realmente excluir o sabor "${sabor.descricao}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sim, excluir',
+                cancelButtonText: 'Cancelar'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        const response = await axios.post(`/vendas/sabores/${sabor.id}/destroy`);
+
+                        window.Toast.fire({
+                            icon: response.data?.action === 'deactivated' ? 'info' : 'success',
+                            title: response.data?.message || 'Sabor processado com sucesso!'
+                        });
+
+                        await this.buscarSabores();
+
+                    } catch (error) {
+                        window.Toast.fire({
+                            icon: 'error',
+                            title: 'Erro ao excluir sabor.',
+                            text: error.response?.data?.message || error.message
+                        });
+                    }
+                }
+            });
         }
     }
+};
 </script>

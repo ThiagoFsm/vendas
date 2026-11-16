@@ -320,6 +320,11 @@
             </a>
         </li>
         <li class="nav-item">
+            <a href="{{ route('vendas.sabores.index') }}" class="nav-link {{ request()->routeIs('vendas.sabores.*') || request()->is('vendas/sabores*') ? 'active' : '' }}">
+                <i class="bi bi-tag"></i> Sabores
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="/perfil" class="nav-link {{ request()->is('perfil*') ? 'active' : '' }}">
                 <i class="bi bi-person"></i> Perfil
             </a>

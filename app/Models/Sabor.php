@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
  * @property string $descricao
- * @property int $ativo
+ * @property boolean $ativo
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Produto> $produtos
@@ -30,10 +31,16 @@ class Sabor extends Model
     protected $table = 'sabores';
 
     protected $fillable = [
-        'descricao'
+        'descricao',
+        'ativo',
     ];
 
-    public function produtos() {
+    protected $casts = [
+        'ativo' => 'boolean',
+    ];
+
+    public function produtos(): HasMany
+    {
         return $this->hasMany(Produto::class, 'sabor_id');
     }
 }

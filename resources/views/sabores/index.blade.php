@@ -1,11 +1,11 @@
 @extends('layouts.main')
 
-@section('title', 'Vendas')
+@section('title', 'Sabores')
 
 @section('content')
     <sabores inline-template
-        :sabores="{{ json_encode($sabores ?? []) }}"
-        :pedidos="{{ json_encode($pedidos ?? []) }}">
+        rota_sabores="{{ route('vendas.sabores.index') }}"
+        rota_store="{{ route('vendas.sabores.store') }}">
         @include('sabores.listagem')
     </sabores>
 @endsection

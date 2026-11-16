@@ -2,108 +2,119 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pedido;
-use App\Models\Produto;
+use App\Http\Requests\SaborRequest;
 use App\Models\Sabor;
-use App\Services\ProducaoService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SaborController extends Controller
 {
-    protected $producaoService;
-
-    public function __construct(ProducaoService $producaoService) {
-        $this->producaoService = $producaoService;
-    }
-
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\JsonResponse|\Illuminate\View\View
+     * @param Request $request
+     * @return View|JsonResponse
      */
-    public function index()
+    public function index(Request $request): View|JsonResponse
     {
-        $sabores = Sabor::where('ativo', 1)->orderBy('id')->get();
-        $pedidos = Pedido::with([
-                'produtos',
-                'produtos.tipoProduto',
-                'produtos.sabor',
-                'produtos.tamanho',
-        ])->get();
+        if ($request->ajax() || $request->wantsJson()) {
+            $sabores = Sabor::withCount('produtos')
+                ->orderBy('id', 'desc')
+                ->get();
 
-        if (request()->ajax()) {
-            $sabor_id = request('sabor_id');
-            $tamanho_id = request('tamanho_id');
-            $pedidosFiltrados = $this->producaoService->filtarPedidos($sabor_id, $tamanho_id);
-
-            return response()->json($pedidosFiltrados);
+            return response()->json($sabores);
         }
 
-        return view('sabores.index', compact('sabores', 'pedidos'));
+        return view('sabores.index');
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * @param Produto $produto
-     * @param Pedido $pedido
+     * @param SaborRequest $request
      * @return JsonResponse
      */
-    public function store(Produto $produto, Pedido $pedido): JsonResponse
+    public function store(SaborRequest $request): JsonResponse
     {
-        $produtoProduzido = $this->producaoService->marcarProdutoComoProduzido($pedido, $produto);
-        return response()->json($produtoProduzido);
+        $dados = $request->validated();
+        if (!isset($dados['ativo'])) {
+            $dados['ativo'] = true;
+        }
+
+        $sabor = Sabor::create($dados);
+        $sabor->loadCount('produtos');
+
+        return response()->json([
+            'message' => 'Sabor cadastrado com sucesso!',
+            'sabor'   => $sabor,
+        ], 201);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Sabor  $sabor
-     * @return \Illuminate\Http\Response
+     * @param Sabor $sabor
+     * @return JsonResponse
      */
-    public function show(Sabor $sabor)
+    public function show(Sabor $sabor): JsonResponse
     {
-        //
+        return response()->json($sabor->loadCount('produtos'));
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Sabor  $sabor
-     * @return \Illuminate\Http\Response
+     * @param SaborRequest $request
+     * @param Sabor $sabor
+     * @return JsonResponse
      */
-    public function edit(Sabor $sabor)
+    public function update(SaborRequest $request, Sabor $sabor): JsonResponse
     {
-        //
+        $dados = $request->validated();
+        $sabor->update($dados);
+        $sabor->loadCount('produtos');
+
+        return response()->json([
+            'message' => 'Sabor atualizado com sucesso!',
+            'sabor'   => $sabor,
+        ]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Alterna o status ativo/inativo do sabor
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Sabor  $sabor
-     * @return \Illuminate\Http\Response
+     * @param Sabor $sabor
+     * @return JsonResponse
      */
-    public function update(Request $request, Sabor $sabor)
+    public function toggleAtivo(Sabor $sabor): JsonResponse
     {
-        //
+        $sabor->ativo = !$sabor->ativo;
+        $sabor->save();
+
+        $status = $sabor->ativo ? 'ativado' : 'desativado';
+
+        return response()->json([
+            'message' => "Sabor {$status} com sucesso!",
+            'ativo'   => $sabor->ativo,
+        ]);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Exclui o sabor ou o inativa caso já esteja vinculado a produtos
      *
-     * @param  \App\Models\Sabor  $sabor
-     * @return \Illuminate\Http\Response
+     * @param Sabor $sabor
+     * @return JsonResponse
      */
-    public function destroy(Sabor $sabor)
+    public function destroy(Sabor $sabor): JsonResponse
     {
-        //
+        if ($sabor->produtos()->exists()) {
+            $sabor->ativo = false;
+            $sabor->save();
+
+            return response()->json([
+                'message' => 'O sabor possui produtos vinculados e foi desativado em vez de excluído.',
+                'action'  => 'deactivated',
+            ]);
+        }
+
+        $sabor->delete();
+
+        return response()->json([
+            'message' => 'Sabor excluído com sucesso!',
+            'action'  => 'deleted',
+        ]);
     }
 }

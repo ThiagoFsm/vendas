@@ -12,9 +12,9 @@
     <div class="card card-custom">
         <!-- Barra de Filtros e Busca -->
         <div class="p-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div class="d-flex align-items-center flex-wrap gap-2 flex-grow-1" style="max-width: 950px;">
+            <div class="d-flex align-items-center flex-wrap gap-2">
                 <!-- Pesquisa de Texto -->
-                <div class="position-relative" style="min-width: 240px; flex: 1;">
+                <div class="position-relative" style="width: 300px; flex-shrink: 0;">
                     <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
                     <input
                         type="text"
@@ -35,7 +35,7 @@
                 </div>
 
                 <!-- Filtro Tipo de Produto -->
-                <div style="min-width: 170px;">
+                <div style="width: 180px; flex-shrink: 0;">
                     <select
                         class="form-select"
                         v-model="filtroTipo"
@@ -49,7 +49,7 @@
                 </div>
 
                 <!-- Filtro Sabor -->
-                <div style="min-width: 160px;">
+                <div style="width: 200px; flex-shrink: 0;">
                     <select
                         class="form-select"
                         v-model="filtroSabor"
@@ -63,7 +63,7 @@
                 </div>
 
                 <!-- Filtro Status -->
-                <div style="min-width: 140px;">
+                <div style="width: 140px; flex-shrink: 0;">
                     <select
                         class="form-select"
                         v-model="filtroStatus"
@@ -79,8 +79,8 @@
                 <button
                     v-if="hasFiltrosAtivos"
                     type="button"
-                    class="btn btn-outline-secondary d-flex align-items-center gap-1"
-                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 38px;"
+                    class="btn btn-outline-secondary d-flex align-items-center gap-1 text-nowrap"
+                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 38px; flex-shrink: 0;"
                     @click="limparFiltros"
                     title="Limpar todos os filtros"
                 >
@@ -101,7 +101,7 @@
                     <thead>
                     <tr class="text-center">
                         <th style="width: 70px;">ID</th>
-                        <th class="text-start">Tipo de Produto</th>
+                        <th>Tipo de Produto</th>
                         <th class="text-start">Sabor</th>
                         <th>Tamanho</th>
                         <th>Valor</th>
@@ -129,15 +129,15 @@
                     </tr>
                     <template v-else>
                         <tr v-for="produto in produtosFiltrados" :key="produto.id" class="text-center">
-                            <td class="fw-bold text-dark">@{{ produto.id }}</td>
-                            <td class="text-start fw-semibold">
+                            <td>@{{ produto.id }}</td>
+                            <td>
                                 @{{ produto.tipo_produto ? produto.tipo_produto.descricao : '-' }}
                             </td>
                             <td class="text-start">
                                 @{{ produto.sabor ? produto.sabor.descricao : '-' }}
                             </td>
                             <td>
-                                <span class="badge bg-light text-dark border">
+                                <span>
                                     @{{ produto.tamanho ? produto.tamanho.descricao : '-' }}
                                 </span>
                             </td>
