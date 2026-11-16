@@ -5,6 +5,7 @@ use App\Http\Controllers\EntregaController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProducaoController;
 use App\Http\Controllers\ProdutoController;
+use App\Http\Controllers\RetiradaController;
 use App\Http\Controllers\SaborController;
 use Illuminate\Support\Facades\Route;
 
@@ -77,5 +78,14 @@ Route::prefix('vendas')->name('vendas.')->group(function () {
         Route::get('/{entrega}', [EntregaController::class, 'show'])->name('show');
         Route::post('/{entrega}/update', [EntregaController::class, 'update'])->name('update');
         Route::post('/{entrega}/destroy', [EntregaController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('retiradas')->name('retiradas.')->group(function () {
+        Route::get('/', [RetiradaController::class, 'index'])->name('index');
+        Route::get('/dependencias', [RetiradaController::class, 'dependencias'])->name('dependencias');
+        Route::post('/store', [RetiradaController::class, 'store'])->name('store');
+        Route::get('/{retirada}', [RetiradaController::class, 'show'])->name('show');
+        Route::post('/{retirada}/update', [RetiradaController::class, 'update'])->name('update');
+        Route::post('/{retirada}/destroy', [RetiradaController::class, 'destroy'])->name('destroy');
     });
 });

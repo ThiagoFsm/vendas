@@ -329,6 +329,11 @@
                 <i class="bi bi-truck"></i> Entregas
             </a>
         </li>
+        <li class="nav-item">
+            <a href="{{ route('vendas.retiradas.index') }}" class="nav-link {{ request()->routeIs('vendas.retiradas.*') || request()->is('vendas/retiradas*') ? 'active' : '' }}">
+                <i class="bi bi-shop"></i> Retiradas
+            </a>
+        </li>
     </ul>
     <div class="resizer" id="resizer"></div>
 </nav>

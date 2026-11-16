@@ -115,7 +115,7 @@
                 <table class="table table-hover align-middle table-bordered-custom mb-0">
                     <thead>
                     <tr class="text-center">
-                        <th style="width: 80px;">ID</th>
+                        <th style="width: 70px;">ID</th>
                         <th class="text-start">Cliente</th>
                         <th>Tipo / Envio</th>
                         <th class="text-start">Endereço / Destino</th>
@@ -146,14 +146,9 @@
                     </tr>
                     <template v-else>
                         <tr v-for="entrega in entregasFiltradas" :key="entrega.id" class="text-center">
-                            <td class="fw-bold text-dark">
-                                #@{{ entrega.id }}
-                                <div v-if="entrega.pedido" class="text-muted small" style="font-size: 0.75rem;">
-                                    Ped: #@{{ entrega.pedido.id }}
-                                </div>
-                            </td>
+                            <td>@{{ entrega.id }}</td>
                             <td class="text-start">
-                                <span class="fw-bold text-dark d-block">
+                                <span class="text-dark d-block">
                                     @{{ entrega.pedido && entrega.pedido.cliente ? entrega.pedido.cliente.nome : '-' }}
                                 </span>
                                 <span class="text-muted small" v-if="entrega.pedido && entrega.pedido.cliente && entrega.pedido.cliente.telefone">
@@ -172,13 +167,13 @@
                                 <span class="text-dark">@{{ enderecoCompleto(entrega) }}</span>
                             </td>
                             <td>
-                                <span class="fw-bold d-block">@{{ formatarData(entrega.data) }}</span>
+                                <span class="d-block">@{{ formatarData(entrega.data) }}</span>
                                 <span class="badge bg-light text-dark border" style="font-size: 0.75rem;">
                                     @{{ entrega.periodo || '-' }}
                                 </span>
                             </td>
                             <td>
-                                <span class="fw-bold text-dark">
+                                <span class="text-dark">
                                     @{{ formatarValor(entrega.pedido ? entrega.pedido.valor_total : 0) }}
                                 </span>
                                 <span v-if="entrega.valor_uber" class="small text-muted d-block">

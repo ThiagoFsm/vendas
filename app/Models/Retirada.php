@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 /**
  * @property int $id
@@ -36,7 +37,7 @@ class Retirada extends Model
         'periodo'
     ];
 
-    public function pedido()
+    public function pedido(): MorphOne
     {
         // Indica que esta entrega aponta para apenas UM pedido
         return $this->morphOne(Pedido::class, 'entrega_retirada');
