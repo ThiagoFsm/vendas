@@ -72,10 +72,10 @@
                                        class="form-control border-2" v-model="item.quantidade" min="1" placeholder="Qtd"
                                        style="height: 40px; border-radius: 8px;">
                             </div>
-                            <div class="col-md-1 my-1 p-0">
-                                <button @click.prevent="adicionarItem" class="mx-2 mb-2 px-2 py-1"
+                            <div class="col-md-1 my-0 p-0">
+                                <button @click.prevent="adicionarItem" class="px-3 py-2"
                                         style="border-radius: 8px; background-color: black; border: black">
-                                    <h5 style="font-size: 14px; margin: 0; color: white; font-weight: bold">+</h5>
+                                    <h5 style="font-size: 20px; margin: 0; color: white; font-weight: bold">+</h5>
                                 </button>
                             </div>
                         </div>

@@ -2,7 +2,7 @@
     import { marcarComoFeito } from '../../funcoes/pedidos';
     export default {
         name: "Pedidos",
-        props: ['rota_pedidos', 'rota_criar', 'rota_store'],
+        props: ['rota_pedidos', 'rota_criar_cliente', 'rota_store'],
         data() {
             return {
                 pedidos: [],
@@ -98,7 +98,7 @@
             },
 
             criarPedido() {
-                window.location.href = `${this.rota_criar}`;
+                window.location.href = `${this.rota_criar_cliente}`;
             },
 
             async detalhesPedido(pedido_id) {

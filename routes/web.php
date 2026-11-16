@@ -43,7 +43,7 @@ Route::prefix('vendas')->name('vendas.')->group(function () {
 
     Route::prefix('clientes')->name('clientes.')->group(function () {
         Route::get('/', [ClienteController::class, 'index'])->name('index');
-        Route::get('/create', [ClienteController::class, 'create'])->name('create');
+        Route::get('create', [ClienteController::class, 'create'])->name('create');
         Route::post('/store', [ClienteController::class, 'store'])->name('store');
     });
 

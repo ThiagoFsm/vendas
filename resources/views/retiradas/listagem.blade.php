@@ -157,17 +157,13 @@
                                 </span>
                             </td>
                             <td class="text-start">
-                                <span class="badge bg-light text-dark border px-2 py-1">
-                                    <i class="bi bi-geo-alt text-danger me-1"></i> @{{ retirada.bairro || 'Local não informado' }}
-                                </span>
+                                <span>@{{ retirada.bairro || 'Local não informado' }}</span>
                             </td>
                             <td>
                                 <span>@{{ formatarData(retirada.data) }}</span>
                             </td>
                             <td>
-                                <span class="badge bg-light text-dark border" style="font-size: 0.75rem;">
-                                    @{{ retirada.periodo || '-' }}
-                                </span>
+                                <span>@{{ retirada.periodo || '-' }}</span>
                             </td>
                             <td>
                                 <span class="text-dark">
