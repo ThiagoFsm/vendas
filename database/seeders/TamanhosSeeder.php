@@ -14,6 +14,10 @@ class TamanhosSeeder extends Seeder
             ['descricao' => '350g', 'ativo' => true],
             ['descricao' => '500g', 'ativo' => true],
             ['descricao' => '200g - coração', 'ativo' => true],
+            ['descricao' => 'P', 'ativo' => true],
+            ['descricao' => 'G', 'ativo' => true],
+            ['descricao' => 'Taça P', 'ativo' => true],
+            ['descricao' => 'Taça G', 'ativo' => true],
         ];
 
         foreach ($tamanhos as $tamanho) {
