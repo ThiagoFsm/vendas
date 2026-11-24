@@ -10,7 +10,7 @@ class TipoProdutosSeeder extends Seeder
     public function run(): void
     {
         $tipos = [
-            ['descricao' => 'Sobremesa', 'ativo' => false],
+            ['descricao' => 'Sobremesa', 'ativo' => true],
             ['descricao' => 'Ovo de Páscoa', 'ativo' => true],
             ['descricao' => 'Coração Lapidado', 'ativo' => true],
         ];
