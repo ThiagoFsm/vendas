@@ -164,7 +164,7 @@
                                 title: response?.message
                             });
 
-                            this.fecharModal();
+                            await this.detalhesPedido(pedido_id);
                             await this.buscarPedidos();
 
                         } catch (error) {
@@ -201,7 +201,7 @@
                                 title: response?.data?.message || 'Pedido marcado como feito com sucesso!'
                             });
 
-                            this.fecharModal();
+                            await this.detalhesPedido(pedido_id);
                             await this.buscarPedidos();
 
                         } catch (error) {

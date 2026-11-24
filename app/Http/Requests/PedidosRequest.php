@@ -18,6 +18,12 @@ class PedidosRequest extends FormRequest
                 'pedidoId' => $this->route('pedidoId'),
             ]);
         }
+
+        if ($this->has('valor_antecipado') && is_string($this->valor_antecipado) && trim($this->valor_antecipado) !== '') {
+            $this->merge([
+                'valor_antecipado' => (float) str_replace(',', '.', str_replace('.', '', $this->valor_antecipado)),
+            ]);
+        }
     }
 
     public function rules(): array
@@ -33,23 +39,23 @@ class PedidosRequest extends FormRequest
                 'pedido.*.produto'                  => 'string|exists:tipo_produtos,descricao',
                 'pedido.*.sabor'                    => 'string|exists:sabores,descricao',
                 'pedido.*.tamanho'                  => 'string|exists:tamanhos,descricao',
-                'pedido.*.quantidade'               => 'string|min:1',
-                'pedido.*.valor'                    => 'integer',
-            'entrega_retirada'                      => 'sometimes|array',
-                'entrega_retirada.data'             => 'date',
-                'entrega_retirada.periodo'          => 'string',
+                'pedido.*.quantidade'               => 'numeric|min:1',
+                'pedido.*.valor'                    => 'numeric',
+            'entrega_retirada'                      => 'sometimes|nullable|array',
+                'entrega_retirada.data'             => 'sometimes|nullable|date',
+                'entrega_retirada.periodo'          => 'sometimes|nullable|string',
                 'entrega_retirada.horas'            => 'sometimes|nullable|string',
                 'entrega_retirada.realizada'        => 'sometimes|nullable|boolean',
             // retirada
-                'entrega_retirada.bairro'           => 'sometimes|string',
+                'entrega_retirada.bairro'           => 'sometimes|nullable|string',
             // uber
-                'entrega_retirada.bairro_id'        => 'sometimes|integer|exists:bairros,id',
-                'entrega_retirada.rua'              => 'sometimes|string',
-                'entrega_retirada.numero'           => 'sometimes|string',
-                'entrega_retirada.valor_uber'       => 'sometimes|string',
+                'entrega_retirada.bairro_id'        => 'sometimes|nullable|integer|exists:bairros,id',
+                'entrega_retirada.rua'              => 'sometimes|nullable|string',
+                'entrega_retirada.numero'           => 'sometimes|nullable|string',
+                'entrega_retirada.valor_uber'       => 'sometimes|nullable',
             // entrega
-                'entrega_retirada.entregador_id'    => 'sometimes|integer|exists:vendedores,id',
-            'valor_antecipado'                      => 'sometimes|string',
+                'entrega_retirada.entregador_id'    => 'sometimes|nullable|integer|exists:vendedores,id',
+            'valor_antecipado'                      => 'sometimes|nullable|numeric',
             'valor_total'                           => 'sometimes|numeric',
         ];
     }

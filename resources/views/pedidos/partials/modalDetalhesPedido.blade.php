@@ -1,5 +1,5 @@
 <div v-if="modal" class="modal-overlay">
-    <div class="modal-content-custom" style="width: 90%; max-width: 850px; max-height: 90vh; display: flex; flex-direction: column;">
+    <div class="modal-content-custom" style="width: 90%; max-width: 1050px; max-height: 90vh; display: flex; flex-direction: column;">
         <div class="modal-header-custom">
             <h4 class="m-0 fw-bold">
                 <i class="bi bi-cart3 me-2"></i>
@@ -84,7 +84,7 @@
                         </div>
                         <div class="col-md-4">
                             <span class="text-muted small d-block">Período / Hora:</span>
-                            <span class="badge bg-light text-dark border px-2 py-1">
+                            <span class="fw-bold text-dark">
                                 @{{ dadosModal.entrega_retirada.periodo || '-' }}
                                 <span v-if="dadosModal.entrega_retirada.horas">(@{{ dadosModal.entrega_retirada.horas.substring(0, 5) }})</span>
                             </span>
@@ -109,7 +109,7 @@
                         </div>
                         <div class="col-md-4">
                             <span class="text-muted small d-block">Período / Hora:</span>
-                            <span class="badge bg-light text-dark border px-2 py-1">
+                            <span class="fw-bold text-dark">
                                 @{{ dadosModal.entrega_retirada.periodo || '-' }}
                                 <span v-if="dadosModal.entrega_retirada.horas">(@{{ dadosModal.entrega_retirada.horas.substring(0, 5) }})</span>
                             </span>
@@ -128,7 +128,7 @@
                         </div>
                         <div class="col-md-4">
                             <span class="text-muted small d-block">Período / Hora:</span>
-                            <span class="badge bg-light text-dark border px-2 py-1">
+                            <span class="fw-bold text-dark">
                                 @{{ dadosModal.entrega_retirada.periodo || '-' }}
                                 <span v-if="dadosModal.entrega_retirada.horas">(@{{ dadosModal.entrega_retirada.horas.substring(0, 5) }})</span>
                             </span>
@@ -154,7 +154,7 @@
                                 <th class="text-start">Produto</th>
                                 <th>Sabor</th>
                                 <th>Tamanho</th>
-                                <th style="width: 140px;">Produção</th>
+                                <th style="width: 200px;">Produção</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -189,11 +189,11 @@
 
         <div class="modal-footer-custom d-flex justify-content-between align-items-center p-3 border-top">
             <div class="d-flex gap-2">
-                <button v-if="!dadosModal.produzido" class="btn btn-sm btn-primary"
+                <button v-if="!dadosModal.produzido" class="btn btn-primary"
                         @click.prevent="marcarPedidoComoFeito(dadosModal.dados.pedido_id)">
                     <i class="bi bi-check2-circle me-1"></i> Marcar como feito
                 </button>
-                <button v-if="!dadosModal.pago" class="btn btn-sm btn-success"
+                <button v-if="!dadosModal.pago" class="btn btn-success"
                         @click.prevent="marcarPedidoComoPago(dadosModal.dados.pedido_id)">
                     <i class="bi bi-cash-coin me-1"></i> Marcar como pago
                 </button>
