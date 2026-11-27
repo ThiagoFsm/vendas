@@ -1,4 +1,4 @@
-<div v-if="modal" class="modal-overlay">
+<div v-if="modal" v-cloak class="modal-overlay">
     <div class="modal-content-custom" style="width: 90%; max-width: 1050px; max-height: 90vh; display: flex; flex-direction: column;">
         <div class="modal-header-custom">
             <h4 class="m-0 fw-bold">

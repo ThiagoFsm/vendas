@@ -14,6 +14,10 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
     <style>
+        [v-cloak] {
+            display: none !important;
+        }
+
         :root {
             --sidebar-width: 140px;
         }
@@ -341,7 +345,7 @@
 <main class="main-container" id="main-content">
     <button class="btn btn-dark mb-4" id="toggleSidebar">☰ Menu</button>
 
-    <div id="app">
+    <div id="app" v-cloak>
         @yield('content')
     </div>
 </main>

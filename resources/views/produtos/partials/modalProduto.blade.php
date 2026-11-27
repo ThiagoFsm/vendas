@@ -1,4 +1,4 @@
-<div v-if="modal" class="modal-overlay">
+<div v-if="modal" v-cloak class="modal-overlay">
     <div class="modal-content-custom" style="width: 90%; max-width: 600px; border-radius: 12px; overflow: hidden; animation: modalIn 0.3s ease-out;">
         <div class="modal-header-custom d-flex justify-content-between align-items-center">
             <h3 class="m-0 fs-5">@{{ editando ? 'Editar Produto' : 'Novo Produto' }}</h3>
