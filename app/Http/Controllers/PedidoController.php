@@ -92,18 +92,29 @@ class PedidoController extends Controller
     {
         $dados = $request->validated();
         $pedidoId = $pedidoId ?? ($dados['pedidoId'] ?? null);
+        $isUpdate = (bool) $pedidoId;
 
         $produtos = $this->pedidoService->prepararProdutosSalvar($dados['pedido'] ?? []);
         $pedidoPreparado = $this->pedidoService->prepararPedidoSalvar($dados);
 
-        if ($pedidoId) {
+        if ($isUpdate) {
             $pedido = $this->pedidoService->atualizarPedido($pedidoId, $pedidoPreparado, $dados['entrega_retirada'] ?? null, $produtos);
         } else {
             $entrega_retirada = $this->pedidoService->gerenciarEntregaRetirada($dados['entrega_retirada'] ?? null);
             $pedido = $this->pedidoService->salvarPedido($pedidoPreparado, $entrega_retirada, $produtos);
         }
 
-        return response()->json($pedido);
+        $mensagem = $isUpdate
+            ? 'Pedido atualizado com sucesso!'
+            : 'Pedido criado com sucesso!';
+
+        session()->flash('success', $mensagem);
+
+        return response()->json([
+            'message' => $mensagem,
+            'pedido' => $pedido,
+            'redirect' => route('vendas.pedidos.index'),
+        ]);
     }
 
     /**

@@ -6,6 +6,7 @@ export default {
         return {
             isEditing: false,
             isLoading: false,
+            salvando: false,
             cliente: null,
             produtos: [],
             tipoProdutos: [],
@@ -329,13 +330,15 @@ export default {
         },
 
         async salvarPedido() {
+            if (this.salvando) return;
+
             if (!this.cliente || !this.cliente.id) {
-                window.Toast.fire({ icon: 'warning', title: 'Cliente não identificado.' });
+                window.Toast?.fire({ icon: 'warning', title: 'Cliente não identificado.' });
                 return;
             }
 
             if (this.itens_pedido.length === 0) {
-                window.Toast.fire({ icon: 'warning', title: 'Adicione pelo menos um item ao pedido.' });
+                window.Toast?.fire({ icon: 'warning', title: 'Adicione pelo menos um item ao pedido.' });
                 return;
             }
 
@@ -343,6 +346,8 @@ export default {
             if (typeof valorAntecipado === 'string') {
                 valorAntecipado = parseFloat(valorAntecipado.replace(/\./g, '').replace(',', '.')) || 0;
             }
+
+            this.salvando = true;
 
             try {
                 const payload = {
@@ -358,19 +363,25 @@ export default {
                     ? `/vendas/pedidos/${this.pedidoId}/store`
                     : '/vendas/pedidos/store';
 
-                await axios.post(url, payload);
+                const response = await axios.post(url, payload);
 
-                const msgSucesso = this.isEditing
+                const msgSucesso = response.data?.message || (this.isEditing
                     ? 'Pedido atualizado com sucesso!'
-                    : 'Pedido criado com sucesso!';
+                    : 'Pedido criado com sucesso!');
 
-                window.Toast.fire({ icon: 'success', title: msgSucesso });
-                setTimeout(() => {
-                    window.location.href = '/vendas/pedidos';
-                }, 1500);
+                const redirectUrl = response.data?.redirect || '/vendas/pedidos';
+
+                try {
+                    sessionStorage.setItem('toast_success', msgSucesso);
+                } catch (e) {
+                    // Ignora erro caso sessionStorage esteja indisponível
+                }
+
+                window.location.assign(redirectUrl);
 
             } catch (error) {
-                window.Toast.fire({
+                this.salvando = false;
+                window.Toast?.fire({
                     icon: 'error',
                     title: this.isEditing ? 'Erro ao atualizar pedido.' : 'Erro ao criar pedido.',
                     text: error.response?.data?.message || error.message

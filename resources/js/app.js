@@ -3,6 +3,18 @@ import './bootstrap';
 import Swal from 'sweetalert2';
 window.Swal = Swal;
 
+window.Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer);
+        toast.addEventListener('mouseleave', Swal.resumeTimer);
+    }
+});
+
 // 1. IMPORTAR O VUE PRIMEIRO
 import Vue from 'vue';
 window.Vue = Vue;
@@ -76,13 +88,31 @@ import './components';
 const app = new Vue({
     el: '#app',
     mounted() {
-        // Verifica se existem mensagens de sessão passadas pelo Blade
-        if (window.session && window.session.success) {
-            this.$toast.success(window.session.success);
+        let storageSuccess = null;
+        try {
+            storageSuccess = sessionStorage.getItem('toast_success');
+            if (storageSuccess) {
+                sessionStorage.removeItem('toast_success');
+            }
+        } catch (e) {
+            // Ignora erro caso sessionStorage esteja indisponível
         }
-        // Usamos .error para a primeira mensagem de erro da sessão
+
+        const successMessage = (window.session && window.session.success) || storageSuccess;
+        if (successMessage) {
+            window.Toast.fire({
+                icon: 'success',
+                title: successMessage
+            });
+        }
+
         if (window.session && window.session.error) {
-            this.$toast.error(window.session.error);
+            window.Toast.fire({
+                icon: 'error',
+                title: 'Ops! Algo deu errado',
+                text: window.session.error,
+                showConfirmButton: true
+            });
         }
     }
 });

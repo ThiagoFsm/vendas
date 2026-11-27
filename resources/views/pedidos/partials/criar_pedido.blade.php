@@ -11,7 +11,7 @@
 
     <div class="card border-10 shadow-sm" style="border-radius: 8px;">
         <div class="card-body p-4">
-            <form action="#" method="POST">
+            <form @submit.prevent novalidate>
                 <div class="row g-4">
                     <div class="col-md-6 text-center">
                         <span class="form-label fw-bold text-dark">Cliente</span>
@@ -165,9 +165,9 @@
                         <button type="reset" class="btn btn-outline-secondary px-4 text-black"
                                 style="border-radius: 8px;">Limpar
                         </button>
-                        <button @click.prevent="salvarPedido" type="submit" class="btn btn-dark px-3 py-2 fw-bold"
+                        <button @click.prevent="salvarPedido" type="button" :disabled="salvando" class="btn btn-dark px-3 py-2 fw-bold"
                                 style="border-radius: 8px; letter-spacing: 0.5px;">
-                            <i class="bi bi-check-circle"></i> @{{ isEditing ? 'ATUALIZAR PEDIDO' : 'SALVAR PEDIDO' }}
+                            <i class="bi bi-check-circle"></i> @{{ salvando ? 'SALVANDO...' : (isEditing ? 'ATUALIZAR PEDIDO' : 'SALVAR PEDIDO') }}
                         </button>
                     </div>
                 </div>

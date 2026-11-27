@@ -7,8 +7,8 @@
 
     <script>
         window.session = {
-            success: "{{ session('success') }}",
-            error: "{{ $errors->first() }}"
+            success: @json(session('success')),
+            error: @json($errors->first())
         };
     </script>
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -393,40 +393,5 @@
     });
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    // 1. Tornamos o Toast global para você usar em qualquer lugar (inclusive no Vue)
-    window.Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-        }
-    });
-
-    // 2. Dispara se houver mensagem de sucesso do Laravel (Redirect::back()->with('success'))
-    @if(session('success'))
-    window.Toast.fire({
-        icon: 'success',
-        title: "{{ session('success') }}",
-        timerProgressBar: true,
-        showConfirmButton: false
-    });
-    @endif
-
-    // 3. Dispara se houver erros de validação ($errors)
-    @if($errors->any())
-    window.Toast.fire({
-        icon: 'error',
-        title: 'Ops! Algo deu errado',
-        text: "{{ $errors->first() }}", // Mostra o primeiro erro
-        showConfirmButton: true
-    });
-    @endif
-</script>
 </body>
 </html>
