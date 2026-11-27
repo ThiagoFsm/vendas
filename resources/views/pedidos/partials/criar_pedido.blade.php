@@ -1,4 +1,4 @@
-<div class="container-fluid py-4" style="font-size: 13px">
+<div class="container-fluid py-4" style="font-size: 18px">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h3 class="fw-bold mb-0">@{{ isEditing ? ('Editar Pedido #' + pedidoId) : 'Novo Pedido' }}</h3>
@@ -14,17 +14,17 @@
             <form @submit.prevent novalidate>
                 <div class="row g-4">
                     <div class="col-md-6 text-center">
-                        <span class="form-label fw-bold text-dark">Cliente</span>
+                        <h5 class="fw-bold mb-2" style="color: #495057;">Cliente</h5>
                         <input type="text" id="cliente_id" name="cliente_id" class="form-control border-2 bg-light mt-1"
                                :value="cliente ? cliente.nome : ''"
-                               style="height: 40px; border-radius: 8px;" readonly>
+                               style="height: 48px; border-radius: 8px;" readonly>
                     </div>
 
                     <div class="col-md-6 text-center">
-                        <span class="form-label fw-bold text-dark">Vendedor(a)</span>
+                        <h5 class="fw-bold mb-2" style="color: #495057;">Vendedor(a)</h5>
                         <input id="vendedor" name="vendedor" class="form-control border-2 bg-light mt-1"
                                :value="cliente && cliente.vendedor ? cliente.vendedor.nome : ''"
-                               style="height: 40px; border-radius: 8px;" readonly>
+                               style="height: 48px; border-radius: 8px;" readonly>
                     </div>
 
                     <div class="col-12">
@@ -35,48 +35,48 @@
                         <h5 class="fw-bold mb-3" style="color: #495057;">Itens do Pedido</h5>
                         <div class="row g-3 align-items-end p-3 mb-3"
                              style="background-color: #f8f9fa; border-radius: 8px;">
-                            <div class="col-md-3 text-center">
+                            <div class="col-lg-3 col-md-6 text-center">
                                 <label for="item_produto" class="form-label small fw-bold text-muted">Produto</label>
                                 <select id="item_produto" name="item_produto" class="form-select select-input border-2"
-                                        v-model="item.tipo_produto_id" style="height: 40px;" v-select>
+                                        v-model="item.tipo_produto_id" style="height: 48px;" v-select>
                                     <option value="">Selecione</option>
                                     <option v-for="tipoProduto in tipoProdutos" :key="tipoProduto.id" :value="tipoProduto.id">
                                         @{{ tipoProduto.descricao }}
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-md-4 text-center">
+                            <div class="col-lg-3 col-md-6 text-center">
                                 <label for="item_sabor" class="form-label small fw-bold text-muted">Sabor</label>
                                 <select id="item_sabor" name="item_sabor" class="form-select select-input border-2"
-                                        v-model="item.sabor_id" style="height: 40px;" v-select>
+                                        v-model="item.sabor_id" style="height: 48px;" v-select>
                                     <option value="">Selecione</option>
                                     <option v-for="sabor in sabores" :key="sabor.id" :value="sabor.id">
                                         @{{ sabor.descricao }}
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-md-2 text-center">
+                            <div class="col-lg-3 col-md-5 text-center">
                                 <label for="item_tamanho" class="form-label small fw-bold text-muted">Tamanho</label>
                                 <select id="item_tamanho" name="item_tamanho" class="form-select select-input border-2"
-                                        v-model="item.tamanho_id" style="height: 40px; border-radius: 8px;" v-select>
+                                        v-model="item.tamanho_id" style="height: 48px; border-radius: 8px;" v-select>
                                     <option value="">@{{ item.tipo_produto_id ? 'Selecione' : 'Selecione o produto' }}</option>
                                     <option v-for="tamanho in tamanhosFiltrados" :key="tamanho.id" :value="tamanho.id">
                                         @{{ tamanho.descricao }}
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-md-2 text-center">
+                            <div class="col-lg-2 col-md-4 text-center">
                                 <label for="item_quantidade"
                                        class="form-label small fw-bold text-muted">Quantidade</label>
                                 <input id="item_quantidade" name="item_quantidade" type="number"
                                        class="form-control border-2" v-model="item.quantidade" min="1" placeholder="Qtd"
-                                       style="height: 40px; border-radius: 8px;">
+                                       style="height: 48px; border-radius: 8px;">
                             </div>
-                            <div class="col-md-1 text-center">
+                            <div class="col-lg-1 col-md-3 text-center">
                                 <label class="form-label small fw-bold text-muted d-none d-md-block">&nbsp;</label>
                                 <button type="button" @click.prevent="adicionarItem"
                                         class="btn btn-dark w-100 d-flex align-items-center justify-content-center"
-                                        style="height: 40px; border-radius: 8px;"
+                                        style="height: 48px; border-radius: 8px;"
                                         title="Adicionar item ao pedido">
                                     <i class="bi bi-plus-lg fs-5"></i>
                                 </button>
@@ -94,7 +94,7 @@
                     </div>
 
                     <div class="col-md-6 text-md-center">
-                        <span class="form-label d-block fw-bold text-dark">Entrega / Retirada</span>
+                        <h5 class="fw-bold mb-3" style="color: #495057;">Entrega / Retirada</h5>
                         <div class="d-flex gap-3 mt-2 justify-content-center">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="tipo_entrega" id="uber"
@@ -115,15 +115,14 @@
                     </div>
 
                     <div class="col-md-6 text-md-center mb-3">
-                        <span class="form-label d-block fw-bold text-dark">Valor Pago na Hora</span>
-                        <div class="d-flex align-items-center justify-content-center gap-2 mt-1" role="group"
-                             style="border-radius: 8px; overflow: hidden;">
+                        <h5 class="fw-bold mb-2" style="color: #495057;">Valor Pago na Hora</h5>
+                        <div class="d-flex align-items-center justify-content-center gap-2 mt-1" role="group">
                             <label class="form-label fw-bold text-muted mb-0"
-                                   for="valor_antecipado" style="font-size: 16px">R$</label>
-                            <div class="col-md-2">
+                                   for="valor_antecipado" style="font-size: 21px">R$</label>
+                            <div style="width: 180px; max-width: 100%;">
                                 <input type="text" class="form-control border-2 text-center" name="valor_antecipado"
                                        id="valor_antecipado" v-model.lazy="valor_antecipado" v-money="$dinheiro"
-                                       style="height: 40px; font-size: 16px; border-radius: 8px;">
+                                       style="height: 48px; font-size: 21px; border-radius: 8px;">
                             </div>
                         </div>
                     </div>

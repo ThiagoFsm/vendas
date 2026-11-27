@@ -14,14 +14,14 @@
         <div class="p-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="d-flex align-items-center flex-wrap gap-2">
                 <!-- Pesquisa de Texto -->
-                <div class="position-relative" style="width: 300px; flex-shrink: 0;">
+                <div class="position-relative" style="width: 360px; max-width: 100%; flex-shrink: 0;">
                     <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
                     <input
                         type="text"
-                        class="form-control ps-5"
+                        class="form-control ps-5 pe-5"
                         placeholder="Buscar por tipo, sabor ou tamanho..."
                         v-model="termoPesquisa"
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px;"
                     >
                     <button
                         v-if="termoPesquisa"
@@ -35,11 +35,11 @@
                 </div>
 
                 <!-- Filtro Tipo de Produto -->
-                <div style="width: 180px; flex-shrink: 0;">
+                <div style="width: 225px; max-width: 100%; flex-shrink: 0;">
                     <select
                         class="form-select"
                         v-model="filtroTipo"
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px;"
                     >
                         <option value="">Todos os Tipos</option>
                         <option v-for="tipo in dependencias.tipoProdutos" :key="tipo.id" :value="tipo.id">
@@ -49,11 +49,11 @@
                 </div>
 
                 <!-- Filtro Sabor -->
-                <div style="width: 200px; flex-shrink: 0;">
+                <div style="width: 250px; max-width: 100%; flex-shrink: 0;">
                     <select
                         class="form-select"
                         v-model="filtroSabor"
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px;"
                     >
                         <option value="">Todos os Sabores</option>
                         <option v-for="sabor in dependencias.sabores" :key="sabor.id" :value="sabor.id">
@@ -63,11 +63,11 @@
                 </div>
 
                 <!-- Filtro Status -->
-                <div style="width: 140px; flex-shrink: 0;">
+                <div style="width: 200px; max-width: 100%; flex-shrink: 0;">
                     <select
                         class="form-select"
                         v-model="filtroStatus"
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px;"
                     >
                         <option value="">Todos Status</option>
                         <option value="ativo">Ativos</option>
@@ -80,7 +80,7 @@
                     v-if="hasFiltrosAtivos"
                     type="button"
                     class="btn btn-outline-secondary d-flex align-items-center gap-1 text-nowrap"
-                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 38px; flex-shrink: 0;"
+                    style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px; flex-shrink: 0;"
                     @click="limparFiltros"
                     title="Limpar todos os filtros"
                 >
@@ -100,13 +100,13 @@
                 <table class="table table-hover align-middle table-bordered-custom mb-0">
                     <thead>
                     <tr class="text-center">
-                        <th style="width: 70px;">ID</th>
+                        <th style="width: 80px;">ID</th>
                         <th>Tipo de Produto</th>
                         <th class="text-start">Sabor</th>
                         <th>Tamanho</th>
                         <th>Valor</th>
                         <th>Status</th>
-                        <th style="width: 180px;">Ações</th>
+                        <th style="width: 230px;">Ações</th>
                     </tr>
                     </thead>
                     <tbody>

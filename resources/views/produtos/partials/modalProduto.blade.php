@@ -1,14 +1,14 @@
 <div v-if="modal" v-cloak class="modal-overlay">
-    <div class="modal-content-custom" style="width: 90%; max-width: 600px; border-radius: 12px; overflow: hidden; animation: modalIn 0.3s ease-out;">
+    <div class="modal-content-custom" style="width: 95%; max-width: 700px; max-height: 92vh; display: flex; flex-direction: column; border-radius: 12px; overflow: hidden; animation: modalIn 0.3s ease-out;">
         <div class="modal-header-custom d-flex justify-content-between align-items-center">
             <h3 class="m-0 fs-5">@{{ editando ? 'Editar Produto' : 'Novo Produto' }}</h3>
-            <span @click.prevent="fecharModal" style="cursor: pointer; font-size: 1.25rem;" title="Fechar">
+            <span @click.prevent="fecharModal" style="cursor: pointer; font-size: 1.5625rem;" title="Fechar">
                 <i class="bi bi-x-lg"></i>
             </span>
         </div>
 
-        <form @submit.prevent="salvarProduto">
-            <div class="modal-body-custom p-4">
+        <form @submit.prevent="salvarProduto" class="d-flex flex-column flex-grow-1" style="min-height: 0;">
+            <div class="modal-body-custom modal-body-scrollable flex-grow-1 p-4">
                 <!-- Tipo de Produto -->
                 <div class="mb-3">
                     <label for="tipo_produto_id" class="form-label fw-bold small text-muted text-uppercase">
@@ -19,7 +19,7 @@
                         class="form-select"
                         v-model="form.tipo_produto_id"
                         required
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 48px;"
                     >
                         <option value="">Selecione o tipo de produto...</option>
                         <option v-for="tipo in dependencias.tipoProdutos" :key="tipo.id" :value="tipo.id">
@@ -38,7 +38,7 @@
                         class="form-select"
                         v-model="form.sabor_id"
                         required
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 48px;"
                     >
                         <option value="">Selecione o sabor...</option>
                         <option v-for="sabor in dependencias.sabores" :key="sabor.id" :value="sabor.id">
@@ -57,7 +57,7 @@
                         class="form-select"
                         v-model="form.tamanho_id"
                         required
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 48px;"
                     >
                         <option value="">Selecione o tamanho...</option>
                         <option v-for="tam in dependencias.tamanhos" :key="tam.id" :value="tam.id">
@@ -80,7 +80,7 @@
                             v-model="form.valor_produto"
                             placeholder="0,00"
                             required
-                            style="border-radius: 0 8px 8px 0; border: 1.5px solid #d1d5db; height: 42px;"
+                            style="border-radius: 0 8px 8px 0; border: 1.5px solid #d1d5db; height: 48px;"
                         >
                     </div>
                 </div>

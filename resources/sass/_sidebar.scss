@@ -54,7 +54,7 @@ $border-color: #d1d5db; // Um cinza mais escuro e definido
 
             i {
                 margin-right: 12px;
-                font-size: 1.1rem;
+                font-size: 1.4125rem;
             }
         }
     }
@@ -80,17 +80,18 @@ $border-color: #d1d5db; // Um cinza mais escuro e definido
     --bs-table-hover-bg: #f8f9fa;
 
     thead th {
-        font-size: 0.85rem;
+        font-size: 1.1625rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         font-weight: 800; // Peso extra no cabeçalho
         color: #374151; // Texto mais escuro
         border-top: none;
-        padding: 1.2rem 1rem;
+        padding: 1rem 0.9rem;
+        white-space: nowrap;
     }
 
     tbody td {
-        padding: 1.2rem 1rem;
+        padding: 1rem 0.9rem;
         color: #1f2937;
         font-weight: 500;
         border-bottom: 1.5px solid $border-color; // Linhas internas mais visíveis
@@ -117,9 +118,10 @@ $border-color: #d1d5db; // Um cinza mais escuro e definido
 
 .btn-action {
     border-radius: 8px;
-    padding: 0.3rem 0.6rem;
-    font-size: 0.85rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 1.1625rem;
     font-weight: 600;
+    white-space: nowrap;
     transition: all 0.2s;
 
     &.btn-view {
@@ -137,7 +139,7 @@ $border-color: #d1d5db; // Um cinza mais escuro e definido
 .marcar {
     border-radius: 8px;
     padding: 0.3rem 0.6rem;
-    font-size: 0.85rem;
+    font-size: 1.1625rem;
     cursor: pointer;
     background-color: #ffffff;
     border: 1px solid #afafaf;
@@ -155,6 +157,6 @@ $border-color: #d1d5db; // Um cinza mais escuro e definido
     border-radius: 6px;
     font-weight: 700;
 
-    font-size: 0.75rem;
+    font-size: 1.0625rem;
     border: 1.5px solid currentColor; // Borda na cor do status
 }

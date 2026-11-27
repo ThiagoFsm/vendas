@@ -1,17 +1,17 @@
 <div v-if="modal" v-cloak class="modal-overlay">
-    <div class="modal-content-custom" style="width: 90%; max-width: 1050px; max-height: 90vh; display: flex; flex-direction: column;">
+    <div class="modal-content-custom" style="width: 95%; max-width: 1200px; max-height: 92vh; display: flex; flex-direction: column;">
         <div class="modal-header-custom">
             <h4 class="m-0 fw-bold">
                 <i class="bi bi-cart3 me-2"></i>
                 Detalhes do Pedido
-                <span v-if="dadosModal.dados && dadosModal.dados.pedido_id" class="badge bg-secondary ms-2" style="font-size: 0.75rem;">
+                <span v-if="dadosModal.dados && dadosModal.dados.pedido_id" class="badge bg-secondary ms-2" style="font-size: 1.0625rem;">
                     #@{{ dadosModal.dados.pedido_id }}
                 </span>
-                <span v-if="dadosModal.nome_cliente" class="text-muted fw-normal ms-2" style="font-size: 1rem;">
+                <span v-if="dadosModal.nome_cliente" class="text-muted fw-normal ms-2" style="font-size: 1.3125rem;">
                     - @{{ dadosModal.nome_cliente }}
                 </span>
             </h4>
-            <span @click.prevent="fecharModal" style="cursor: pointer; font-size: 1.25rem;" title="Fechar">
+            <span @click.prevent="fecharModal" style="cursor: pointer; font-size: 1.5625rem;" title="Fechar">
                 <i class="bi bi-x-lg"></i>
             </span>
         </div>
@@ -150,11 +150,11 @@
                         <table class="table align-middle mb-0 text-center">
                             <thead class="bg-light">
                             <tr>
-                                <th style="width: 80px;">Qtd</th>
+                                <th style="width: 100px;">Qtd</th>
                                 <th class="text-start">Produto</th>
                                 <th>Sabor</th>
                                 <th>Tamanho</th>
-                                <th style="width: 200px;">Produção</th>
+                                <th style="width: 240px;">Produção</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -169,7 +169,7 @@
                                 <td>
                                     <div v-if="produto.pivot.produzido" class="d-flex align-items-center justify-content-center">
                                         <span class="text-success fw-bold" title="Produto feito">
-                                            <i class="bi bi-check-all" style="font-size: 1.4rem;"></i>
+                                            <i class="bi bi-check-all" style="font-size: 1.7125rem;"></i>
                                         </span>
                                     </div>
                                     <div v-else class="d-flex align-items-center justify-content-center">
@@ -187,8 +187,8 @@
             </div>
         </div>
 
-        <div class="modal-footer-custom d-flex justify-content-between align-items-center p-3 border-top">
-            <div class="d-flex gap-2">
+        <div class="modal-footer-custom d-flex justify-content-between align-items-center flex-wrap gap-2 p-3 border-top">
+            <div class="d-flex flex-wrap gap-2">
                 <button v-if="!dadosModal.produzido" class="btn btn-primary"
                         @click.prevent="marcarPedidoComoFeito(dadosModal.dados.pedido_id)">
                     <i class="bi bi-check2-circle me-1"></i> Marcar como feito

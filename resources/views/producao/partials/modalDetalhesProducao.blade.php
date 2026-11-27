@@ -1,8 +1,8 @@
 <div v-if="modal" v-cloak class="modal-overlay">
-    <div class="modal-content-custom" style="width: 90%; max-width: 900px; height: 92vh; max-height: 940px; display: flex; flex-direction: column;">
+    <div class="modal-content-custom" style="width: 95%; max-width: 1100px; height: 92vh; max-height: 940px; display: flex; flex-direction: column;">
         <div class="modal-header-custom">
             <h3 class="m-0">Detalhes de Produção</h3>
-            <span @click.prevent="fecharModal" style="cursor:pointer; font-size: 1.25rem;" title="Fechar">
+            <span @click.prevent="fecharModal" style="cursor:pointer; font-size: 1.5625rem;" title="Fechar">
                 <i class="bi bi-x-lg"></i>
             </span>
         </div>
@@ -11,14 +11,14 @@
         <div class="p-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="d-flex align-items-center flex-wrap gap-2">
                 <!-- Pesquisa por Cliente -->
-                <div class="position-relative" style="width: 300px; flex-shrink: 0;">
+                <div class="position-relative" style="width: 360px; max-width: 100%; flex-shrink: 0;">
                     <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
                     <input
                         type="text"
-                        class="form-control ps-5"
+                        class="form-control ps-5 pe-5"
                         placeholder="Buscar pelo nome do cliente..."
                         v-model="termoPesquisa"
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px;"
                     >
                     <button
                         v-if="termoPesquisa"
@@ -32,11 +32,11 @@
                 </div>
 
                 <!-- Filtro Produção -->
-                <div style="width: 170px; flex-shrink: 0;">
+                <div style="width: 220px; max-width: 100%; flex-shrink: 0;">
                     <select
                         class="form-select"
                         v-model="filtroProducao"
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px;"
                     >
                         <option value="">Toda Produção</option>
                         <option value="a_fazer">À fazer</option>
@@ -49,7 +49,7 @@
                     v-if="hasFiltrosAtivos"
                     type="button"
                     class="btn btn-outline-secondary d-flex align-items-center gap-1 text-nowrap"
-                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 38px; flex-shrink: 0;"
+                    style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px; flex-shrink: 0;"
                     @click="limparFiltros"
                     title="Limpar filtros"
                 >
@@ -93,7 +93,7 @@
                                 Marcar como feito
                             </button>
                             <a v-else class="btn-marcar-feito">
-                                <i class="bi bi-check-all" style="font-size: 25px"></i>
+                                <i class="bi bi-check-all" style="font-size: 30px"></i>
                             </a>
                         </div>
                     </td>

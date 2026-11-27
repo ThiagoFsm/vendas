@@ -1,14 +1,14 @@
 <div v-if="modalEditar" v-cloak class="modal-overlay">
-    <div class="modal-content-custom" style="width: 90%; max-width: 650px; max-height: 90vh; display: flex; flex-direction: column;">
+    <div class="modal-content-custom" style="width: 95%; max-width: 820px; max-height: 92vh; display: flex; flex-direction: column;">
         <div class="modal-header-custom d-flex justify-content-between align-items-center">
             <h4 class="m-0 fw-bold">
                 <i class="bi bi-pencil-square me-2 text-primary"></i>
                 Editar Entrega @{{ formEditar.id }}
-                <span v-if="entregaEditando && entregaEditando.pedido" class="badge bg-secondary ms-2" style="font-size: 0.75rem;">
+                <span v-if="entregaEditando && entregaEditando.pedido" class="badge bg-secondary ms-2" style="font-size: 1.0625rem;">
                     Pedido @{{ entregaEditando.pedido.id }}
                 </span>
             </h4>
-            <span @click.prevent="fecharModalEditar" style="cursor: pointer; font-size: 1.25rem;" title="Fechar">
+            <span @click.prevent="fecharModalEditar" style="cursor: pointer; font-size: 1.5625rem;" title="Fechar">
                 <i class="bi bi-x-lg"></i>
             </span>
         </div>
@@ -46,7 +46,7 @@
                                     class="form-control"
                                     v-model="formEditar.data"
                                     required
-                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 48px;"
                                 >
                             </div>
                             <div class="col-md-4">
@@ -58,7 +58,7 @@
                                     class="form-select"
                                     v-model="formEditar.periodo"
                                     required
-                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 48px;"
                                 >
                                     <option value="">Selecione o período...</option>
                                     <option value="Manhã">Manhã</option>
@@ -75,7 +75,7 @@
                                     id="edit_horas"
                                     class="form-control"
                                     v-model="formEditar.horas"
-                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 48px;"
                                 >
                             </div>
                             <div class="col-12 mt-2">
@@ -144,7 +144,7 @@
                                     class="form-select"
                                     v-model="formEditar.entregador_id"
                                     :required="formEditar.modalidade === 'entrega'"
-                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 48px;"
                                 >
                                     <option value="">Selecione o entregador responsável...</option>
                                     <option v-for="entregador in dependencias.entregadores" :key="entregador.id" :value="entregador.id">
@@ -177,7 +177,7 @@
                                         v-model="formEditar.valor_uber"
                                         v-money="$dinheiro"
                                         :required="formEditar.modalidade === 'uber'"
-                                        style="border-radius: 0 8px 8px 0; border: 1.5px solid #d1d5db; height: 42px;"
+                                        style="border-radius: 0 8px 8px 0; border: 1.5px solid #d1d5db; height: 48px;"
                                     >
                                 </div>
                             </div>
@@ -190,7 +190,7 @@
                                     class="form-select"
                                     v-model="formEditar.bairro_id"
                                     :required="formEditar.modalidade === 'uber'"
-                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 48px;"
                                 >
                                     <option value="">Selecione o bairro...</option>
                                     <option v-for="bairro in dependencias.bairros" :key="bairro.id" :value="bairro.id">
@@ -198,7 +198,7 @@
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-4">
                                 <label for="edit_rua" class="form-label fw-bold small text-muted text-uppercase">
                                     Rua / Logradouro <span class="text-danger">*</span>
                                 </label>
@@ -209,10 +209,10 @@
                                     placeholder="Ex: Rua das Flores"
                                     v-model="formEditar.rua"
                                     :required="formEditar.modalidade === 'uber'"
-                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 48px;"
                                 >
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <label for="edit_numero" class="form-label fw-bold small text-muted text-uppercase">
                                     Número <span class="text-danger">*</span>
                                 </label>
@@ -223,7 +223,7 @@
                                     placeholder="Nº"
                                     v-model="formEditar.numero"
                                     :required="formEditar.modalidade === 'uber'"
-                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 48px;"
                                 >
                             </div>
                         </div>

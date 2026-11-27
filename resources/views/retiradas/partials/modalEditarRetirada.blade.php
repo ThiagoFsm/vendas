@@ -1,14 +1,14 @@
 <div v-if="modalEditar" v-cloak class="modal-overlay">
-    <div class="modal-content-custom" style="width: 90%; max-width: 600px; max-height: 90vh; display: flex; flex-direction: column;">
+    <div class="modal-content-custom" style="width: 95%; max-width: 780px; max-height: 92vh; display: flex; flex-direction: column;">
         <div class="modal-header-custom d-flex justify-content-between align-items-center">
             <h4 class="m-0 fw-bold">
                 <i class="bi bi-pencil-square me-2 text-primary"></i>
                 Editar Retirada #@{{ formEditar.id }}
-                <span v-if="retiradaEditando && retiradaEditando.pedido" class="badge bg-secondary ms-2" style="font-size: 0.75rem;">
+                <span v-if="retiradaEditando && retiradaEditando.pedido" class="badge bg-secondary ms-2" style="font-size: 1.0625rem;">
                     Pedido #@{{ retiradaEditando.pedido.id }}
                 </span>
             </h4>
-            <span @click.prevent="fecharModalEditar" style="cursor: pointer; font-size: 1.25rem;" title="Fechar">
+            <span @click.prevent="fecharModalEditar" style="cursor: pointer; font-size: 1.5625rem;" title="Fechar">
                 <i class="bi bi-x-lg"></i>
             </span>
         </div>
@@ -46,7 +46,7 @@
                                     class="form-control"
                                     v-model="formEditar.data"
                                     required
-                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 48px;"
                                 >
                             </div>
                             <div class="col-md-4">
@@ -58,7 +58,7 @@
                                     class="form-select"
                                     v-model="formEditar.periodo"
                                     required
-                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 48px;"
                                 >
                                     <option value="">Selecione o período...</option>
                                     <option value="Manhã">Manhã</option>
@@ -75,7 +75,7 @@
                                     id="edit_retirada_horas"
                                     class="form-control"
                                     v-model="formEditar.horas"
-                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 48px;"
                                 >
                             </div>
                             <div class="col-12 mt-2">
@@ -107,7 +107,7 @@
                                 v-model="formEditar.bairro"
                                 placeholder="Selecione ou digite o local de retirada..."
                                 required
-                                style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                                style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 48px;"
                             >
                             <datalist id="listaBairrosRetirada">
                                 <option value="Jacy">Jacy</option>

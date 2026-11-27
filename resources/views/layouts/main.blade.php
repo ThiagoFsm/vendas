@@ -19,7 +19,7 @@
         }
 
         :root {
-            --sidebar-width: 140px;
+            --sidebar-width: 215px;
         }
 
         body {
@@ -88,14 +88,20 @@
 
         /* Ajusta o container do Select2 para respeitar o seu design */
         .select2-container--bootstrap-5 .select2-selection {
-            min-height: 40px !important; /* Ajuste para a altura que você usa nos outros campos */
+            min-height: 48px !important; /* Ajuste para a altura que você usa nos outros campos */
             border-radius: 8px !important; /* Seu ajuste de design */
             display: flex !important;
             align-items: center !important;
+            font-size: 1.2125rem !important;
+        }
+
+        .select2-container--bootstrap-5 .select2-dropdown,
+        .select2-container--bootstrap-5 .select2-results__option {
+            font-size: 1.2125rem !important;
         }
 
         .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
-            line-height: normal !important;
+            line-height: 1.4 !important;
             padding-left: 0.75rem !important; /* Alinha com o padding padrão do Bootstrap 5 */
         }
 
@@ -138,7 +144,7 @@
 
         .modal-header-custom h3 {
             margin: 0;
-            font-size: 1.25rem;
+            font-size: 1.5625rem;
             font-weight: 500;
         }
 
@@ -149,7 +155,7 @@
         }
 
         /* Estilização de inputs dentro da modal para combinar com seu Select2 */
-        .modal-body-custom input,
+        .modal-body-custom input:not([type="checkbox"]):not([type="radio"]),
         .modal-body-custom select,
         .modal-body-custom textarea {
             width: 100%;
@@ -160,6 +166,12 @@
             margin-bottom: 15px;
             outline: none;
             transition: border-color 0.2s;
+        }
+
+        .modal-body-custom .input-group input {
+            width: 1%;
+            margin-top: 0;
+            margin-bottom: 0;
         }
 
         .modal-body-custom input:focus {
@@ -190,7 +202,7 @@
 
         /* Modal Scrollable Body & Custom Scrollbar */
         .modal-body-scrollable {
-            max-height: 480px;
+            max-height: 75vh;
             overflow-y: auto;
             overflow-x: auto;
         }
@@ -244,7 +256,7 @@
             background: #444747;
             color: white;
             border-color: white;
-            padding: 5px 15px;
+            padding: 8px 18px;
             border-radius: 8px;
             cursor: pointer;
             transition: background 0.2s;
@@ -259,7 +271,7 @@
             background: #b5ffb5;
             color: black;
             border-color: black;
-            padding: 5px 15px;
+            padding: 8px 18px;
             border-radius: 8px;
             cursor: pointer;
             transition: background 0.2s;

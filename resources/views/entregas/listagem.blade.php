@@ -17,14 +17,14 @@
         <div class="p-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="d-flex align-items-center flex-wrap gap-2">
                 <!-- Barra de Pesquisa -->
-                <div class="position-relative" style="width: 280px; flex-shrink: 0;">
+                <div class="position-relative" style="width: 360px; max-width: 100%; flex-shrink: 0;">
                     <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
                     <input
                         type="text"
-                        class="form-control ps-5"
+                        class="form-control ps-5 pe-5"
                         placeholder="Buscar por cliente, endereço ou entregador..."
                         v-model="termoPesquisa"
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px;"
                     >
                     <button
                         v-if="termoPesquisa"
@@ -38,11 +38,11 @@
                 </div>
 
                 <!-- Filtro Tipo de Entrega -->
-                <div style="width: 160px; flex-shrink: 0;">
+                <div style="width: 215px; max-width: 100%; flex-shrink: 0;">
                     <select
                         class="form-select"
                         v-model="filtroTipo"
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px;"
                     >
                         <option value="">Todos os Tipos</option>
                         <option value="uber">Uber</option>
@@ -51,11 +51,11 @@
                 </div>
 
                 <!-- Filtro Período -->
-                <div style="width: 150px; flex-shrink: 0;">
+                <div style="width: 215px; max-width: 100%; flex-shrink: 0;">
                     <select
                         class="form-select"
                         v-model="filtroPeriodo"
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px;"
                     >
                         <option value="">Todos Períodos</option>
                         <option value="Manhã">Manhã</option>
@@ -65,22 +65,22 @@
                 </div>
 
                 <!-- Filtro Data -->
-                <div style="width: 165px; flex-shrink: 0;">
+                <div style="width: 215px; max-width: 100%; flex-shrink: 0;">
                     <input
                         type="date"
                         class="form-control"
                         v-model="filtroData"
                         title="Filtrar por data"
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px;"
                     >
                 </div>
 
                 <!-- Filtro Status Pedido -->
-                <div style="width: 160px; flex-shrink: 0;">
+                <div style="width: 230px; max-width: 100%; flex-shrink: 0;">
                     <select
                         class="form-select"
                         v-model="filtroStatusPedido"
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px;"
                     >
                         <option value="">Status Pedido</option>
                         <option value="pago">Pago</option>
@@ -95,7 +95,7 @@
                     v-if="hasFiltrosAtivos"
                     type="button"
                     class="btn btn-outline-secondary d-flex align-items-center gap-1 text-nowrap"
-                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 38px; flex-shrink: 0;"
+                    style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px; flex-shrink: 0;"
                     @click="limparFiltros"
                     title="Limpar todos os filtros"
                 >
@@ -115,15 +115,15 @@
                 <table class="table table-hover align-middle table-bordered-custom mb-0">
                     <thead>
                     <tr class="text-center">
-                        <th style="width: 70px;">ID</th>
+                        <th style="width: 80px;">ID</th>
                         <th class="text-start">Cliente</th>
                         <th>Entregador (a)</th>
                         <th class="text-start">Endereço</th>
                         <th>Data / Período / Hora</th>
                         <th>Valor Pedido</th>
                         <th>Status Pedido</th>
-                        <th style="width: 110px;">Realizada</th>
-                        <th style="width: 190px;">Ações</th>
+                        <th style="width: 155px;">Realizada</th>
+                        <th style="width: 265px;">Ações</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -169,10 +169,10 @@
                             </td>
                             <td>
                                 <span class="d-block">@{{ formatarData(entrega.data) }}</span>
-                                <span class="badge bg-light text-dark border" style="font-size: 0.75rem;">
+                                <span class="badge bg-light text-dark border" style="font-size: 1.0625rem;">
                                     @{{ entrega.periodo || '-' }}
                                 </span>
-                                <small v-if="entrega.horas" class="text-muted d-block mt-1" style="font-size: 0.75rem;">
+                                <small v-if="entrega.horas" class="text-muted d-block mt-1" style="font-size: 1.0625rem;">
                                     <i class="bi bi-clock me-1"></i>@{{ formatarHora(entrega.horas) }}
                                 </small>
                             </td>
@@ -199,7 +199,7 @@
                                     <span
                                         class="badge"
                                         :class="entrega.pedido.produzido ? 'bg-success text-white' : 'bg-secondary text-white'"
-                                        style="font-size: 0.7rem; border-radius: 30px;">
+                                        style="font-size: 1.0125rem; border-radius: 30px;">
                                         @{{ entrega.pedido.produzido ? 'Produzido' : 'À fazer' }}
                                     </span>
                                 </div>
@@ -209,7 +209,7 @@
                                 <span
                                     class="badge"
                                     :class="entrega.realizada ? 'bg-success text-white' : 'bg-secondary text-white'"
-                                    style="border-radius: 30px; font-size: 0.75rem; padding: 0.35rem 0.6rem;">
+                                    style="border-radius: 30px; font-size: 1.0625rem; padding: 0.35rem 0.6rem;">
                                     <i class="bi" :class="entrega.realizada ? 'bi-check2-circle me-1' : 'bi-clock me-1'"></i>
                                     @{{ entrega.realizada ? 'Realizada' : 'Pendente' }}
                                 </span>

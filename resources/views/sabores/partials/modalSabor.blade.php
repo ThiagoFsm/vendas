@@ -1,14 +1,14 @@
 <div v-if="modal" v-cloak class="modal-overlay">
-    <div class="modal-content-custom" style="width: 90%; max-width: 550px; border-radius: 12px; overflow: hidden; animation: modalIn 0.3s ease-out;">
+    <div class="modal-content-custom" style="width: 95%; max-width: 660px; max-height: 92vh; display: flex; flex-direction: column; border-radius: 12px; overflow: hidden; animation: modalIn 0.3s ease-out;">
         <div class="modal-header-custom d-flex justify-content-between align-items-center">
             <h3 class="m-0 fs-5">@{{ editando ? 'Editar Sabor' : 'Novo Sabor' }}</h3>
-            <span @click.prevent="fecharModal" style="cursor: pointer; font-size: 1.25rem;" title="Fechar">
+            <span @click.prevent="fecharModal" style="cursor: pointer; font-size: 1.5625rem;" title="Fechar">
                 <i class="bi bi-x-lg"></i>
             </span>
         </div>
 
-        <form @submit.prevent="salvarSabor">
-            <div class="modal-body-custom p-4">
+        <form @submit.prevent="salvarSabor" class="d-flex flex-column flex-grow-1" style="min-height: 0;">
+            <div class="modal-body-custom modal-body-scrollable flex-grow-1 p-4">
                 <!-- Descrição do Sabor -->
                 <div class="mb-3">
                     <label for="sabor_descricao" class="form-label fw-bold small text-muted text-uppercase">
@@ -21,7 +21,7 @@
                         placeholder="Ex: Nutella, Ninho com Nutella, Paçoca..."
                         v-model="form.descricao"
                         required
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 42px;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 48px;"
                     >
                 </div>
 

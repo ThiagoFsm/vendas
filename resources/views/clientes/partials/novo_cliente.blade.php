@@ -1,4 +1,4 @@
-<div class="container-fluid py-4" style="font-size: 13px">
+<div class="container-fluid py-4" style="font-size: 18px">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h3 class="fw-bold mb-0">Cadastre o cliente</h3>
@@ -16,12 +16,12 @@
                 <div class="row g-4">
                     <div class="col-md-6">
                         <label for="nome" class="form-label fw-bold text-dark">Nome do cliente</label>
-                        <input type="text" id="nome" name="nome" class="form-control border-2 bg-light" style="height: 40px; border-radius: 8px;" required>
+                        <input type="text" id="nome" name="nome" class="form-control border-2 bg-light" style="height: 48px; border-radius: 8px;" required>
                     </div>
 
                     <div class="col-md-6">
                         <label for="vendedor_id" class="form-label fw-bold text-dark">Vendedor(a)</label>
-                        <select class="form-select border-2" id="vendedor_id" name="vendedor_id" style="height: 40px;" required>
+                        <select class="form-select border-2" id="vendedor_id" name="vendedor_id" style="height: 48px; border-radius: 8px;" required>
                             <option value="">Selecione</option>
                             @if(isset($dependencias['vendedores']))
                                 @foreach($dependencias['vendedores'] as $vendedor)

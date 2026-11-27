@@ -13,7 +13,7 @@
                         <div>
                             <h5 style="color: black">@{{ sabor.descricao }}</h5>
                         </div>
-                        <div class="d-flex flex-row gap-2 justify-content-center">
+                        <div class="d-flex flex-row flex-wrap gap-2 justify-content-center">
                             <div class="btn-success">
                                 <button class="btn-sabor" :style="{ background: GerarCorSabor(sabor.id), color: 'white' }"
                                 @click.prevent="filtrarItens(sabor.id, sabor.descricao, 1)">150g</button>

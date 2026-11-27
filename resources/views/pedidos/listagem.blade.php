@@ -12,14 +12,14 @@
         <div class="p-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="d-flex align-items-center flex-wrap gap-2">
                 <!-- Barra de Pesquisa de Cliente -->
-                <div class="position-relative" style="width: 300px; flex-shrink: 0;">
+                <div class="position-relative" style="width: 360px; max-width: 100%; flex-shrink: 0;">
                     <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
                     <input
                         type="text"
-                        class="form-control ps-5"
+                        class="form-control ps-5 pe-5"
                         placeholder="Buscar pelo nome do cliente..."
                         v-model="termoPesquisa"
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px;"
                     >
                     <button
                         v-if="termoPesquisa"
@@ -33,11 +33,11 @@
                 </div>
 
                 <!-- Filtro Vendedor -->
-                <div style="width: 200px; flex-shrink: 0;">
+                <div style="width: 260px; max-width: 100%; flex-shrink: 0;">
                     <select
                         class="form-select"
                         v-model="filtroVendedor"
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px;"
                     >
                         <option value="">Todos os Vendedores</option>
                         <option v-for="vendedor in vendedores" :key="vendedor.id" :value="vendedor.id">
@@ -47,11 +47,11 @@
                 </div>
 
                 <!-- Filtro Produção -->
-                <div style="width: 170px; flex-shrink: 0;">
+                <div style="width: 220px; max-width: 100%; flex-shrink: 0;">
                     <select
                         class="form-select"
                         v-model="filtroProducao"
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px;"
                     >
                         <option value="">Toda Produção</option>
                         <option value="a_fazer">À fazer</option>
@@ -64,7 +64,7 @@
                     v-if="hasFiltrosAtivos"
                     type="button"
                     class="btn btn-outline-secondary d-flex align-items-center gap-1 text-nowrap"
-                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 38px; flex-shrink: 0;"
+                    style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px; flex-shrink: 0;"
                     @click="limparFiltros"
                     title="Limpar todos os filtros"
                 >
@@ -82,14 +82,14 @@
                 <table class="table table-hover align-middle table-bordered-custom mb-0">
                     <thead>
                     <tr class="text-center">
-                        <th class="w-1/12">Nº Pedido</th>
-                        <th class="w-1/12 text-start">Cliente</th>
-                        <th class="w-1/12">Vendedor</th>
-                        <th class="w-1/12">Qtd</th>
-                        <th class="w-1/12">Valor Total</th>
-                        <th class="w-1/12">Pagamento</th>
-                        <th class="w-1/12">Produção</th>
-                        <th>Ações</th>
+                        <th style="width: 120px;">Nº Pedido</th>
+                        <th class="text-start">Cliente</th>
+                        <th>Vendedor</th>
+                        <th style="width: 90px;">Qtd</th>
+                        <th>Valor Total</th>
+                        <th>Pagamento</th>
+                        <th>Produção</th>
+                        <th style="width: 290px;">Ações</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -131,7 +131,7 @@
                                 <div class="d-flex align-items-center justify-content-center">
                                     <div class="d-flex align-items-center justify-content-center gap-1">
                                         <a class="btn-marcar-feito">
-                                            <i class="bi bi-check-all" style="font-size: 25px"></i>
+                                            <i class="bi bi-check-all" style="font-size: 30px"></i>
                                         </a>
                                     </div>
                                 </div>

@@ -14,14 +14,14 @@
         <div class="p-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="d-flex align-items-center flex-wrap gap-2">
                 <!-- Pesquisa de Texto -->
-                <div class="position-relative" style="width: 300px; flex-shrink: 0;">
+                <div class="position-relative" style="width: 360px; max-width: 100%; flex-shrink: 0;">
                     <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
                     <input
                         type="text"
-                        class="form-control ps-5"
+                        class="form-control ps-5 pe-5"
                         placeholder="Buscar pelo nome do sabor..."
                         v-model="termoPesquisa"
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px;"
                     >
                     <button
                         v-if="termoPesquisa"
@@ -35,11 +35,11 @@
                 </div>
 
                 <!-- Filtro Status -->
-                <div style="width: 150px; flex-shrink: 0;">
+                <div style="width: 200px; max-width: 100%; flex-shrink: 0;">
                     <select
                         class="form-select"
                         v-model="filtroStatus"
-                        style="border-radius: 8px; border: 1.5px solid #d1d5db;"
+                        style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px;"
                     >
                         <option value="">Todos Status</option>
                         <option value="ativo">Ativos</option>
@@ -52,7 +52,7 @@
                     v-if="hasFiltrosAtivos"
                     type="button"
                     class="btn btn-outline-secondary d-flex align-items-center gap-1 text-nowrap"
-                    style="border-radius: 8px; border: 1.5px solid #d1d5db; height: 38px; flex-shrink: 0;"
+                    style="border-radius: 8px; border: 1.5px solid #d1d5db; min-height: 48px; flex-shrink: 0;"
                     @click="limparFiltros"
                     title="Limpar filtros"
                 >
@@ -72,11 +72,11 @@
                 <table class="table table-hover align-middle table-bordered-custom mb-0">
                     <thead>
                     <tr class="text-center">
-                        <th style="width: 70px;">ID</th>
+                        <th style="width: 80px;">ID</th>
                         <th class="text-start">Descrição do Sabor</th>
                         <th>Produtos Vinculados</th>
                         <th>Status</th>
-                        <th style="width: 180px;">Ações</th>
+                        <th style="width: 230px;">Ações</th>
                     </tr>
                     </thead>
                     <tbody>
