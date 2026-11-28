@@ -3,7 +3,7 @@
 
     export default {
         name: "producao",
-        props: ["sabores", 'pedidos'],
+        props: ["sabores", "tamanhos", "pedidos"],
         data() {
             return {
                 modal: false,

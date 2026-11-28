@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PedidosRequest;
 use App\Models\Pedido;
+use App\Models\Retirada;
 use App\Services\PedidoService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
@@ -162,6 +163,28 @@ class PedidoController extends Controller
 
         return response()->json([
             'message' => $pedidoProduzido ? 'Pedido marcado como feito com sucesso!' : 'O pedido já está concluído.'
+        ]);
+    }
+
+    public function entregarRetirar(Pedido $pedido): JsonResponse
+    {
+        $pedido->load('entrega_retirada');
+
+        if (!$pedido->entrega_retirada) {
+            return response()->json([
+                'message' => 'Este pedido não possui entrega ou retirada vinculada.'
+            ], 422);
+        }
+
+        $isRetirada = $pedido->entrega_retirada instanceof Retirada;
+        $realizado = $this->pedidoService->marcarEntregaRetiradaComoRealizada($pedido);
+
+        $mensagem = $realizado
+            ? ($isRetirada ? 'Pedido marcado como retirado com sucesso!' : 'Pedido marcado como entregue com sucesso!')
+            : ($isRetirada ? 'O pedido já foi retirado.' : 'O pedido já foi entregue.');
+
+        return response()->json([
+            'message' => $mensagem
         ]);
     }
 }

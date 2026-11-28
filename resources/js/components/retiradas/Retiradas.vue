@@ -48,22 +48,7 @@ export default {
 
     computed: {
         bairrosUnicos() {
-            const conjunto = new Set();
-            if (Array.isArray(this.retiradas)) {
-                this.retiradas.forEach(r => {
-                    if (r.bairro && r.bairro.trim()) {
-                        conjunto.add(r.bairro.trim());
-                    }
-                });
-            }
-            if (this.dependencias.bairros && Array.isArray(this.dependencias.bairros)) {
-                this.dependencias.bairros.forEach(b => {
-                    if (b.descricao && b.descricao.trim()) {
-                        conjunto.add(b.descricao.trim());
-                    }
-                });
-            }
-            return Array.from(conjunto).sort((a, b) => a.localeCompare(b));
+            return ['Jacy', 'Tiradentes'];
         },
 
         hasFiltrosAtivos() {
@@ -110,7 +95,7 @@ export default {
 
                 // 2. Filtro por Bairro
                 if (this.filtroBairro) {
-                    if ((retirada.bairro || '').trim() !== this.filtroBairro.trim()) {
+                    if ((retirada.bairro || '').trim().toLowerCase() !== this.filtroBairro.trim().toLowerCase()) {
                         return false;
                     }
                 }

@@ -292,4 +292,17 @@ class PedidoService
 
         return $salvo;
     }
+
+    public function marcarEntregaRetiradaComoRealizada(Pedido $pedido): bool
+    {
+        $entregaRetirada = $pedido->entrega_retirada;
+
+        if (!$entregaRetirada || $entregaRetirada->realizada) {
+            return false;
+        }
+
+        $entregaRetirada->realizada = true;
+
+        return $entregaRetirada->save();
+    }
 }

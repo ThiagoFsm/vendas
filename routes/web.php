@@ -39,6 +39,7 @@ Route::prefix('vendas')->name('vendas.')->group(function () {
         Route::post('/{pedidoId}/store', [PedidoController::class, 'store'])->name('update');
         Route::post('/{pedido}/pagar', [PedidoController::class, 'pagar'])->name('pagar');
         Route::post('/{pedido}/produzir', [PedidoController::class, 'produzir'])->name('produzir');
+        Route::post('/{pedido}/entregar-retirar', [PedidoController::class, 'entregarRetirar'])->name('entregarRetirar');
         Route::post('/{pedido}/destroy', [PedidoController::class, 'destroy'])->name('destroy');
     });
 

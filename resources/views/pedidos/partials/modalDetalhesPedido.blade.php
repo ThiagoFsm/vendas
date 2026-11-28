@@ -78,60 +78,102 @@
                                 @{{ dadosModal.entrega_retirada.rua + ', ' + dadosModal.entrega_retirada.numero + (dadosModal.entrega_retirada.bairro ? ' - ' + dadosModal.entrega_retirada.bairro.descricao : '') }}
                             </span>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <span class="text-muted small d-block">Data:</span>
                             <span class="fw-bold text-dark">@{{ dadosModal.entrega_retirada.data }}</span>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <span class="text-muted small d-block">Período / Hora:</span>
                             <span class="fw-bold text-dark">
                                 @{{ dadosModal.entrega_retirada.periodo || '-' }}
                                 <span v-if="dadosModal.entrega_retirada.horas">(@{{ dadosModal.entrega_retirada.horas.substring(0, 5) }})</span>
                             </span>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <span class="text-muted small d-block">Valor do Uber:</span>
                             <span class="fw-bold text-success">@{{ dadosModal.entrega_retirada.valor_uber }}</span>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="text-muted small d-block">Entrega:</span>
+                            <div v-if="dadosModal.entrega_retirada.realizada" class="d-flex align-items-center">
+                                <a class="btn-marcar-feito" title="Entregue">
+                                    <i class="bi bi-check-all" style="font-size: 30px"></i>
+                                </a>
+                            </div>
+                            <div v-else class="mt-1">
+                                <button class="btn btn-sm btn-outline-success"
+                                        @click.prevent="marcarEntregaRetiradaComoRealizada(dadosModal.dados.pedido_id, false)">
+                                    <i class="bi bi-check2 me-1"></i> Marcar como entregue
+                                </button>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Detalhes se for Entrega com Entregador -->
                     <div class="row g-3" v-else-if="dadosModal.entrega_retirada.entregador_id">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <span class="text-muted small d-block">Entregador(a):</span>
                             <span class="fw-bold text-dark">
                                 @{{ dadosModal.entrega_retirada.entregador ? dadosModal.entrega_retirada.entregador.nome : 'Não informado' }}
                             </span>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <span class="text-muted small d-block">Data:</span>
                             <span class="fw-bold text-dark">@{{ dadosModal.entrega_retirada.data }}</span>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <span class="text-muted small d-block">Período / Hora:</span>
                             <span class="fw-bold text-dark">
                                 @{{ dadosModal.entrega_retirada.periodo || '-' }}
                                 <span v-if="dadosModal.entrega_retirada.horas">(@{{ dadosModal.entrega_retirada.horas.substring(0, 5) }})</span>
                             </span>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="text-muted small d-block">Entrega:</span>
+                            <div v-if="dadosModal.entrega_retirada.realizada" class="d-flex align-items-center">
+                                <a class="btn-marcar-feito" title="Entregue">
+                                    <i class="bi bi-check-all" style="font-size: 30px"></i>
+                                </a>
+                            </div>
+                            <div v-else class="mt-1">
+                                <button class="btn btn-sm btn-outline-success"
+                                        @click.prevent="marcarEntregaRetiradaComoRealizada(dadosModal.dados.pedido_id, false)">
+                                    <i class="bi bi-check2 me-1"></i> Marcar como entregue
+                                </button>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Detalhes se for Retirada -->
                     <div class="row g-3" v-else>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <span class="text-muted small d-block">Bairro / Local de Retirada:</span>
                             <span class="fw-bold text-dark">@{{ dadosModal.entrega_retirada.bairro }}</span>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <span class="text-muted small d-block">Data:</span>
                             <span class="fw-bold text-dark">@{{ dadosModal.entrega_retirada.data }}</span>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <span class="text-muted small d-block">Período / Hora:</span>
                             <span class="fw-bold text-dark">
                                 @{{ dadosModal.entrega_retirada.periodo || '-' }}
                                 <span v-if="dadosModal.entrega_retirada.horas">(@{{ dadosModal.entrega_retirada.horas.substring(0, 5) }})</span>
                             </span>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="text-muted small d-block">Retirada:</span>
+                            <div v-if="dadosModal.entrega_retirada.realizada" class="d-flex align-items-center">
+                                <a class="btn-marcar-feito" title="Retirado">
+                                    <i class="bi bi-check-all" style="font-size: 30px"></i>
+                                </a>
+                            </div>
+                            <div v-else class="mt-1">
+                                <button class="btn btn-sm btn-outline-success"
+                                        @click.prevent="marcarEntregaRetiradaComoRealizada(dadosModal.dados.pedido_id, true)">
+                                    <i class="bi bi-check2 me-1"></i> Marcar como retirado
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pedido;
 use App\Models\Produto;
 use App\Models\Sabor;
+use App\Models\Tamanho;
 use App\Services\ProducaoService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -34,6 +35,7 @@ class ProducaoController extends Controller
         }
 
         $sabores = Sabor::where('ativo', true)->orderBy('id')->get();
+        $tamanhos = Tamanho::where('ativo', true)->orderBy('id')->get();
         $pedidos = Pedido::with([
             'produtos',
             'produtos.tipoProduto',
@@ -41,7 +43,7 @@ class ProducaoController extends Controller
             'produtos.tamanho',
         ])->get();
 
-        return view('producao.index', compact('sabores', 'pedidos'));
+        return view('producao.index', compact('sabores', 'tamanhos', 'pedidos'));
     }
 
     /**

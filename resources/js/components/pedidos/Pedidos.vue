@@ -234,6 +234,50 @@
                 });
             },
 
+            async marcarEntregaRetiradaComoRealizada(pedido_id, isRetirada = false) {
+                const titulo = isRetirada ? 'Marcar como retirado?' : 'Marcar como entregue?';
+                const texto = isRetirada
+                    ? 'Confirmar que este pedido foi retirado?'
+                    : 'Confirmar que este pedido foi entregue?';
+
+                Swal.fire({
+                    title: titulo,
+                    text: texto,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: 'lightgreen',
+                    cancelButtonColor: '#1f2937',
+                    confirmButtonText: '<span style="color: black">Confirmar</span>',
+                    cancelButtonText: 'Cancelar'
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        try {
+                            Swal.showLoading();
+
+                            const endpoint = this.rota_pedidos
+                                ? `${this.rota_pedidos}/${pedido_id}/entregar-retirar`
+                                : `/vendas/pedidos/${pedido_id}/entregar-retirar`;
+                            const response = await axios.post(endpoint);
+
+                            window.Toast.fire({
+                                icon: 'success',
+                                title: response?.data?.message || (isRetirada ? 'Pedido marcado como retirado com sucesso!' : 'Pedido marcado como entregue com sucesso!')
+                            });
+
+                            await this.detalhesPedido(pedido_id);
+                            await this.buscarPedidos();
+
+                        } catch (error) {
+                            window.Toast.fire({
+                                icon: 'error',
+                                title: 'Erro ao atualizar pedido.',
+                                text: error?.response?.data?.message || 'Erro interno no servidor.'
+                            });
+                        }
+                    }
+                });
+            },
+
             editarPedido(pedidoId) {
                 const endpoint = this.rota_pedidos ? `${this.rota_pedidos}/${pedidoId}/edit` : `/vendas/pedidos/${pedidoId}/edit`;
                 window.location.href = endpoint;

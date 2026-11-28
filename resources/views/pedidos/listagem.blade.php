@@ -89,22 +89,23 @@
                         <th>Valor Total</th>
                         <th>Pagamento</th>
                         <th>Produção</th>
+                        <th>Entrega/Retirada</th>
                         <th style="width: 290px;">Ações</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr v-if="carregando">
-                        <td colspan="8" class="text-center py-4 text-muted">
+                        <td colspan="9" class="text-center py-4 text-muted">
                             <span>Carregando pedidos...</span>
                         </td>
                     </tr>
                     <tr v-else-if="!pedidos || pedidos.length === 0">
-                        <td colspan="8" class="text-center py-4 text-muted">
+                        <td colspan="9" class="text-center py-4 text-muted">
                             <span>Nenhum pedido encontrado.</span>
                         </td>
                     </tr>
                     <tr v-else-if="pedidosFiltrados.length === 0">
-                        <td colspan="8" class="text-center py-4 text-muted">
+                        <td colspan="9" class="text-center py-4 text-muted">
                             <span v-if="termoPesquisa">Nenhum pedido encontrado para o cliente "<strong>@{{ termoPesquisa }}</strong>".</span>
                             <span v-else>Nenhum pedido encontrado com os filtros selecionados.</span>
                         </td>
@@ -142,6 +143,20 @@
                                         <h6 class="m-0">À fazer</h6>
                                     </div>
                                 </div>
+                            </td>
+                            <td>
+                                <div v-if="pedido.entrega_retirada && pedido.entrega_retirada.realizada" class="d-flex align-items-center justify-content-center">
+                                    <a class="btn-marcar-feito"
+                                       :title="pedido.entrega_retirada_type && pedido.entrega_retirada_type.includes('Retirada') ? 'Retirado' : 'Entregue'">
+                                        <i class="bi bi-check-all" style="font-size: 30px"></i>
+                                    </a>
+                                </div>
+                                <div v-else-if="pedido.entrega_retirada" class="d-flex align-items-center justify-content-center">
+                                    <h6 class="m-0">
+                                        @{{ pedido.entrega_retirada_type && pedido.entrega_retirada_type.includes('Retirada') ? 'À retirar' : 'À entregar' }}
+                                    </h6>
+                                </div>
+                                <span v-else class="text-muted">-</span>
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center gap-1">

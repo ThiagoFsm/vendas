@@ -13,23 +13,16 @@
                         <div>
                             <h5 style="color: black">@{{ sabor.descricao }}</h5>
                         </div>
-                        <div class="d-flex flex-row flex-wrap gap-2 justify-content-center">
-                            <div class="btn-success">
+                        <div class="d-flex flex-row flex-wrap gap-2 justify-content-center" v-if="tamanhos && tamanhos.length > 0">
+                            <div v-for="tamanho in tamanhos" :key="tamanho.id">
                                 <button class="btn-sabor" :style="{ background: GerarCorSabor(sabor.id), color: 'white' }"
-                                @click.prevent="filtrarItens(sabor.id, sabor.descricao, 1)">150g</button>
+                                        @click.prevent="filtrarItens(sabor.id, sabor.descricao, tamanho.id)">
+                                    @{{ tamanho.descricao }}
+                                </button>
                             </div>
-                            <div>
-                                <button class="btn-sabor" :style="{ background: GerarCorSabor(sabor.id), color: 'white' }"
-                                @click.prevent="filtrarItens(sabor.id, sabor.descricao, 2)">350g</button>
-                            </div>
-                            <div>
-                                <button class="btn-sabor" :style="{ background: GerarCorSabor(sabor.id), color: 'white' }"
-                                @click.prevent="filtrarItens(sabor.id, sabor.descricao, 3)">500g</button>
-                            </div>
-                            <div>
-                                <button class="btn-sabor" :style="{ background: GerarCorSabor(sabor.id), color: 'white' }"
-                                @click.prevent="filtrarItens(sabor.id, sabor.descricao, 4)">coração</button>
-                            </div>
+                        </div>
+                        <div v-else class="text-muted small">
+                            Nenhum tamanho ativo encontrado.
                         </div>
                     </div>
                 </div>
