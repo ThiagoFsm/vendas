@@ -102,7 +102,9 @@ class PedidoController extends Controller
             $pedido = $this->pedidoService->atualizarPedido($pedidoId, $pedidoPreparado, $dados['entrega_retirada'] ?? null, $produtos);
         } else {
             $entrega_retirada = $this->pedidoService->gerenciarEntregaRetirada($dados['entrega_retirada'] ?? null);
-            $pedido = $this->pedidoService->salvarPedido($pedidoPreparado, $entrega_retirada, $produtos);
+            $dadosCliente = $dados['cliente'] ?? session('cliente_pendente_pedido');
+            $pedido = $this->pedidoService->salvarPedido($pedidoPreparado, $entrega_retirada, $produtos, is_array($dadosCliente) ? $dadosCliente : null);
+            session()->forget('cliente_pendente_pedido');
         }
 
         $mensagem = $isUpdate
@@ -168,7 +170,7 @@ class PedidoController extends Controller
 
     public function entregarRetirar(Pedido $pedido): JsonResponse
     {
-        $pedido->load('entrega_retirada');
+        $pedido->load(['entrega_retirada', 'produtos']);
 
         if (!$pedido->entrega_retirada) {
             return response()->json([
@@ -177,6 +179,18 @@ class PedidoController extends Controller
         }
 
         $isRetirada = $pedido->entrega_retirada instanceof Retirada;
+        $todosItensProduzidos = $pedido->produtos->isNotEmpty()
+            ? $pedido->produtos->every(fn ($produto): bool => (bool) ($produto->pivot->produzido ?? false))
+            : (bool) $pedido->produzido;
+
+        if (!$pedido->produzido || !$todosItensProduzidos) {
+            $acao = $isRetirada ? 'marcar como retirado' : 'marcar como entregue';
+
+            return response()->json([
+                'message' => "Não é possível {$acao}: todos os itens do pedido precisam estar produzidos primeiro."
+            ], 422);
+        }
+
         $realizado = $this->pedidoService->marcarEntregaRetiradaComoRealizada($pedido);
 
         $mensagem = $realizado
@@ -185,6 +199,16 @@ class PedidoController extends Controller
 
         return response()->json([
             'message' => $mensagem
+        ]);
+    }
+
+    public function cancelarCriacao(): JsonResponse
+    {
+        session()->forget('cliente_pendente_pedido');
+
+        return response()->json([
+            'message' => 'Cadastro de pedido cancelado.',
+            'redirect' => route('vendas.pedidos.index'),
         ]);
     }
 }

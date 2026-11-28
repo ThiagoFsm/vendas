@@ -36,18 +36,32 @@ class ClienteController extends Controller
      */
     public function create()
     {
+        session()->forget('cliente_pendente_pedido');
         $dependencias = $this->clienteService->gerenciarDependencias();
 
         return view('clientes.create', compact('dependencias'));
     }
 
-
     public function store(Request $request)
     {
-        $dados = $request->all();
-        $cliente = $this->clienteService->salvarCliente($dados);
+        $dados = $request->validate([
+            'nome' => 'required|string|max:255',
+            'vendedor_id' => 'required|integer|exists:vendedores,id',
+        ]);
 
-        return redirect()->route('vendas.pedidos.create', ['cliente_id' => $cliente->id]);
+        $vendedor = Vendedor::findOrFail($dados['vendedor_id']);
+
+        session()->put('cliente_pendente_pedido', [
+            'id' => null,
+            'nome' => trim($dados['nome']),
+            'vendedor_id' => (int) $vendedor->id,
+            'vendedor' => [
+                'id' => (int) $vendedor->id,
+                'nome' => $vendedor->nome,
+            ],
+        ]);
+
+        return redirect()->route('vendas.pedidos.create');
     }
 
     /**

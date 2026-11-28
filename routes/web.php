@@ -32,11 +32,14 @@ Route::get('/', function () {
 Route::prefix('vendas')->name('vendas.')->group(function () {
     Route::prefix('pedidos')->name('pedidos.')->group(function () {
         Route::get('/', [PedidoController::class, 'index'])->name('index');
-        Route::get('/{cliente_id?}/dependencias', [PedidoController::class, 'dependencias'])->name('dependencias');
-        Route::get('/{cliente_id?}/create', [PedidoController::class, 'create'])->name('create');
+        Route::get('/dependencias', [PedidoController::class, 'dependencias'])->name('dependencias');
+        Route::get('/{cliente_id}/dependencias', [PedidoController::class, 'dependencias'])->name('dependencias.cliente');
+        Route::get('/create', [PedidoController::class, 'create'])->name('create');
+        Route::get('/{cliente_id}/create', [PedidoController::class, 'create'])->name('create.cliente');
         Route::get('/{pedido_id?}/edit', [PedidoController::class, 'edit'])->name('edit');
         Route::get('/{pedido}', [PedidoController::class, 'show'])->name('show');
         Route::post('/store', [PedidoController::class, 'store'])->name('store');
+        Route::post('/cancelar-criacao', [PedidoController::class, 'cancelarCriacao'])->name('cancelarCriacao');
         Route::post('/{pedidoId}/store', [PedidoController::class, 'store'])->name('update');
         Route::post('/{pedido}/pagar', [PedidoController::class, 'pagar'])->name('pagar');
         Route::post('/{pedido}/produzir', [PedidoController::class, 'produzir'])->name('produzir');

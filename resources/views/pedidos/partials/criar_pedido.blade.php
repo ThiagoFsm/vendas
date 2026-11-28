@@ -161,6 +161,11 @@
                         </strong>
                     </div>
                     <div class="d-flex gap-2">
+                        <button @click.prevent="cancelarPedido" type="button" :disabled="salvando"
+                                class="btn btn-outline-danger px-4"
+                                style="border-radius: 8px;">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </button>
                         <button type="reset" class="btn btn-outline-secondary px-4 text-black"
                                 style="border-radius: 8px;">Limpar
                         </button>

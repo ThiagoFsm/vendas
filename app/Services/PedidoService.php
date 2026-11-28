@@ -82,7 +82,9 @@ class PedidoService
     public function gerenciarDependencias($idCliente = null): array
     {
         $dependencias = [];
-        $dependencias['cliente'] = !is_null($idCliente) ? Cliente::with('vendedor')->find($idCliente) : null;
+        $dependencias['cliente'] = !is_null($idCliente)
+            ? Cliente::with('vendedor')->find($idCliente)
+            : session('cliente_pendente_pedido');
         $dependencias['produtos'] = Produto::with(['tipoProduto', 'sabor', 'tamanho'])->where('ativo', true)->get();
         $dependencias['tipoProdutos'] = TipoProduto::where('ativo', true)->get();
         $dependencias['sabores'] = Sabor::where('ativo', true)->get();
@@ -160,12 +162,21 @@ class PedidoService
      * @param $pedidoPreparado
      * @param $entrega_retirada
      * @param $produtos
+     * @param array<string, mixed>|null $dadosCliente
      * @return Pedido
      * @throws Throwable
      */
-    public function salvarPedido($pedidoPreparado, $entrega_retirada, $produtos): Pedido
+    public function salvarPedido($pedidoPreparado, $entrega_retirada, $produtos, ?array $dadosCliente = null): Pedido
     {
-        return DB::transaction(function () use ($pedidoPreparado, $entrega_retirada, $produtos) {
+        return DB::transaction(function () use ($pedidoPreparado, $entrega_retirada, $produtos, $dadosCliente) {
+            if (empty($pedidoPreparado['cliente_id']) && !empty($dadosCliente)) {
+                $cliente = Cliente::create([
+                    'nome' => trim((string) ($dadosCliente['nome'] ?? '')),
+                    'vendedor_id' => (int) ($dadosCliente['vendedor_id'] ?? 0),
+                ]);
+                $pedidoPreparado['cliente_id'] = $cliente->id;
+            }
+
             $pedido = new Pedido($pedidoPreparado);
             if ($entrega_retirada) {
                 $pedido->entrega_retirada()->associate($entrega_retirada);

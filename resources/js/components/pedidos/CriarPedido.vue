@@ -329,10 +329,41 @@ export default {
             }
         },
 
+        async cancelarPedido() {
+            if (this.salvando) return;
+
+            const result = await Swal.fire({
+                title: this.isEditing ? 'Cancelar edição?' : 'Cancelar pedido?',
+                text: this.isEditing
+                    ? 'As alterações não salvas serão descartadas.'
+                    : 'Os dados do cliente e do pedido não serão salvos.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sim, cancelar',
+                cancelButtonText: 'Continuar editando'
+            });
+
+            if (!result.isConfirmed) return;
+
+            try {
+                await axios.post('/vendas/pedidos/cancelar-criacao');
+            } catch (error) {
+                // Mesmo em caso de falha na limpeza da sessão, redireciona para a listagem
+            }
+
+            window.location.assign('/vendas/pedidos');
+        },
+
         async salvarPedido() {
             if (this.salvando) return;
 
-            if (!this.cliente || !this.cliente.id) {
+            const temClienteValido = Boolean(
+                this.cliente && (this.cliente.id || (this.cliente.nome && this.cliente.vendedor_id))
+            );
+
+            if (!temClienteValido) {
                 window.Toast?.fire({ icon: 'warning', title: 'Cliente não identificado.' });
                 return;
             }

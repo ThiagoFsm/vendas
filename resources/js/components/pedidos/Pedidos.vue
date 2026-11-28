@@ -235,6 +235,21 @@
             },
 
             async marcarEntregaRetiradaComoRealizada(pedido_id, isRetirada = false) {
+                const produtos = Array.isArray(this.dadosModal?.produtos) ? this.dadosModal.produtos : [];
+                const todosItensProntos = produtos.length > 0
+                    ? produtos.every(p => Boolean(p.pivot && p.pivot.produzido))
+                    : Boolean(this.dadosModal?.produzido);
+                const pedidoProduzido = Boolean(this.dadosModal?.produzido) && todosItensProntos;
+
+                if (!pedidoProduzido) {
+                    const acao = isRetirada ? 'marcar como retirado' : 'marcar como entregue';
+                    window.Toast.fire({
+                        icon: 'warning',
+                        title: `Não é possível ${acao}: todos os itens do pedido precisam estar produzidos primeiro.`
+                    });
+                    return;
+                }
+
                 const titulo = isRetirada ? 'Marcar como retirado?' : 'Marcar como entregue?';
                 const texto = isRetirada
                     ? 'Confirmar que este pedido foi retirado?'

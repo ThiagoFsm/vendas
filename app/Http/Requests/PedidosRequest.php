@@ -31,9 +31,9 @@ class PedidosRequest extends FormRequest
         return [
             'pedidoId'                              => 'sometimes|nullable|exists:pedidos,id',
             'cliente'                               => 'sometimes|array',
-                'cliente.id'                        => 'integer|exists:clientes,id',
-                'cliente.nome'                      => 'string',
-                'cliente.vendedor_id'               => 'integer|exists:vendedores,id',
+                'cliente.id'                        => 'sometimes|nullable|integer|exists:clientes,id',
+                'cliente.nome'                      => 'required_without:cliente.id|nullable|string|max:255',
+                'cliente.vendedor_id'               => 'required_without:cliente.id|nullable|integer|exists:vendedores,id',
             'pedido'                                => 'sometimes|array',
                 'pedido.*.produto_id'               => 'integer|exists:produtos,id',
                 'pedido.*.produto'                  => 'string|exists:tipo_produtos,descricao',
