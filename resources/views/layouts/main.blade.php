@@ -350,6 +350,11 @@
                 <i class="bi bi-shop"></i> Retiradas
             </a>
         </li>
+        <li class="nav-item">
+            <a href="{{ route('vendas.configuracoes.index') }}" class="nav-link {{ request()->routeIs('vendas.configuracoes.*') || request()->is('vendas/configuracoes*') ? 'active' : '' }}">
+                <i class="bi bi-gear"></i> Configurações
+            </a>
+        </li>
     </ul>
     <div class="resizer" id="resizer"></div>
 </nav>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\EntregaController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProducaoController;
@@ -89,5 +90,11 @@ Route::prefix('vendas')->name('vendas.')->group(function () {
         Route::get('/{retirada}', [RetiradaController::class, 'show'])->name('show');
         Route::post('/{retirada}/update', [RetiradaController::class, 'update'])->name('update');
         Route::post('/{retirada}/destroy', [RetiradaController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('configuracoes')->name('configuracoes.')->group(function () {
+        Route::get('/', [ConfiguracaoController::class, 'index'])->name('index');
+        Route::post('/salvar', [ConfiguracaoController::class, 'salvar'])->name('salvar');
+        Route::post('/novo-item', [ConfiguracaoController::class, 'storeItem'])->name('novoItem');
     });
 });
